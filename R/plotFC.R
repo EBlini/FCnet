@@ -1,13 +1,13 @@
 #' plot a Functional Connectivity matrix
 #'
-#' This function reads a (square) matrix and plot is using `ggplot2`.
+#' This function reads a (square) matrix and plots it using `ggplot2`.
 #'
 #' @param FCmatrix The FC matrix to plot
 #' @param style Whether to plot only the lower triangle (and diagonal) or the entire FC matrix.
-#' @param col The color palette used to plot values (i.e. a vector of colors).
+#' @param col The color palette used to plot values (i.e. a vector of colors). The vector is often divergent, es. `c("red", "white", "blue")`.
 #' Defaults to `optionsFCnet("colorPaletteDefault")`.
 #' @param limit The limits for the FC values. Defaults to `NULL` and automatically adapts to the data range.
-#' @param network_definition A character vector specifying to which FC network the ROI belongs to. If provided, draws vertical and horizontal lines separating the networks.
+#' @param network_definition A character vector specifying to which FC network the ROI belongs to. If provided, draws vertical and horizontal lines visually separating the networks.
 #' @param plot_labels if `TRUE` annotates the network names defined in `network_definition`. Pretty results not warranted.
 #'
 #' @return A `ggplot2` object which can be customized further.
@@ -55,7 +55,7 @@ plotFC= function(FCmatrix,
 
   #plot baseline grid
   p= ggplot2::ggplot(data = hmDF,
-                     aes(x=Var1, y=Var2, fill=value)) +
+                     ggplot2::aes(x=Var1, y=Var2, fill=value)) +
     ggplot2::geom_tile() +
     ggplot2::scale_fill_gradientn(colours = col,
                          limit = limit,
@@ -64,10 +64,10 @@ plotFC= function(FCmatrix,
     ggplot2::theme_void() +
     ggplot2::scale_y_continuous(trans = "reverse") +
     ggplot2::guides(fill= NULL) +
-    ggplot2::theme(axis.title.x=element_blank(),
-          axis.text.x=element_blank(),
-          axis.title.y=element_blank(),
-          axis.text.y=element_blank())
+    ggplot2::theme(axis.title.x= ggplot2::element_blank(),
+          axis.text.x= ggplot2::element_blank(),
+          axis.title.y= ggplot2::element_blank(),
+          axis.text.y= ggplot2::element_blank())
 
 
   #add network labels if provided
@@ -97,26 +97,25 @@ plotFC= function(FCmatrix,
                                 length(intercepts$intercepts)),
                          xend= int_v
                          ),
-        aes(y= intercepts, yend= intercepts, x= x, xend= xend),
+        ggplot2::aes(y= intercepts, yend= intercepts, x= x, xend= xend),
         inherit.aes = F) +
       ggplot2::geom_segment(
         data= data.frame(intercepts= intercepts$intercepts,
                          yend= int_v2,
                          y= int_v
                          ),
-        aes(y= y, yend= yend, x= intercepts, xend= intercepts),
+        ggplot2::aes(y= y, yend= yend, x= intercepts, xend= intercepts),
         inherit.aes = F)
 
-    #plot diagonal if there's only the lower triangle
-    if(style== "lower.tri"){
-      p= p + ggplot2::geom_segment(
-        data= data.frame(x= 0,
-                         y= 0,
-                         xend= mat_dim,
-                         yend= mat_dim),
-        aes(y= y, yend= yend, x= x, xend= xend), inherit.aes = F)
+    #plot diagonal anyway
+    p= p + ggplot2::geom_segment(
+      data= data.frame(x= 0,
+                       y= 0,
+                       xend= mat_dim,
+                       yend= mat_dim),
+      ggplot2::aes(y= y, yend= yend, x= x, xend= xend), inherit.aes = F)
 
-    }
+
 
     if(plot_labels){
 
@@ -142,7 +141,7 @@ plotFC= function(FCmatrix,
         labels$pos= cs(labels$pos)
 
         p= p +
-          annotate("text", x = labels$pos+1,
+          ggplot2::annotate("text", x = labels$pos+1,
                    y= labels$pos,
                    label= labels$labels,
                    hjust= 0, vjust= 0,
@@ -164,11 +163,11 @@ plotFC= function(FCmatrix,
                          200)[1:length(labels$pos)]
 
       p= p +
-        annotate("text", x = labels$pos,
+        ggplot2::annotate("text", x = labels$pos,
                  y= labels$alt,
                  label= labels$labels,
                  angle= labels$angle, hjust= 0.5) +
-        annotate("text", y = labels$pos,
+        ggplot2::annotate("text", y = labels$pos,
                  x= labels$alt2,
                  label= labels$labels,
                  angle= labels$angle2, hjust= 0.5)
