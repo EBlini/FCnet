@@ -15,7 +15,7 @@ must be included in the folder. Files other than .csv are disregarded.}
 are too many. Option "data.table" uses \code{data.table::fread()}, which is sensibly
 faster when FC matrices are many; \code{data.table} must be installed. Option "parallel" uses
 \code{future.apply::future_lapply()}: \code{future.apply} must be installed, your
-machine should have multiple cores available, and threads should be defined explicitly
+machine should have multiple cores available for use, and threads should be defined explicitly
 beforehand by the user (e.g. by calling \code{plan(multisession)}).}
 }
 \value{
@@ -30,5 +30,5 @@ It is of PARAMOUNT importance that FC matrices are correctly ordered
 in their folder, according to participants' IDs (and therefore the behavioral
 score(s) to predict). Note that characters are ordered alphabetically by
 default in R, thus you may want to ensure that participants with low IDs
-(e.g. n° 5) are identified by file names preserving this order (e.g. FC 05.csv).
+(e.g. # 5) are identified by file names preserving this order (e.g. FC 05.csv).
 }

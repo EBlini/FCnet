@@ -1,19 +1,29 @@
 Package: FCnet
-Title: Analysis of Functional Connectivity Matrices through Feature Reduction and Elastic Nets
+Title: Analysis of Functional Connectivity Matrices through Elastic Nets
 Version: 0.0.0.9000
+Author: Elvio Blini [aut, cre]
+Maintainer: Elvio Blini <elvio.blini@unipd.it>
 Authors@R: 
-    person(given = "Elvio",
+    c(person(given = "Elvio",
            family = "Blini",
            role = c("aut", "cre"),
            email = "elvio.blini {at} unipd.it",
-           comment = c(ORCID = "0000-0002-7181-5763"))
+           comment = c(ORCID = "0000-0002-7181-5763")))
 Description: 
-  This package is a wrapper around 'glmnet' that has been optimized for the analysis of functional connectivity / behavior relationships.
-  Functional connectivity matrices are typically very large, thus functions are available in order to apply features reduction techniques prior to the regression models. 
+  Analysis of Functional Connectivity (FC) data can be daunting due to the large
+  dimensionality of the features involved. FCnet provides helper functions 
+  to reduce this dimensionality by applying either Principal Components Analysis
+  (PCA) or Independent Component Analysis (ICA) on FC matrices. Then, FCnet 
+  acts as a wrapper around 'glmnet' and implements regression methods - i.e.
+  elastic nets, thus encompassing Ridge and LASSO frameworks - for robust 
+  prediction of (behavioral) scores associated with the matrices. Regression
+  models are crossvalidated and prediction performances indices are returned. 
+  Utilities for permutation tests, back-projection of the results onto the 
+  original space, and plotting are provided as well.
 Depends: glmnet,glmnetUtils
-Imports: 
-        ggplot2,reshape2,data.table
-License: use_gpl3_license()
+Imports: reshape2, settings
+Suggests: ggplot2, data.table,future.apply
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
