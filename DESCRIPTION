@@ -21,8 +21,8 @@ Description:
   Utilities for permutation tests, back-projection of the results onto the 
   original space, and plotting are provided as well.
 Depends: glmnet,glmnetUtils
-Imports: reshape2, settings
-Suggests: ggplot2, data.table,future.apply
+Imports: reshape2, settings, ica, ggplot2
+Enhances: data.table, future.apply
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

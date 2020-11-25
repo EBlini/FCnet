@@ -3,3 +3,4 @@
 export(loadFC)
 export(optionsFCnet)
 export(plotFC)
+export(reduce_featuresFC)
