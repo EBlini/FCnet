@@ -4,7 +4,7 @@
 #' itself built around `glmnet::cv.glmnet()`. For extended documentation,
 #' the readers are encouraged to consult the respective pages.
 #' `cv_FCnet()` requires two objects at minimum: `y` is a vector or data.frame
-#' with exactly one column, corresponding to the behavioral score to predict; `x`
+#' with exactly one column, corresponding to the (behavioral) score to predict; `x`
 #' is a data.frame or a list of lists with an entry named "Weights",
 #' which includes the independent variables. `x` can be - and is meant to be -
 #' one object created by `reduce_featuresFC()`, but this is not strictly necessary.
@@ -72,13 +72,13 @@ cv_FCnet= function(y, #dependent variable, typically behavior
   #ensure you are working with matrices
   y= data.matrix(y)
 
-  if(class(x)== "list"){
+  if(class(x)[1]== "list"){
 
     x= data.matrix(x$Weights)
 
   } else {
 
-    if(class(x)== "data.frame"){x= data.matrix(x)}
+    if(class(x)[1]== "data.frame"){x= data.matrix(x)}
 
   }
 
