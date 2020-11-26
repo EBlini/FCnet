@@ -124,21 +124,28 @@ plotFC= function(FCmatrix,
         labels= int$values)
 
       if(style== "lower.tri"){
+
         #check spacing
         #you may bring this function out
-        cs= function(x){
+        #only if > 3 lables
+        if(length(unique(labels$labels))>3){
 
-          while(sum(diff(x) < mean(diff(x)) - 1.6*sd(diff(x)))>0){
-            co= mean(diff(x)) - 1.6*sd(diff(x))
-            dpos= c(FALSE, diff(x)< co)
-            #x[which(dpos)-1]= x[which(dpos)-1] - 0.1
-            x[which(dpos)]= x[which(dpos)] + 0.1
+          cs= function(x){
 
+            while(sum(diff(x) < mean(diff(x)) - 1.6*sd(diff(x)))>0){
+              co= mean(diff(x)) - 1.6*sd(diff(x))
+              dpos= c(FALSE, diff(x)< co)
+              #x[which(dpos)-1]= x[which(dpos)-1] - 0.1
+              x[which(dpos)]= x[which(dpos)] + 0.1
+
+            }
+
+            return(x)
           }
 
-          return(x)
+          labels$pos= cs(labels$pos)
+
         }
-        labels$pos= cs(labels$pos)
 
         p= p +
           ggplot2::annotate("text", x = labels$pos+1,

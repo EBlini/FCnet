@@ -1,6 +1,10 @@
 # Variable, global to package's namespace.
 # This function is not exported to user space and does not need to be documented.
 opt= settings::options_manager(
+  cv.type.measure= "mae",
+  intercept= T,
+  standardize= F,
+
   colorPaletteDefault= c("darkslateblue", "royalblue4",
                        "royalblue1", "cyan2",
                        "white",
@@ -13,6 +17,12 @@ opt= settings::options_manager(
 
 #' Set or get options for FCnet
 #'
+#' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
+#' Differently from `glmnetUtils::cva.glmnet()` the deafult is the mean absolute error.
+#' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
+#' @param standardize Whether x must be standardized. Differently from
+#' `glmnet::glmnet()` the default is FALSE as we assume predictors are already either
+#' summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.
 #' @param colorPaletteDefault The default color palette for plotting matrices (a vector of colors).
 
 #' @export

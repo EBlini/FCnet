@@ -7,6 +7,15 @@
 optionsFCnet(...)
 }
 \arguments{
+\item{cv.type.measure}{The measure to minimize in crossvalidation inner loops.
+Differently from \code{glmnetUtils::cva.glmnet()} the deafult is the mean absolute error.}
+
+\item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
+
+\item{standardize}{Whether x must be standardized. Differently from
+\code{glmnet::glmnet()} the default is FALSE as we assume predictors are already either
+summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.}
+
 \item{colorPaletteDefault}{The default color palette for plotting matrices (a vector of colors).}
 }
 \description{
