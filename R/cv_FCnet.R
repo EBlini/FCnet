@@ -61,7 +61,7 @@
 cv_FCnet= function(y, #dependent variable, typically behavior
                   x, #independent variables, typically neural measures
                   alpha= seq(0, 1, by= 0.1),
-                  lambda= 10^seq(-5, 5, length.out = 200),
+                  lambda= rev(10^seq(-5, 5, length.out = 200)),
                   nfolds= nrow(x),
                   rep_cv= 1,
                   type.measure= optionsFCnet("cv.type.measure"),
@@ -105,20 +105,26 @@ cv_FCnet= function(y, #dependent variable, typically behavior
       return(cva)
     })
 
-    pars= lapply(cv_ridge, function(p)get_CVparsFCnet(p))
+    pars= sapply(cv_ridge, function(p)get_CVparsFCnet(p))
 
-    pars= do.call(rbind, pars)
+    lambda= as.numeric(pars[rownames(pars)== optionsFCnet("whichLambda")])
 
-    lambda= median(pars$lambdaMin)
+    alpha= as.numeric(pars[rownames(pars)== "alpha"])
 
-    alpha= median(pars$alpha)
+    #return best parameters
+    bp= list(alpha= alpha,
+             lambda= lambda)
+
+    #return fit to make predictions quicker/avoid nesting?
+    best= as.numeric(pars[rownames(pars)== "best"])
+
+    fit= cv_ridge[[1]]$modlist[[best]]
+
+    bp[["fit"]]= fit
+
+
+    return(bp)
 
   } #end if | vectors>1
-
-  #return best parameters
-  bp= list(alpha= alpha,
-           lambda= lambda)
-
-  return(bp)
 
 }

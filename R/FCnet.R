@@ -22,8 +22,6 @@
 #' A call to `FCnet()` returns a `glmnet::glmnet()` model which can be explored
 #' further if necessary.
 #'
-#'
-#' Alongside the model, if requested...
 
 #'
 #'
@@ -59,7 +57,7 @@
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' Differently from `glmnetUtils::cva.glmnet()` the deafult is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
-#' @param standardize Whether x must be standardized. Differently from
+#' @param standardize Whether x must be standardized.
 #' `glmnet::glmnet()` the default is FALSE as we assume predictors are already either
 #' summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.
 #' @param ... Other parameters passed to `glmnetUtils::cva.glmnet()` or
@@ -76,7 +74,7 @@
 FCnet= function(y,
                 x,
                 alpha= seq(0, 1, by= 0.1),
-                lambda= 10^seq(-5, 5, length.out = 200),
+                lambda= rev(10^seq(-5, 5, length.out = 200)),
                 nfolds= nrow(x),
                 rep_cv= 1,
                 fit_stats= F,
@@ -118,7 +116,6 @@ FCnet= function(y,
               standardize= standardize,
               intercept= intercept,
               ...)
-
 
   #wrap up results
   res= list(fit= fit,
@@ -162,7 +159,7 @@ FCnet= function(y,
                s= lambda,
                newx= as.matrix(x))
 
-    res[["p"]]= p
+    res[["predicted"]]= p
 
     gfstats= evalFCnet(true = y,
                        predicted = p)

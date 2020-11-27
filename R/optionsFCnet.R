@@ -2,8 +2,9 @@
 # This function is not exported to user space and does not need to be documented.
 opt= settings::options_manager(
   cv.type.measure= "mae",
-  intercept= T,
-  standardize= F,
+  intercept= F,
+  standardize= T,
+  whichLambda= "lambda.min",
 
   colorPaletteDefault= c("darkslateblue", "royalblue4",
                        "royalblue1", "cyan2",
@@ -23,6 +24,11 @@ opt= settings::options_manager(
 #' @param standardize Whether x must be standardized. Differently from
 #' `glmnet::glmnet()` the default is FALSE as we assume predictors are already either
 #' summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.
+#' @param whichLambda During crossvalidation, either selects "lambda.min" - which
+#' chooses the value of lambda which best minimizes the mean crossvalidation error - or
+#' "lambda.1se" - which "which gives the most regularized model such that error is
+#' within one standard error of the minimum". The latter would be preferable
+#'  for stability.
 #' @param colorPaletteDefault The default color palette for plotting matrices (a vector of colors).
 
 #' @export

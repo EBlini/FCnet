@@ -8,9 +8,10 @@ FCnet(
   y,
   x,
   alpha = seq(0, 1, by = 0.1),
-  lambda = 10^seq(-5, 5, length.out = 200),
+  lambda = rev(10^seq(-5, 5, length.out = 200)),
   nfolds = nrow(x),
   rep_cv = 1,
+  fit_stats = F,
   type.measure = optionsFCnet("cv.type.measure"),
   intercept = optionsFCnet("intercept"),
   standardize = optionsFCnet("standardize"),
@@ -55,7 +56,7 @@ approximation of the LOO.}
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
 
-\item{standardize}{Whether x must be standardized. Differently from
+\item{standardize}{Whether x must be standardized.
 \code{glmnet::glmnet()} the default is FALSE as we assume predictors are already either
 summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.}
 
@@ -68,7 +69,8 @@ Differently from \code{glmnetUtils::cva.glmnet()} the deafult is the mean absolu
 \value{
 A model produced by \code{glmnet::glmnet()}.
 Crossvalidated best alpha and lambda values.
-A vector of observed (y) and predicted (predicted) values. Model's coefficients.
+If requested: a vector of observed (y) and predicted (predicted) values;
+model's coefficients; goodness of fit statistics.
 }
 \description{
 This function is a wrapper around \code{glmnet::glmnet()}. For extended documentation,
@@ -82,9 +84,16 @@ which includes the independent variables. \code{x} can be - and is meant to be -
 one object created by \code{reduce_featuresFC()}, but this is not strictly necessary.
 The final model finds the best hyperparameters through \code{cv_FCnet()}; details of
 the crossvalidation procedures can be passed as arguments to \code{FCnet()} if
-necessary. Use of this function equals to a \strong{non-nested} approach to data
-analysis in which crossvalidation and predictions are made on overlapping sets
-of observations. A better approach - though computationally more demanding - would be
-to perform \strong{nested} inner and outer loop, e.g.- via the function \code{FCnetLOO()}.
-The crossvalidated lambda and alpha parameters only are returned.
+necessary. Use of this function is not encouraged because crossvalidation and
+predictions are made on overlapping sets of observations. A better approach
+\itemize{
+\item though computationally more demanding - would be to perform \strong{nested} inner
+and outer loop, e.g.- via the function \code{FCnetLOO()}.
+This is the reason why, in order to evaluate the results of a \code{FCnet()} call
+in terms of goodness of fit, such statistics must be required explicitly by
+setting \code{fit_stats= T} (sure such statistics can be calculated post-hoc
+anyway).
+A call to \code{FCnet()} returns a \code{glmnet::glmnet()} model which can be explored
+further if necessary.
+}
 }

@@ -4,7 +4,7 @@
 #' Internal function to retrieve the alpha and lambda parameters
 #' resulting in the minimum crossvalidation error.
 #'
-#' @param fit The default color palette for plotting matrices (a vector of colors).
+#' @param fit An object returned by `glmnetUtils::cva.glmnet()`.
 #'
 #' @return The crossvalidated parameters with the associated error
 
@@ -28,9 +28,10 @@ get_CVparsFCnet= function(fit){
 
   res= data.frame(
     alpha= alpha[best],
-    lambdaMin= lambdaMin[best],
-    lambdaSE= lambdaSE[best],
-    error= error[best]
+    lambda.min= lambdaMin[best],
+    lambda.1se= lambdaSE[best],
+    error= error[best],
+    best= best
   )
 
   return(res)

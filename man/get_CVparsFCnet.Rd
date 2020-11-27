@@ -7,7 +7,7 @@
 get_CVparsFCnet(fit)
 }
 \arguments{
-\item{fit}{The default color palette for plotting matrices (a vector of colors).}
+\item{fit}{An object returned by \code{glmnetUtils::cva.glmnet()}.}
 }
 \value{
 The crossvalidated parameters with the associated error
