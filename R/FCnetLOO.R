@@ -66,6 +66,7 @@
 #' If requested: a vector of observed (y) and predicted (predicted) values;
 #' model's coefficients; goodness of fit statistics.
 #'
+#' @export
 
 
 FCnetLOO= function(y,
