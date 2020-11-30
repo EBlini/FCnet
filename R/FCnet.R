@@ -144,7 +144,7 @@ FCnet= function(y,
     #                    Coefficient= cf[-1])
     #
 
-    #not sure why the hell did I need the chunk avove while I can simply do:
+    #not sure why the hell did I need the chunk above while I can simply do:
 
     cname= rownames(coef(fit))
     cf= coef(fit)[,1]
@@ -157,7 +157,8 @@ FCnet= function(y,
     #predict behavioral scores based on model
     p= predict(fit,
                s= lambda,
-               newx= as.matrix(x))
+               newx= as.matrix(x)
+               )
 
     res[["predicted"]]= p
 

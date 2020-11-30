@@ -20,7 +20,9 @@ summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC ma
 chooses the value of lambda which best minimizes the mean crossvalidation error - or
 "lambda.1se" - which "which gives the most regularized model such that error is
 within one standard error of the minimum". The latter would be preferable
-for stability.}
+for stability.
+@param consensus_function which function is used to create consensus between
+coefficients from different models.}
 
 \item{colorPaletteDefault}{The default color palette for plotting matrices (a vector of colors).}
 }

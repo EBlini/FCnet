@@ -102,7 +102,7 @@ FCnetLOO= function(y,
 
   #main sequence here: parallel or not
 
-  if(parallelLOO){
+  if(parallelLOO== TRUE){
 
     loo= future.apply::future_lapply(lapply_over, function(r){
 
@@ -118,7 +118,8 @@ FCnetLOO= function(y,
                  type.measure= type.measure,
                  intercept= intercept,
                  standardize= standardize,
-                 ...)
+                 ...
+                 )
 
       p= predict(fit$fit,
                  s= fit$lambda,
@@ -153,7 +154,8 @@ FCnetLOO= function(y,
 
       p= predict(fit$fit,
                  s= fit$lambda,
-                 newx= t(data.matrix((x[r,]))))
+                 newx= t(data.matrix((x[r,])))
+                 )
 
       p= as.numeric(p)
 

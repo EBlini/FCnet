@@ -3,8 +3,9 @@
 opt= settings::options_manager(
   cv.type.measure= "mae",
   intercept= F,
-  standardize= T,
+  standardize= F,
   whichLambda= "lambda.min",
+  consensus_function= median,
 
   colorPaletteDefault= c("darkslateblue", "royalblue4",
                        "royalblue1", "cyan2",
@@ -29,6 +30,8 @@ opt= settings::options_manager(
 #' "lambda.1se" - which "which gives the most regularized model such that error is
 #' within one standard error of the minimum". The latter would be preferable
 #'  for stability.
+#'  @param consensus_function which function is used to create consensus between
+#'  coefficients from different models.
 #' @param colorPaletteDefault The default color palette for plotting matrices (a vector of colors).
 
 #' @export
