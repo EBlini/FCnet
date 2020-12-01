@@ -11,7 +11,8 @@ opt= settings::options_manager(
                        "royalblue1", "cyan2",
                        "white",
                        "darkgoldenrod1", "darkgoldenrod3",
-                       "red3", "firebrick4")
+                       "red3", "firebrick4"),
+  colorNuances= 20
 
   )
 
@@ -33,6 +34,7 @@ opt= settings::options_manager(
 #'  @param consensus_function which function is used to create consensus between
 #'  coefficients from different models.
 #' @param colorPaletteDefault The default color palette for plotting matrices (a vector of colors).
+#' @param colorNuances Number of nuances along the provided colorPalette.
 
 #' @export
 

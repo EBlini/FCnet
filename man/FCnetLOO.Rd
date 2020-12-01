@@ -47,7 +47,7 @@ installed, the machine should have multiple cores available for use,
 and threads should be defined explicitly beforehand by the user
 (e.g. by calling \code{plan(multisession)}).}
 
-\item{scale_y}{Whether y should be scaled prior to fit. Default, TRUE, scales y with
+\item{scale_y}{Whether y should be scaled prior to fit. Default, TRUE, scales and center y with
 \code{scale()}.}
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
@@ -60,7 +60,7 @@ summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC ma
 \code{glmnet::glmnet()}.}
 
 \item{cv.type.measure}{The measure to minimize in crossvalidation inner loops.
-Differently from \code{glmnetUtils::cva.glmnet()} the deafult is the mean absolute error.}
+Differently from \code{glmnetUtils::cva.glmnet()} the default is the mean absolute error.}
 }
 \value{
 A model produced by \code{glmnet::glmnet()}.

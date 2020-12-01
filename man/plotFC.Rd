@@ -10,7 +10,8 @@ plotFC(
   col = optionsFCnet("colorPaletteDefault"),
   limit = NULL,
   network_definition = NULL,
-  plot_labels = F
+  plot_labels = F,
+  colorNuances = optionsFCnet("colorNuances")
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ Defaults to \code{optionsFCnet("colorPaletteDefault")}.}
 \item{network_definition}{A character vector specifying to which FC network the ROI belongs to. If provided, draws vertical and horizontal lines visually separating the networks.}
 
 \item{plot_labels}{if \code{TRUE} annotates the network names defined in \code{network_definition}. Pretty results not warranted.}
+
+\item{colorNuances}{Number of nuances along the provided colorPalette.}
 }
 \value{
 A \code{ggplot2} object which can be customized further.

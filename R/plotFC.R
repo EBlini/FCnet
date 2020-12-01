@@ -9,7 +9,7 @@
 #' @param limit The limits for the FC values. Defaults to `NULL` and automatically adapts to the data range.
 #' @param network_definition A character vector specifying to which FC network the ROI belongs to. If provided, draws vertical and horizontal lines visually separating the networks.
 #' @param plot_labels if `TRUE` annotates the network names defined in `network_definition`. Pretty results not warranted.
-#'
+#' @param colorNuances Number of nuances along the provided colorPalette.
 #' @return A `ggplot2` object which can be customized further.
 
 #' @export
@@ -19,7 +19,8 @@ plotFC= function(FCmatrix,
                  col= optionsFCnet("colorPaletteDefault"),
                  limit = NULL,
                  network_definition= NULL,
-                 plot_labels= F){
+                 plot_labels= F,
+                 colorNuances= optionsFCnet("colorNuances")){
 
   #match
   style= match.arg(style)
@@ -51,7 +52,7 @@ plotFC= function(FCmatrix,
 
   #retrieve color scale from options
   gc= colorRampPalette(col)
-  col= gc(20)
+  col= gc(colorNuances)
 
   #plot baseline grid
   p= ggplot2::ggplot(data = hmDF,

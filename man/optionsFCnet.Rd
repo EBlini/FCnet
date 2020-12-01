@@ -25,6 +25,8 @@ for stability.
 coefficients from different models.}
 
 \item{colorPaletteDefault}{The default color palette for plotting matrices (a vector of colors).}
+
+\item{colorNuances}{Number of nuances along the provided colorPalette.}
 }
 \description{
 Set or get options for FCnet

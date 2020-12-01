@@ -50,10 +50,10 @@
 #' installed, the machine should have multiple cores available for use,
 #' and threads should be defined explicitly beforehand by the user
 #' (e.g. by calling `plan(multisession)`).
-#' @param scale_y Whether y should be scaled prior to fit. Default, TRUE, scales y with
+#' @param scale_y Whether y should be scaled prior to fit. Default, TRUE, scales and center y with
 #' `scale()`.
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
-#' Differently from `glmnetUtils::cva.glmnet()` the deafult is the mean absolute error.
+#' Differently from `glmnetUtils::cva.glmnet()` the default is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
 #' @param standardize Whether x must be standardized.
 #' `glmnet::glmnet()` the default is FALSE as we assume predictors are already either
