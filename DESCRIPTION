@@ -1,15 +1,24 @@
 Package: FCnet
-Title: Analysis of Functional Connectivity Matrices through Elastic Nets
+Title: Analysis of Functional Connectivity matrices through elastic NETs
 Version: 0.0.0.9000
 Year: 2020 
-Author: Elvio Blini [aut, cre]
+Date: 2020
+Author: Elvio Blini [aut, cre], Michele De Filippo De Grazia [aut], Testolin [aut], Zorzi [aut] 
 Maintainer: Elvio Blini <elvio.blini@unipd.it>
-Authors@R: 
-    c(person(given = "Elvio",
+Authors@R: c(person(given = "Elvio",
            family = "Blini",
            role = c("aut", "cre"),
            email = "elvio.blini {at} unipd.it",
-           comment = c(ORCID = "0000-0002-7181-5763")))
+           comment = c(ORCID = "0000-0002-7181-5763")),
+           person(given = "Michele",
+           family = "De Filippo De Grazia",
+           role = c("aut")),
+           person(given = "Alberto",
+           family = "Testolin",
+           role = c("aut")),
+           person(given = "Marco",
+           family = "Zorzi",
+           role = c("aut")))
 Description: 
   Analysis of Functional Connectivity (FC) data can be daunting due to the large
   dimensionality of the features involved. FCnet provides helper functions 
