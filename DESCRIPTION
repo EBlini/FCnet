@@ -1,6 +1,7 @@
 Package: FCnet
 Title: Analysis of Functional Connectivity Matrices through Elastic Nets
 Version: 0.0.0.9000
+Year: 2020 
 Author: Elvio Blini [aut, cre]
 Maintainer: Elvio Blini <elvio.blini@unipd.it>
 Authors@R: 
