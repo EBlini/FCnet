@@ -9,7 +9,7 @@ opt= settings::options_manager(
 
   colorPaletteDefault= c("darkslateblue", "royalblue4",
                        "royalblue1", "cyan2",
-                       "white",
+                       "white", "white",
                        "darkgoldenrod1", "darkgoldenrod3",
                        "red3", "firebrick4"),
   colorNuances= 20

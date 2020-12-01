@@ -40,8 +40,16 @@ plotFC= function(FCmatrix,
   hmDF$value[hmDF$value== Inf]= NA
   hmDF$value[hmDF$value== -Inf]= NA
 
-  if(is.null(limit))(limit= c(min(hmDF$value, na.rm = T),
-                              max(hmDF$value, na.rm = T)))
+  if(is.null(limit)){
+
+    min.l= min(hmDF$value, na.rm = T)
+    max.l= max(hmDF$value, na.rm = T)
+
+    if(abs(min.l)<abs(max.l))(min.l= sign(min.l)*abs(max.l)) else (max.l= sign(max.l)*abs(min.l))
+
+    limit= c(min.l, max.l)
+
+  }
 
   #dimension of the matrix
   mat_dim= dim(FCmatrix)[1]
