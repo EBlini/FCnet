@@ -58,6 +58,9 @@ polishMat= function(mat){
   mat[mat>1]= 1
   mat[mat<-1]= -1
   
+  #diagonal back to 1
+  diag(mat)= 1
+  
   return(mat)
   
 }
