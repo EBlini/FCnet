@@ -94,11 +94,11 @@ permutateLOO= function(y,
 
   } else {
 
-    if(class(model_R2[1]== "list"))(original_R2= model_R2$R2)
+    if(class(model_R2)[1]== "list")(original_R2= model_R2$R2)
 
   }
 
-  original_R2= as.numeric(original_R2)
+  original_R2= as.numeric(model_R2)
 
   if(parallelLOO){
 
@@ -120,17 +120,17 @@ permutateLOO= function(y,
 
       R2= data.frame(nPerm= p, R2= res$R2)
 
-      res= list(R2=R2)
+      res_inner= list(R2=R2)
 
       if(return_coeffs){
 
         Coeffs= res$coeffs
         Coeffs$nPerm= p
-        res[["Coeffs"]]= Coeffs
+        res_inner[["Coeffs"]]= Coeffs
 
       }
 
-      return(res)
+      return(res_inner)
 
     }, future.seed= T)} else {
 

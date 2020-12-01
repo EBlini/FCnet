@@ -44,6 +44,7 @@ library("gridExtra") #arrange plots
 ```
 
 The `FCnet` package comes with a 324x324 matrix of functional connectivity data obtained from 37 participants. We use it as a starting point to simulate several FC matrices.
+Please note that the functions - written in full below - are available in `FCnet` (see `?simulateFCnet` for help), but are therein subject to changes.
 
 ```{r}
 data("MeanFC")
