@@ -48,16 +48,14 @@ It can be set to whatever integer >3 and < nrow(x).}
 \item{rep_cv}{Number of times the crossvalidation procedure must be repeated.
 It defaults to 1 (as the LOO procedure is deterministic, thus values larger
 than 1 are redundant). If rep_cv>1, the crossvalidation is repeated rep_cv
-times, and the median crossvalidated alpha and lambda values across all rep_cv
+times, and the consensus (by default: median) crossvalidated alpha and lambda values across all rep_cv
 are returned. Useful in order to decrease randomness when kfold crossvalidation
 is required. Setting this parameter too high though will result in a mere
 approximation of the LOO.}
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
 
-\item{standardize}{Whether x must be standardized. Differently from
-\code{glmnet::glmnet()} the default is FALSE as we assume predictors are already either
-summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.}
+\item{standardize}{Whether x must be standardized internally to glmnet.}
 
 \item{...}{Other parameters passed to \code{glmnetUtils::cva.glmnet()}.}
 
@@ -76,10 +74,9 @@ with exactly one column, corresponding to the (behavioral) score to predict; \co
 is a data.frame or a list of lists with an entry named "Weights",
 which includes the independent variables. \code{x} can be - and is meant to be -
 one object created by \code{reduce_featuresFC()}, but this is not strictly necessary.
-The crossvalidated lambda and alpha parameters only are returned. For the model,
-use the \code{FCnet()} function. Differently from \code{glmnet::cv.glmnet()}, here the
+The crossvalidated lambda and alpha parameters are returned. For the model,
+use the \code{FCnetLOO()} function to avoid overfitting.
+Differently from \code{glmnet::cv.glmnet()}, here the
 mean absolute error is minimized by default; you can change this parameter
 directly in the function or by running \code{optionsFCnet(optionsFCnet= "mse")}.
-Another difference in the defaults setting is that x is not standardized
-in the call because we assume FC data to be already normalized.
 }

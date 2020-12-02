@@ -8,12 +8,12 @@
 #' is a data.frame or a list of lists with an entry named "Weights",
 #' which includes the independent variables. `x` can be - and is meant to be -
 #' one object created by `reduce_featuresFC()`, but this is not strictly necessary.
-#' The crossvalidated lambda and alpha parameters only are returned. For the model,
-#' use the `FCnet()` function. Differently from `glmnet::cv.glmnet()`, here the
+#' The crossvalidated lambda and alpha parameters are returned. For the model,
+#' use the `FCnetLOO()` function to avoid overfitting.
+#' Differently from `glmnet::cv.glmnet()`, here the
 #' mean absolute error is minimized by default; you can change this parameter
 #' directly in the function or by running `optionsFCnet(optionsFCnet= "mse")`.
-#' Another difference in the defaults setting is that x is not standardized
-#' in the call because we assume FC data to be already normalized.
+
 #'
 #' @param y The dependent variable, typically behavioral scores to predict.
 #' This can be a vector or a single data.frame column.
@@ -40,23 +40,19 @@
 #' @param rep_cv Number of times the crossvalidation procedure must be repeated.
 #' It defaults to 1 (as the LOO procedure is deterministic, thus values larger
 #' than 1 are redundant). If rep_cv>1, the crossvalidation is repeated rep_cv
-#' times, and the median crossvalidated alpha and lambda values across all rep_cv
+#' times, and the consensus (by default: median) crossvalidated alpha and lambda values across all rep_cv
 #' are returned. Useful in order to decrease randomness when kfold crossvalidation
 #' is required. Setting this parameter too high though will result in a mere
 #' approximation of the LOO.
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' Differently from `glmnetUtils::cva.glmnet()` the deafult is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
-#' @param standardize Whether x must be standardized. Differently from
-#' `glmnet::glmnet()` the default is FALSE as we assume predictors are already either
-#' summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.
+#' @param standardize Whether x must be standardized internally to glmnet.
 #' @param ... Other parameters passed to `glmnetUtils::cva.glmnet()`.
 #'
 #' @return The crossvalidated alpha and lambda parameters with the associated error.
 
 #' @export
-
-
 
 cv_FCnet= function(y, #dependent variable, typically behavior
                   x, #independent variables, typically neural measures
@@ -68,6 +64,10 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                   intercept= optionsFCnet("intercept"),
                   standardize= optionsFCnet("standardize"),
                   ...){
+
+  if(length(alpha)== 1 & length(lambda)==1){
+    stop("Scalar values for alpha and lambda have been supplied: a vector is needed.")
+  }
 
   #ensure you are working with matrices
   y= data.matrix(y)
@@ -107,20 +107,57 @@ cv_FCnet= function(y, #dependent variable, typically behavior
 
     pars= sapply(cv_ridge, function(p)get_CVparsFCnet(p))
 
+    #return fit to make predictions quicker/avoid too much nesting?
+    min_error= which.min(as.numeric(pars[rownames(pars)== "error"]))
+    best= as.numeric(pars[rownames(pars)== "best"])[min_error]
+
+    fit= cv_ridge[[min_error]]$modlist[[best]]
+
+    #now hyperparameters
     lambda= as.numeric(pars[rownames(pars)== optionsFCnet("whichLambda")])
 
+    #if more folds/repetitions, take the median as consensus
+    if(rep_cv>1){
+
+      lambda= optionsFCnet("consensus_function")(lambda)
+
+    }
+
     alpha= as.numeric(pars[rownames(pars)== "alpha"])
+    if(rep_cv>1){
+
+      alpha= optionsFCnet("consensus_function")(alpha)
+
+    }
+
+    #return coefficients
+    cname= rownames(coef(fit))
+    cf= coef(fit)[,1]
+
+    coeffs= data.frame(Feature= cname,
+                       Coefficient= cf)
+
+    rownames(coeffs)= NULL
+    #useless at this point
+    # #predict behavioral scores based on model
+    # p= predict(fit,
+    #            s= lambda,
+    #            newx= as.matrix(x)
+    #            )
+    #
+    # #fit stats - maybe unnecessary
+    # gfstats= evalFCnet(true = y,
+    #                    predicted = p)
 
     #return best parameters
     bp= list(alpha= alpha,
-             lambda= lambda)
-
-    #return fit to make predictions quicker/avoid nesting?
-    best= as.numeric(pars[rownames(pars)== "best"])
-
-    fit= cv_ridge[[1]]$modlist[[best]]
-
-    bp[["fit"]]= fit
+             lambda= lambda,
+             fit= fit,
+             y= y,
+             coeffs= coeffs#,
+             #predicted= p,
+             #fit_stats= gfstats
+             )
 
 
     return(bp)

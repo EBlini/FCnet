@@ -47,9 +47,7 @@
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' Differently from `glmnetUtils::cva.glmnet()` the default is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
-#' @param standardize Whether x must be standardized.
-#' `glmnet::glmnet()` the default is FALSE as we assume predictors are already either
-#' summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.
+#' @param standardize Whether x must be standardized internally to glmnet.
 #' @param ... Other parameters passed to `glmnetUtils::cva.glmnet()` or
 #' `glmnet::glmnet()`.
 #'
@@ -98,7 +96,8 @@ permutateLOO= function(y,
 
   }
 
-  original_R2= as.numeric(model_R2)
+  if(is.na(original_R2))(original_R2= 0)
+  original_R2= as.numeric(original_R2)
 
   if(parallelLOO){
 
@@ -118,7 +117,7 @@ permutateLOO= function(y,
                     ...
                     )
 
-      R2= data.frame(nPerm= p, R2= res$R2)
+      R2= data.frame(nPerm= p, R2= ifelse(is.na(res$R2), 0, res$R2))
 
       res_inner= list(R2=R2)
 
@@ -148,21 +147,21 @@ permutateLOO= function(y,
                       intercept= intercept,
                       standardize= standardize,
                       ...
-        )
+                      )
 
         R2= data.frame(nPerm= p, R2= res$R2)
 
-        res= list(R2=R2)
+        res_inner= list(R2=R2)
 
         if(return_coeffs){
 
           Coeffs= res$coeffs
           Coeffs$nPerm= p
-          res[["Coeffs"]]= Coeffs
+          res_inner[["Coeffs"]]= Coeffs
 
         }
 
-        return(res)
+        return(res_inner)
 
       })
 

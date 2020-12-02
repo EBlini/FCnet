@@ -10,11 +10,10 @@ optionsFCnet(...)
 \item{cv.type.measure}{The measure to minimize in crossvalidation inner loops.
 Differently from \code{glmnetUtils::cva.glmnet()} the deafult is the mean absolute error.}
 
-\item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
+\item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.
+Useful if y is not scaled and centered.}
 
-\item{standardize}{Whether x must be standardized. Differently from
-\code{glmnet::glmnet()} the default is FALSE as we assume predictors are already either
-summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.}
+\item{standardize}{Whether x must be standardized internally to \code{glmnet::glmnet()}.}
 
 \item{whichLambda}{During crossvalidation, either selects "lambda.min" - which
 chooses the value of lambda which best minimizes the mean crossvalidation error - or

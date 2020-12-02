@@ -1,7 +1,7 @@
-#' Leave-One-Out cross-validated fit of elastic nets for Functional Connectivity data
+#' Leave-One-Out fit of elastic nets for Functional Connectivity data with nested crossvalidation
 #'
 #' This function is a wrapper around `glmnet::glmnet()` as called from
-#' `FCnet::FCnet()`. For extended documentation,
+#' `FCnet::cv_FCnet()`. For extended documentation,
 #' the readers are encouraged to consult the original source of `glmnet::glmnet()`
 #' and its vignette. `glmnet::glmnet()` fits a robust linear model through
 #' penalized maximum likelihood computed via the lasso or elastic net
@@ -12,7 +12,7 @@
 #' which includes the independent variables. `x` can be - and is meant to be -
 #' one object created by `reduce_featuresFC()`, but this is not strictly necessary.
 #' The best model and hyperparameters are retrieved in inner loops through `cv_FCnet()`;
-#' details of the crossvalidation procedures can be passed as arguments to
+#' details of the crossvalidation procedures can be passed as `...` arguments to
 #' `FCnetLOO()` if necessary.
 #' A call to `FCnetLOO()` returns a list including goodness of fit measures
 #' for the outer loop, a data.frame including coefficients for all nested models,
@@ -24,8 +24,6 @@
 #' the user (e.g. via `plan(multisession`).
 #'
 
-#'
-#'
 #' @param y The dependent variable, typically behavioral scores to predict.
 #' This can be a vector or a single data.frame column.
 #' @param x The independent variables, typically neural measures that have
@@ -36,13 +34,13 @@
 #' entry named "Weights". Otherwise, a data.frame can be passed to x.
 #' @param alpha Value(s) that bias the elastic net toward ridge regression
 #' (alpha== 0) or LASSO regression (alpha== 1). If a vector of alpha values
-#' is supplied, the value is optimized through crossvalidation.
+#' is supplied, the value is optimized through nested crossvalidation.
 #' It defaults to a vector ranging from 0 to 1 with steps of 0.1.
 #' The crossvalidated alpha is returned.
 #' @param lambda Regularization parameter for the regression,
 #' see `glmnet::glmnet()`. Lambda must be a vector with length>1.
 #' When a vector of lambda values is supplied, the value of lambda
-#' is optimized through internal crossvalidation. It defaults to a vector
+#' is optimized through internal nested crossvalidation. It defaults to a vector
 #' ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.
 #' The crossvalidated optimal lambda is returned.
 #' @param parallelLOO If TRUE - recommended, but not the default - uses
@@ -56,15 +54,12 @@
 #' Differently from `glmnetUtils::cva.glmnet()` the default is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
 #' @param standardize Whether x must be standardized.
-#' `glmnet::glmnet()` the default is FALSE as we assume predictors are already either
-#' summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.
 #' @param ... Other parameters passed to `glmnetUtils::cva.glmnet()` or
 #' `glmnet::glmnet()`.
 #'
-#' @return A model produced by `glmnet::glmnet()`.
-#' Crossvalidated best alpha and lambda values.
-#' If requested: a vector of observed (y) and predicted (predicted) values;
-#' model's coefficients; goodness of fit statistics.
+#' @return Goodness of fit statistics for the outer loops, as well as LOO predictions.
+#' Crossvalidated best alpha and lambda values for the inner loops as well as
+#' all inner models' coefficients combined..
 #'
 #' @export
 
@@ -111,20 +106,20 @@ FCnetLOO= function(y,
 
       new_y= y[-r,]
 
-      fit= FCnet(y = new_y,
-                 x = new_x,
-                 alpha = alpha,
-                 lambda = lambda,
-                 fit_stats = T,
-                 type.measure= type.measure,
-                 intercept= intercept,
-                 standardize= standardize,
-                 ...
-                 )
+      fit= cv_FCnet(y = new_y,
+                    x = new_x,
+                    alpha = alpha,
+                    lambda = lambda,
+                    type.measure= type.measure,
+                    intercept= intercept,
+                    standardize= standardize,
+                    ...
+                    )
 
       p= predict(fit$fit,
                  s= fit$lambda,
-                 newx= t(data.matrix((x[r,]))))
+                 newx= t(data.matrix((x[r,]))),
+                 exact= TRUE)
 
       p= as.numeric(p)
 
@@ -143,19 +138,20 @@ FCnetLOO= function(y,
 
       new_y= y[-r,]
 
-      fit= FCnet(y = new_y,
-                 x = new_x,
-                 alpha = alpha,
-                 lambda = lambda,
-                 fit_stats = T,
-                 type.measure= type.measure,
-                 intercept= intercept,
-                 standardize= standardize,
-                 ...)
+      fit= cv_FCnet(y = new_y,
+                    x = new_x,
+                    alpha = alpha,
+                    lambda = lambda,
+                    type.measure= type.measure,
+                    intercept= intercept,
+                    standardize= standardize,
+                    ...
+      )
 
       p= predict(fit$fit,
                  s= fit$lambda,
-                 newx= t(data.matrix((x[r,])))
+                 newx= t(data.matrix((x[r,]))),
+                 exact= TRUE
                  )
 
       p= as.numeric(p)

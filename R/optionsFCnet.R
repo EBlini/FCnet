@@ -3,7 +3,7 @@
 opt= settings::options_manager(
   cv.type.measure= "mae",
   intercept= F,
-  standardize= F,
+  standardize= T,
   whichLambda= "lambda.min",
   consensus_function= median,
 
@@ -23,9 +23,8 @@ opt= settings::options_manager(
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' Differently from `glmnetUtils::cva.glmnet()` the deafult is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
-#' @param standardize Whether x must be standardized. Differently from
-#' `glmnet::glmnet()` the default is FALSE as we assume predictors are already either
-#' summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.
+#' Useful if y is not scaled and centered.
+#' @param standardize Whether x must be standardized internally to `glmnet::glmnet()`.
 #' @param whichLambda During crossvalidation, either selects "lambda.min" - which
 #' chooses the value of lambda which best minimizes the mean crossvalidation error - or
 #' "lambda.1se" - which "which gives the most regularized model such that error is

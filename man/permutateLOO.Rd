@@ -64,9 +64,7 @@ hand, may be quite large.}
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
 
-\item{standardize}{Whether x must be standardized.
-\code{glmnet::glmnet()} the default is FALSE as we assume predictors are already either
-summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.}
+\item{standardize}{Whether x must be standardized internally to glmnet.}
 
 \item{...}{Other parameters passed to \code{glmnetUtils::cva.glmnet()} or
 \code{glmnet::glmnet()}.}

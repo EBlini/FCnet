@@ -2,7 +2,7 @@
 % Please edit documentation in R/FCnetLOO.R
 \name{FCnetLOO}
 \alias{FCnetLOO}
-\title{Leave-One-Out cross-validated fit of elastic nets for Functional Connectivity data}
+\title{Leave-One-Out fit of elastic nets for Functional Connectivity data with nested crossvalidation}
 \usage{
 FCnetLOO(
   y,
@@ -30,14 +30,14 @@ entry named "Weights". Otherwise, a data.frame can be passed to x.}
 
 \item{alpha}{Value(s) that bias the elastic net toward ridge regression
 (alpha== 0) or LASSO regression (alpha== 1). If a vector of alpha values
-is supplied, the value is optimized through crossvalidation.
+is supplied, the value is optimized through nested crossvalidation.
 It defaults to a vector ranging from 0 to 1 with steps of 0.1.
 The crossvalidated alpha is returned.}
 
 \item{lambda}{Regularization parameter for the regression,
 see \code{glmnet::glmnet()}. Lambda must be a vector with length>1.
 When a vector of lambda values is supplied, the value of lambda
-is optimized through internal crossvalidation. It defaults to a vector
+is optimized through internal nested crossvalidation. It defaults to a vector
 ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.
 The crossvalidated optimal lambda is returned.}
 
@@ -52,9 +52,7 @@ and threads should be defined explicitly beforehand by the user
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
 
-\item{standardize}{Whether x must be standardized.
-\code{glmnet::glmnet()} the default is FALSE as we assume predictors are already either
-summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC matrices.}
+\item{standardize}{Whether x must be standardized.}
 
 \item{...}{Other parameters passed to \code{glmnetUtils::cva.glmnet()} or
 \code{glmnet::glmnet()}.}
@@ -63,14 +61,13 @@ summarised with PCA or ICA (and therefore scaled) or drawn from normalized FC ma
 Differently from \code{glmnetUtils::cva.glmnet()} the default is the mean absolute error.}
 }
 \value{
-A model produced by \code{glmnet::glmnet()}.
-Crossvalidated best alpha and lambda values.
-If requested: a vector of observed (y) and predicted (predicted) values;
-model's coefficients; goodness of fit statistics.
+Goodness of fit statistics for the outer loops, as well as LOO predictions.
+Crossvalidated best alpha and lambda values for the inner loops as well as
+all inner models' coefficients combined..
 }
 \description{
 This function is a wrapper around \code{glmnet::glmnet()} as called from
-\code{FCnet::FCnet()}. For extended documentation,
+\code{FCnet::cv_FCnet()}. For extended documentation,
 the readers are encouraged to consult the original source of \code{glmnet::glmnet()}
 and its vignette. \code{glmnet::glmnet()} fits a robust linear model through
 penalized maximum likelihood computed via the lasso or elastic net
@@ -81,7 +78,7 @@ is a data.frame or a list of lists with an entry named "Weights",
 which includes the independent variables. \code{x} can be - and is meant to be -
 one object created by \code{reduce_featuresFC()}, but this is not strictly necessary.
 The best model and hyperparameters are retrieved in inner loops through \code{cv_FCnet()};
-details of the crossvalidation procedures can be passed as arguments to
+details of the crossvalidation procedures can be passed as \code{...} arguments to
 \code{FCnetLOO()} if necessary.
 A call to \code{FCnetLOO()} returns a list including goodness of fit measures
 for the outer loop, a data.frame including coefficients for all nested models,
