@@ -2,8 +2,8 @@
 # This function is not exported to user space and does not need to be documented.
 opt= settings::options_manager(
   cv.type.measure= "mae",
-  intercept= F,
-  standardize= F,
+  intercept= T,
+  standardize= T,
   whichLambda= "lambda.min",
   consensus_function= median,
 
