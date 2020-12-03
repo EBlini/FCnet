@@ -101,15 +101,17 @@
 <h2 class="hasAnchor">
 <a href="#scope" class="anchor"></a>Scope</h2>
 <p>The analysis of (Functional Connectivity) neuroimaging data can be daunting due to the very high dimensionality of the features involved. In time, several approaches to the problem have been devised. <code>FCnet</code> allows one to easily implement a three steps procedure consisting of:</p>
-<p>1) <strong>Feature reduction</strong>: the functional connectivity matrices are first summarized through data reduction techniques such as Principal Component Analysis or Independent Components Analysis.</p>
-<p>2) <strong>Robust regression</strong>: the reduced matrix of Weights is then entered into a robust regression model (with either ridge or LASSO penalty). The model is crossvalidated internally by means of Leave-One-Out (nested) crossvalidation.</p>
-<p>3) <strong>Back-projection</strong>: models’ coefficients can be back-projected onto the original space, in order to rank the most predictive edges of a matrix.</p>
+<ol>
+<li><p><strong>Feature reduction</strong>: the functional connectivity matrices are first summarized through data reduction techniques such as Principal Component Analysis or Independent Components Analysis.</p></li>
+<li><p><strong>Robust regression</strong>: the reduced matrix of Weights is then entered into a robust regression model (with either ridge or LASSO penalty). The model is crossvalidated internally by means of Leave-One-Out (nested) crossvalidation.</p></li>
+<li><p><strong>Back-projection</strong>: models’ coefficients can be back-projected onto the original space, in order to rank the most predictive edges of a matrix.</p></li>
+</ol>
 <p>For useful references, see: <a href="https://www.pnas.org/content/113/30/E4367">Siegel et al., 2016</a>; <a href="https://academic.oup.com/brain/article/143/7/2173/5861020">Salvalaggio et al., 2020</a>; <a href="https://link.springer.com/chapter/10.1007%2F978-3-030-59277-6_3">Calesella et al., 2020</a>.</p>
 </div>
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
-<p>An overview of the package is available <a href="https://github.com/EBlini/FCnet/tree/main/doc">here</a>.</p>
+<p>An overview of the package is available <a href="https://eblini.github.io/FCnet/articles/FCnet_overview_of_package.html">here</a>.</p>
 </div>
 </div>
   </div>

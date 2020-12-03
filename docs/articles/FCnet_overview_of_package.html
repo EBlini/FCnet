@@ -228,8 +228,8 @@
                  alpha<span class="op">=</span> <span class="fl">0</span>, <span class="co">#ridge regression</span>
                  parallelLOO <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> 
 <span class="va">r_bias</span><span class="op">$</span><span class="va">R2</span></code></pre></div>
-<pre><code>## [1] 0.4072602</code></pre>
-<p>It appears that this model is capable to explain about 40% of the variance from LOO observations.</p>
+<pre><code>## [1] 0.4370219</code></pre>
+<p>It appears that this model is capable to explain about 43% of the variance from LOO observations.</p>
 <p>A graphical depiction of the fit or coefficients can be obtained with <code><a href="../reference/plotFCnet.html">plotFCnet()</a></code>:</p>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotFCnet.html">plotFCnet</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">r_bias</span>, 
@@ -286,8 +286,8 @@
 <col width="11%">
 <col width="7%">
 <col width="9%">
-<col width="9%">
 <col width="8%">
+<col width="9%">
 <col width="11%">
 <col width="11%">
 <col width="11%">
@@ -306,16 +306,16 @@
 <th align="right">Quantile_95</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td align="right">0.4072602</td>
+<td align="right">0.4370219</td>
 <td align="right">100</td>
-<td align="right">0.43</td>
-<td align="right">0.4640017</td>
-<td align="right">0.4114322</td>
-<td align="right">1.270409</td>
-<td align="right">0.304157</td>
-<td align="right">0.9372907</td>
-<td align="right">1</td>
-<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0.0657441</td>
+<td align="right">0.067413</td>
+<td align="right">0.1978735</td>
+<td align="right">0.0467026</td>
+<td align="right">0.0709691</td>
+<td align="right">0.1729288</td>
+<td align="right">0.2248702</td>
 </tr></tbody>
 </table>
 <p>The original model's R2 is reported on the left. On the rightmost part of the row, a few statistics concerning the distribution of R2 from null models is reported. The full distribution is available to the user anyway in the created object through the relative slot. In this fictional scenario, and considering the low number of permutations, it appears that the original model beats most null models. Models can always be improved by crossvalidating the number of features to extract, though particular attention should be payed not to "double dip" in the data.</p>
