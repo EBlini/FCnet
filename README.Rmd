@@ -50,5 +50,5 @@ For useful references, see: [Siegel et al., 2016](https://www.pnas.org/content/1
  
 ## Overview
 
-An overview of the package is available [here](https://github.com/EBlini/FCnet/tree/main/vignettes/FCnet_overview_of_package.html).
+An overview of the package is available [here](https://github.com/EBlini/FCnet/tree/main/doc).
 

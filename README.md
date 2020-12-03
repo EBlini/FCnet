@@ -50,4 +50,4 @@ al., 2020](https://link.springer.com/chapter/10.1007%2F978-3-030-59277-6_3).
 ## Overview
 
 An overview of the package is available
-[here](https://github.com/EBlini/FCnet/tree/main/vignettes/FCnet_overview_of_package.html).
+[here](https://github.com/EBlini/FCnet/tree/main/doc).
