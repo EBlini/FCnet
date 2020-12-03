@@ -45,7 +45,15 @@ plotFC= function(FCmatrix,
     min.l= min(hmDF$value, na.rm = T)
     max.l= max(hmDF$value, na.rm = T)
 
-    if(abs(min.l)<abs(max.l))(min.l= sign(min.l)*abs(max.l)) else (max.l= sign(max.l)*abs(min.l))
+    if(abs(min.l)<abs(max.l)){
+
+      min.l= -1*max.l
+
+    } else {
+
+      max.l= -1*min.l
+
+    }
 
     limit= c(min.l, max.l)
 
@@ -60,7 +68,7 @@ plotFC= function(FCmatrix,
 
   #retrieve color scale from options
   gc= colorRampPalette(col)
-  col= gc(colorNuances)
+  col= gc(optionsFCnet("colorNuances"))
 
   #plot baseline grid
   p= ggplot2::ggplot(data = hmDF,
@@ -78,6 +86,36 @@ plotFC= function(FCmatrix,
           axis.title.y= ggplot2::element_blank(),
           axis.text.y= ggplot2::element_blank())
 
+
+  #add triangle if no network is provided
+
+  if(is.null(network_definition) & style== "lower.tri"){
+
+    p= p +
+      ggplot2::geom_segment(
+        data= data.frame(y= c(0, mat_dim+1, mat_dim+1),
+                         yend= c(mat_dim+1, mat_dim+1, 0),
+                         x= c(0, 0, mat_dim+1),
+                         xend= c(0, mat_dim+1, 0)),
+        ggplot2::aes(y= y, yend= yend, x= x, xend= xend),
+        inherit.aes = F)
+
+  }
+
+  #add square if no network is provided
+
+  if(is.null(network_definition) & style== "full"){
+
+    p= p +
+      ggplot2::geom_segment(
+        data= data.frame(y= c(0, mat_dim+1, 0, 0),
+                         yend= c(mat_dim+1, mat_dim+1, 0, mat_dim+1),
+                         x= c(0, 0, 0, mat_dim+1),
+                         xend= c(0, mat_dim+1, mat_dim+1, mat_dim+1)),
+        ggplot2::aes(y= y, yend= yend, x= x, xend= xend),
+        inherit.aes = F)
+
+  }
 
   #add network labels if provided
   if(!is.null(network_definition)){

@@ -11,7 +11,7 @@
 #' created by `simulateMat()`.
 #' @param Nmat Number of matrices to simulate from the template
 #' @param mat_variability SD of the gaussian noise used to simulate
-#' different matrices
+#' different matrices/individuals
 #' @param y the behavioral score according to which networks will be
 #' biased or perturbed. Recommended to be scaled.
 #' @param network1 Indices of the first network to perturb
@@ -75,6 +75,8 @@ simulateMat= function(mat,
 
     ms= polishMat(ms)
 
+    return(ms)
+
   })
 
   return(sim)
@@ -91,23 +93,51 @@ simulateMat= function(mat,
 #of a behavioral score y
 biasMat= function(matrices, y,
                   network1, network2,
-                  bias_multiplier, bias_variability){
+                  bias_multiplier,
+                  bias_variability,
+                  mat_variability){
 
-  sim= lapply(1:length(matrices), function(x){
+
+  #find a variability
+  variability= sqrt(bias_variability^2 + mat_variability^2)/2
+
+  #find a vector with given correlation bias_multiplier with y
+  scores= rnorm(length(y),
+                bias_multiplier,
+                variability)
+
+  res= residuals(lm(scores ~ y))
+
+  scores= (bias_multiplier*sd(res)*y + res*sd(y) *sqrt(1- bias_multiplier^2))
+
+  #mean value of the network
+  starting_point= Reduce("+",
+                         lapply(matrices, function(x) {
+
+                           as.matrix(x[network1, network2])/ length(matrices)
+
+                         }))
+
+  starting_point= mean(starting_point)
+
+
+  lapply(1:length(matrices), function(x){
 
     mat= matrices[[x]]
 
     #the score will be proportional to participants' performance
     #though with a random component included
-    score= (y[x] / max(abs(y))) *
-      (bias_multiplier + rnorm(1, 0, bias_variability))
-
     dim_mat= dim(mat[network1, network2])
 
-    mat[network1, network2] = mat[network1, network2] +
-      rep(score, dim_mat[1]*dim_mat[2])
-    mat[network2, network1] = mat[network2, network1] +
-      rep(score, dim_mat[1]*dim_mat[2])
+    score= matrix(
+      rnorm(dim_mat[1]*dim_mat[2],
+            as.numeric(scores[x]),
+            variability),
+      dim_mat[1], dim_mat[2])
+
+    #add it
+    mat[network1, network2] = starting_point + score
+    mat[network2, network1] = starting_point + score
 
     mat= polishMat(mat)
 
@@ -115,7 +145,7 @@ biasMat= function(matrices, y,
 
   })
 
-  return(sim)
+
 
 }
 

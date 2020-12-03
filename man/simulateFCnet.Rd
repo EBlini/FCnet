@@ -12,7 +12,15 @@ polishMat(mat)
 
 simulateMat(mat, Nmat, mat_variability)
 
-biasMat(matrices, y, network1, network2, bias_multiplier, bias_variability)
+biasMat(
+  matrices,
+  y,
+  network1,
+  network2,
+  bias_multiplier,
+  bias_variability,
+  mat_variability
+)
 
 noiseMat(matrices, y, network1, network2, noise_multiplier)
 }
@@ -22,7 +30,7 @@ noiseMat(matrices, y, network1, network2, noise_multiplier)
 \item{Nmat}{Number of matrices to simulate from the template}
 
 \item{mat_variability}{SD of the gaussian noise used to simulate
-different matrices}
+different matrices/individuals}
 
 \item{matrices}{List of lists of FC matrices such as the one
 created by \code{simulateMat()}.}

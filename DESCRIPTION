@@ -1,6 +1,6 @@
 Package: FCnet
 Title: Analysis of Functional Connectivity matrices through elastic NETs
-Version: 0.0.1
+Version: 0.1.1.9000
 Year: 2020 
 Date: 2020
 Author: Elvio Blini [aut, cre], Michele De Filippo De Grazia [aut], Testolin [aut], Zorzi [aut] 
@@ -19,17 +19,19 @@ Authors@R: c(person(given = "Elvio",
            person(given = "Marco",
            family = "Zorzi",
            role = c("aut")))
-Description: 
-  Analysis of Functional Connectivity (FC) data can be daunting due to the large
-  dimensionality of the features involved. FCnet provides helper functions 
-  to reduce this dimensionality by applying either Principal Components Analysis
-  (PCA) or Independent Component Analysis (ICA) on FC matrices. Then, FCnet 
-  acts as a wrapper around 'glmnet' and implements regression methods - i.e.
-  elastic nets, thus encompassing Ridge and LASSO frameworks - for robust 
-  prediction of (behavioral) scores associated with the matrices. Regression
-  models are crossvalidated and prediction performances indices are returned. 
-  Utilities for permutation tests, back-projection of the results onto the 
-  original space, and plotting are provided as well.
+Description: The analysis of (Functional Connectivity) neuroimaging data can be 
+  daunting due to the very high dimensionality of the features involved. 
+  In time, several approaches to the problem have been devised. 
+  `FCnet` allows one to easily implement a three steps procedure consisting of: 
+  i) Feature reduction: the functional connectivity matrices are first 
+  summarized through data reduction techniques such as Principal 
+  Component Analysis or Independent Components Analysis. 
+  ii) Robust regression: the reduced matrix of Weights is then entered 
+  into a robust regression model (with either ridge or LASSO penalty). 
+  The model is crossvalidated internally by means of Leave-One-Out (nested) 
+  crossvalidation. 
+  ii) Back-projection: models' coefficients can be back-projected onto the 
+  original space, in order to rank the most predictive edges of a matrix. 
 Depends: glmnet,glmnetUtils
 Imports: reshape2, settings, ica, ggplot2
 Enhances: data.table, future.apply
