@@ -33,8 +33,8 @@ Description: The analysis of (Functional Connectivity) neuroimaging data can be
   ii) Back-projection: models' coefficients can be back-projected onto the 
   original space, in order to rank the most predictive edges of a matrix. 
 Depends: R (>= 4.0), glmnet, glmnetUtils
-Imports: reshape2, settings, ica, ggplot2, gridExtra
-Enhances: data.table, future.apply
+Imports: reshape2, settings, ica, ggplot2, gridExtra, future.apply
+Enhances: data.table
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
