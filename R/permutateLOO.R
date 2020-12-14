@@ -32,7 +32,10 @@
 #' (e.g. by calling `plan(multisession)`).
 #' @param scale_y Whether y should be scaled prior to fit. Default, TRUE, scales
 #' and center y with `scale()`.
-#'
+#' @param scale_x Whether x should be scaled prior to fit. Default, TRUE, subtracts
+#' the mean matrix value and divides each entry for the matrix variance.
+#' Beware that this adds to `optionsFCnet("standardize")`.
+
 #' @param nperm The number of permutations for the null models. Default is 100.
 #'
 #' @param model_R2 Optional. If this entry is left NULL, the original model is
@@ -62,6 +65,7 @@ permutateLOO= function(y,
                        lambda= rev(10^seq(-5, 5, length.out = 200)),
                        parallelLOO= F,
                        scale_y= T,
+                       scale_x= T,
                        nperm= 100,
                        model_R2= NULL,
                        return_coeffs= F,
@@ -76,6 +80,21 @@ permutateLOO= function(y,
   #scaling if requested, then set to False in inner call
   if(scale_y){y= scale(y)}
 
+  #further reformatting of x
+  if(class(x)[1]== "list"){
+
+    x= data.matrix(x$Weights)
+
+  } else {
+
+    if(class(x)[1]== "data.frame"){x= data.matrix(x)}
+
+  }
+
+  #scaling if requested
+  if(scale_x){x= (x - mean(x))/var(as.vector(x))}
+
+
   #original model here
   if(is.null(model_R2)){
 
@@ -85,6 +104,7 @@ permutateLOO= function(y,
                           lambda= lambda,
                           parallelLOO= parallelLOO,
                           scale_y= F,
+                          scale_x= F,
                           type.measure= type.measure,
                           intercept= intercept,
                           standardize= standardize,
@@ -111,6 +131,7 @@ permutateLOO= function(y,
                     lambda= lambda,
                     parallelLOO= F,
                     scale_y= F,
+                    scale_x= F,
                     type.measure= type.measure,
                     intercept= intercept,
                     standardize= standardize,
@@ -143,6 +164,7 @@ permutateLOO= function(y,
                       lambda= lambda,
                       parallelLOO= F,
                       scale_y= F,
+                      scale_x= F,
                       type.measure= type.measure,
                       intercept= intercept,
                       standardize= standardize,

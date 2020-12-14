@@ -11,6 +11,7 @@ permutateLOO(
   lambda = rev(10^seq(-5, 5, length.out = 200)),
   parallelLOO = F,
   scale_y = T,
+  scale_x = T,
   nperm = 100,
   model_R2 = NULL,
   return_coeffs = F,
@@ -50,6 +51,10 @@ and threads should be defined explicitly beforehand by the user
 
 \item{scale_y}{Whether y should be scaled prior to fit. Default, TRUE, scales
 and center y with \code{scale()}.}
+
+\item{scale_x}{Whether x should be scaled prior to fit. Default, TRUE, subtracts
+the mean matrix value and divides each entry for the matrix variance.
+Beware that this adds to \code{optionsFCnet("standardize")}.}
 
 \item{nperm}{The number of permutations for the null models. Default is 100.}
 
