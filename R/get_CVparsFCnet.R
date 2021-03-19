@@ -26,12 +26,15 @@ get_CVparsFCnet= function(fit){
 
   best= which.min(error)
 
+  N_comp= fit$modlist[[1]]$glmnet.fit$dim[1]
+
   res= data.frame(
     alpha= alpha[best],
     lambda.min= lambdaMin[best],
     lambda.1se= lambdaSE[best],
     error= error[best],
-    best= best
+    best= best,
+    N_comp= N_comp
   )
 
   return(res)

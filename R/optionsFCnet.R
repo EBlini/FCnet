@@ -1,7 +1,7 @@
 # Variable, global to package's namespace.
 # This function is not exported to user space and does not need to be documented.
 opt= settings::options_manager(
-  cv.type.measure= "mae",
+  cv.type.measure= "mse",
   intercept= F,
   standardize= T,
   whichLambda= "lambda.min",
@@ -21,7 +21,7 @@ opt= settings::options_manager(
 #' Set or get options for FCnet
 #'
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
-#' Differently from `glmnetUtils::cva.glmnet()` the deafult is the mean absolute error.
+#' The deafult is the mean squared error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
 #' Useful if y is not scaled and centered.
 #' @param standardize Whether x must be standardized internally to `glmnet::glmnet()`.

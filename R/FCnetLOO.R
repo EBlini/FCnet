@@ -43,6 +43,9 @@
 #' is optimized through internal nested crossvalidation. It defaults to a vector
 #' ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.
 #' The crossvalidated optimal lambda is returned.
+#' @param cv_Ncomp Whether to crossvalidate the number of components or not.
+#' It defaults to NULL, but a vector can be supplied specifing the number of
+#' components to test in the inner loops.
 #' @param parallelLOO If TRUE - recommended, but not the default - uses
 #' `future.apply::future_lapply()` for the outer loops: `future.apply` must be
 #' installed, the machine should have multiple cores available for use,
@@ -71,6 +74,7 @@ FCnetLOO= function(y,
                    x,
                    alpha= seq(0, 1, by= 0.1),
                    lambda= rev(10^seq(-5, 5, length.out = 200)),
+                   cv_Ncomp= NULL,
                    parallelLOO= F,
                    scale_y= T,
                    scale_x= T,
@@ -100,75 +104,61 @@ FCnetLOO= function(y,
   if(scale_x){x= (x - mean(x))/var(as.vector(x))}
 
 
-  #indices for LOO
+  #indices for the LOO function below, passed within lapply or future_lapply
   lapply_over= 1:nrow(x)
 
-  #main sequence here: parallel or not
+
+
+  #main function here: parallel or not
+  loo_f= function(r){
+
+    new_x= x[-r,]
+
+    new_y= y[-r,]
+
+    fit= cv_FCnet(y = new_y,
+                  x = new_x,
+                  alpha = alpha,
+                  lambda = lambda,
+                  cv_Ncomp = cv_Ncomp,
+                  type.measure= type.measure,
+                  intercept= intercept,
+                  standardize= standardize,
+                  ...
+    )
+
+    p= predict(fit$fit,
+               s= fit$lambda,
+               newx= t(data.matrix((x[r, 1:fit$N_comp]))),
+               exact= TRUE)
+
+    p= as.numeric(p)
+
+    return(list(prediction= p,
+                alpha= fit$alpha,
+                lambda= fit$lambda,
+                N_comp= fit$N_comp,
+                coeffs= fit$coeffs))
+
+  }
+
+
 
   if(parallelLOO== TRUE){
 
     loo= future.apply::future_lapply(lapply_over, function(r){
 
-      new_x= x[-r,]
+      loo_f(r)
 
-      new_y= y[-r,]
-
-      fit= cv_FCnet(y = new_y,
-                    x = new_x,
-                    alpha = alpha,
-                    lambda = lambda,
-                    type.measure= type.measure,
-                    intercept= intercept,
-                    standardize= standardize,
-                    ...
-                    )
-
-      p= predict(fit$fit,
-                 s= fit$lambda,
-                 newx= t(data.matrix((x[r,]))),
-                 exact= TRUE)
-
-      p= as.numeric(p)
-
-      return(list(prediction= p,
-                  alpha= fit$alpha,
-                  lambda= fit$lambda,
-                  coeffs= fit$coeffs))
-
-    }, future.seed = T)
+      }, future.seed = T)
 
   } else {
 
     loo= lapply(lapply_over, function(r){
 
-      new_x= x[-r,]
+      loo_f(r)
 
-      new_y= y[-r,]
-
-      fit= cv_FCnet(y = new_y,
-                    x = new_x,
-                    alpha = alpha,
-                    lambda = lambda,
-                    type.measure= type.measure,
-                    intercept= intercept,
-                    standardize= standardize,
-                    ...
-      )
-
-      p= predict(fit$fit,
-                 s= fit$lambda,
-                 newx= t(data.matrix((x[r,]))),
-                 exact= TRUE
-                 )
-
-      p= as.numeric(p)
-
-      return(list(prediction= p,
-                  alpha= fit$alpha,
-                  lambda= fit$lambda,
-                  coeffs= fit$coeffs))
-
-    })
+      })
 
   } #end if parallelLOO
 
@@ -178,6 +168,8 @@ FCnetLOO= function(y,
   alpha= sapply(loo, function(x)x[["alpha"]])
 
   lambda= sapply(loo, function(x)x[["lambda"]])
+
+  N_comp= sapply(loo, function(x)x[["N_comp"]])
 
   coeffs= lapply(loo, function(x){data.frame(x$coeffs)})
   coeffs= do.call(rbind, coeffs)
@@ -199,6 +191,7 @@ FCnetLOO= function(y,
             predicted= prediction,
             alpha= alpha,
             lambda= lambda,
+            N_comp= N_comp,
             coeffs= coeffs,
             y= y)
 

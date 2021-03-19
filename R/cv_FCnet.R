@@ -34,16 +34,9 @@
 #' is optimized through internal crossvalidation. It defaults to a vector
 #' ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.
 #' The crossvalidated optimal lambda is returned.
-#' @param nfolds Number of folds to be created in the crossvalidation of alpha
-#' and/or lambda. It defaults to `nrow(x)`, that is Leave-One-Out crossvalidation.
-#' It can be set to whatever integer >3 and < nrow(x).
-#' @param rep_cv Number of times the crossvalidation procedure must be repeated.
-#' It defaults to 1 (as the LOO procedure is deterministic, thus values larger
-#' than 1 are redundant). If rep_cv>1, the crossvalidation is repeated rep_cv
-#' times, and the consensus (by default: median) crossvalidated alpha and lambda values across all rep_cv
-#' are returned. Useful in order to decrease randomness when kfold crossvalidation
-#' is required. Setting this parameter too high though will result in a mere
-#' approximation of the LOO.
+#' @param cv_Ncomp Whether to crossvalidate the number of components or not.
+#' It defaults to NULL, but a vector can be supplied specifing the number of
+#' components to test in the inner loops.
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' Differently from `glmnetUtils::cva.glmnet()` the deafult is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
@@ -58,8 +51,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                   x, #independent variables, typically neural measures
                   alpha= seq(0, 1, by= 0.1),
                   lambda= rev(10^seq(-5, 5, length.out = 200)),
-                  nfolds= nrow(x),
-                  rep_cv= 1,
+                  cv_Ncomp= NULL,
                   type.measure= optionsFCnet("cv.type.measure"),
                   intercept= optionsFCnet("intercept"),
                   standardize= optionsFCnet("standardize"),
@@ -82,17 +74,28 @@ cv_FCnet= function(y, #dependent variable, typically behavior
 
   }
 
+  #nfold is set to loo
+  nfolds= nrow(x)
+
+  #initialize a vector of zeros to store coefficients
+  #this is in case cv of the number of components is required
+  cname= c("Intercept", colnames(x))
+  zeros= rep(0, ncol(x) + 1) #+1 is the intercept
+
+  #if cv_Ncomp is null, all components are tested
+  if(is.null(cv_Ncomp))(cv_Ncomp= ncol(x))
+
 
   #to add here: what to do with missing values?
 
 
   #crossvalidate alpha and/or lambda, but only if vectors are supplied
-  if (length(alpha)>1 | length(lambda)>1){
+  if (length(alpha)>1 | length(lambda)>1 | length(cv_Ncomp)>1){
 
-    #crossvalidate n times, take the median of the recovered parameters
-    cv_ridge= lapply(1:rep_cv, function(time){
 
-      cva= cva.glmnet(x= x, y= y,
+    Ncomp_ridge= lapply(cv_Ncomp, function(NC){
+
+      cva= cva.glmnet(x= x[, 1: NC], y= y,
                       alpha = alpha,
                       lambda = lambda,
                       nfolds= nfolds,
@@ -102,37 +105,33 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                       standardize= standardize,
                       ...
                       )
-      return(cva)
-    })
+        return(cva)
 
-    pars= sapply(cv_ridge, function(p)get_CVparsFCnet(p))
+      })
 
-    #return fit to make predictions quicker/avoid too much nesting?
+    pars= sapply(Ncomp_ridge, function(p)get_CVparsFCnet(p))
+
+    #the minimum error observed among the external loop, i.e. ncomp
     min_error= which.min(as.numeric(pars[rownames(pars)== "error"]))
+
+    #the best model (alpha, etc) where the minimum error is observed
     best= as.numeric(pars[rownames(pars)== "best"])[min_error]
 
-    fit= cv_ridge[[min_error]]$modlist[[best]]
+    fit= Ncomp_ridge[[min_error]]$modlist[[best]]
 
-    #now hyperparameters
-    lambda= as.numeric(pars[rownames(pars)== optionsFCnet("whichLambda")])
 
-    #if more folds/repetitions, take the median as consensus
-    if(rep_cv>1){
+    #now hyperparameters of the best model,
+    #i.e. where the minimum error was observed
+    lambda= as.numeric(pars[rownames(pars)== optionsFCnet("whichLambda")])[min_error]
+    alpha= as.numeric(pars[rownames(pars)== "alpha"])[min_error]
+    N_comp= as.numeric(pars[rownames(pars)== "N_comp"])[min_error]
 
-      lambda= optionsFCnet("consensus_function")(lambda)
 
-    }
-
-    alpha= as.numeric(pars[rownames(pars)== "alpha"])
-    if(rep_cv>1){
-
-      alpha= optionsFCnet("consensus_function")(alpha)
-
-    }
-
-    #return coefficients
-    cname= rownames(coef(fit))
+    #return coefficients - only for components that were actually tested
+    #the rest is set to zero
     cf= coef(fit)[,1]
+    zeros[1: length(cf)] = cf
+    cf= zeros
 
     coeffs= data.frame(Feature= cname,
                        Coefficient= cf)
@@ -152,6 +151,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
     #return best parameters
     bp= list(alpha= alpha,
              lambda= lambda,
+             N_comp= N_comp,
              fit= fit,
              y= y,
              coeffs= coeffs#,
