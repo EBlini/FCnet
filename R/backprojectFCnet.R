@@ -44,14 +44,21 @@ backprojectFCnet= function(coeffs,
   if(class(coeffs)== "list")(coeffs= coeffs$coeffs)
   if(class(coeffs)== "data.frame"){
 
+    #get coeffs names - useful for reordering them
+    names= coeffs$Feature[coeffs$ID== 1]
+
     coeffs= tapply(coeffs$Coefficient,
                    coeffs$Feature,
                    optionsFCnet("consensus_function"))
 
-    if("(Intercept)" %in% names(coeffs)){
+    #reorder
+    coeffs= coeffs[names]
 
-      intercept= as.numeric(coeffs[names(coeffs) %in% "(Intercept)"])
-      coeffs= as.numeric(coeffs[!names(coeffs) %in% "(Intercept)"])
+
+    if("Intercept" %in% names(coeffs) | "(Intercept)" %in% names(coeffs)){
+
+      intercept= as.numeric(coeffs[names(coeffs) %in% c("(Intercept)", "Intercept")])
+      coeffs= as.numeric(coeffs[!names(coeffs) %in% c("(Intercept)", "Intercept")])
 
     }
   }
@@ -75,7 +82,6 @@ backprojectFCnet= function(coeffs,
 
 
   #do the job here
-
   #multiply coeffs per PCA loadings
   final_coeffs= t(t(Loadings) * coeffs)
 

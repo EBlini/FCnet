@@ -101,7 +101,7 @@ the user (e.g. via plan(multisession)." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -171,8 +171,10 @@ the user (e.g. via <code>plan(multisession</code>).</p>
   <span class='va'>x</span>,
   alpha <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span>, by <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span>,
   lambda <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rev.html'>rev</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>^</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>5</span>, <span class='fl'>5</span>, length.out <span class='op'>=</span> <span class='fl'>200</span><span class='op'>)</span><span class='op'>)</span>,
+  cv_Ncomp <span class='op'>=</span> <span class='cn'>NULL</span>,
   parallelLOO <span class='op'>=</span> <span class='cn'>F</span>,
   scale_y <span class='op'>=</span> <span class='cn'>T</span>,
+  scale_x <span class='op'>=</span> <span class='cn'>T</span>,
   type.measure <span class='op'>=</span> <span class='fu'><a href='optionsFCnet.html'>optionsFCnet</a></span><span class='op'>(</span><span class='st'>"cv.type.measure"</span><span class='op'>)</span>,
   intercept <span class='op'>=</span> <span class='fu'><a href='optionsFCnet.html'>optionsFCnet</a></span><span class='op'>(</span><span class='st'>"intercept"</span><span class='op'>)</span>,
   standardize <span class='op'>=</span> <span class='fu'><a href='optionsFCnet.html'>optionsFCnet</a></span><span class='op'>(</span><span class='st'>"standardize"</span><span class='op'>)</span>,
@@ -214,6 +216,12 @@ ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.
 The crossvalidated optimal lambda is returned.</p></td>
     </tr>
     <tr>
+      <th>cv_Ncomp</th>
+      <td><p>Whether to crossvalidate the number of components or not.
+It defaults to NULL, but a vector can be supplied specifing the number of
+components to test in the inner loops.</p></td>
+    </tr>
+    <tr>
       <th>parallelLOO</th>
       <td><p>If TRUE - recommended, but not the default - uses
 <code><a href='https://rdrr.io/pkg/future.apply/man/future_lapply.html'>future.apply::future_lapply()</a></code> for the outer loops: <code>future.apply</code> must be
@@ -225,6 +233,12 @@ and threads should be defined explicitly beforehand by the user
       <th>scale_y</th>
       <td><p>Whether y should be scaled prior to fit. Default, TRUE, scales and center y with
 <code><a href='https://rdrr.io/r/base/scale.html'>scale()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>scale_x</th>
+      <td><p>Whether x should be scaled prior to fit. Default, TRUE, subtracts
+the mean matrix value and divides each entry for the matrix variance.
+Beware that this adds to <code><a href='optionsFCnet.html'>optionsFCnet("standardize")</a></code>.</p></td>
     </tr>
     <tr>
       <th>intercept</th>
