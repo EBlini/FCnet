@@ -3,7 +3,7 @@
 opt= settings::options_manager(
   cv.type.measure= "mse",
   intercept= F,
-  standardize= T,
+  standardize= F,
   whichLambda= "lambda.min",
   consensus_function= median,
 

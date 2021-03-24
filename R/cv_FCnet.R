@@ -35,8 +35,12 @@
 #' ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.
 #' The crossvalidated optimal lambda is returned.
 #' @param cv_Ncomp Whether to crossvalidate the number of components or not.
-#' It defaults to NULL, but a vector can be supplied specifing the number of
+#' It defaults to NULL, but a vector can be supplied specifing the number (range) of
 #' components to test in the inner loops.
+#' @param cv_Ncomp_method Whether the number of components to optimize means
+#' components are ordered (e.g. according to the explained variance of neuroimaging
+#' data) or - somehow experimental - whether to use the N best components
+#' ranked according to their relationship (MSE) with y.
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' Differently from `glmnetUtils::cva.glmnet()` the deafult is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
@@ -52,13 +56,18 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                   alpha= seq(0, 1, by= 0.1),
                   lambda= rev(10^seq(-5, 5, length.out = 200)),
                   cv_Ncomp= NULL,
+                  cv_Ncomp_method= c("order", "optimized"),
                   type.measure= optionsFCnet("cv.type.measure"),
                   intercept= optionsFCnet("intercept"),
                   standardize= optionsFCnet("standardize"),
                   ...){
 
-  if(length(alpha)== 1 & length(lambda)==1){
-    stop("Scalar values for alpha and lambda have been supplied: a vector is needed.")
+
+  cv_Ncomp_method= match.arg(cv_Ncomp_method)
+
+
+  if(length(lambda)==1){
+    stop("Scalar values for lambda have been supplied: a vector is needed.")
   }
 
   #ensure you are working with matrices
@@ -79,12 +88,29 @@ cv_FCnet= function(y, #dependent variable, typically behavior
 
   #initialize a vector of zeros to store coefficients
   #this is in case cv of the number of components is required
-  cname= c("Intercept", colnames(x))
+  cname= c(("Intercept"), colnames(x))
   zeros= rep(0, ncol(x) + 1) #+1 is the intercept
 
   #if cv_Ncomp is null, all components are tested
   if(is.null(cv_Ncomp))(cv_Ncomp= ncol(x))
 
+  if(cv_Ncomp_method== "order" | length(cv_Ncomp)== 1){
+
+    test_c= lapply(cv_Ncomp, function(x)1:x)
+
+  } else {
+
+    mse= apply(x, 2, function(z){mean(summary(lm(y~z))$residuals^2)})
+
+    rank= rank(mse, ties.method = "max")
+    all_x= 1:ncol(x)
+
+    test_c= lapply(cv_Ncomp, function(n){
+
+      all_x[rank<= n]
+
+    })
+  }
 
   #to add here: what to do with missing values?
 
@@ -93,9 +119,9 @@ cv_FCnet= function(y, #dependent variable, typically behavior
   if (length(alpha)>1 | length(lambda)>1 | length(cv_Ncomp)>1){
 
 
-    Ncomp_ridge= lapply(cv_Ncomp, function(NC){
+    Ncomp_ridge= lapply(test_c, function(NC){
 
-      cva= cva.glmnet(x= x[, 1: NC], y= y,
+      cva= cva.glmnet(x= x[, NC], y= y,
                       alpha = alpha,
                       lambda = lambda,
                       nfolds= nfolds,
@@ -126,11 +152,12 @@ cv_FCnet= function(y, #dependent variable, typically behavior
     alpha= as.numeric(pars[rownames(pars)== "alpha"])[min_error]
     N_comp= as.numeric(pars[rownames(pars)== "N_comp"])[min_error]
 
+    which_comp= test_c[[min_error]]
 
     #return coefficients - only for components that were actually tested
     #the rest is set to zero
     cf= coef(fit)[,1]
-    zeros[1: length(cf)] = cf
+    zeros[c(1, which_comp+1)] = cf
     cf= zeros
 
     coeffs= data.frame(Feature= cname,
