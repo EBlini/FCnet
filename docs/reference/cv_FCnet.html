@@ -154,6 +154,7 @@ directly in the function or by running <code><a href='optionsFCnet.html'>options
   alpha <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span>, by <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span>,
   lambda <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rev.html'>rev</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>^</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>5</span>, <span class='fl'>5</span>, length.out <span class='op'>=</span> <span class='fl'>200</span><span class='op'>)</span><span class='op'>)</span>,
   cv_Ncomp <span class='op'>=</span> <span class='cn'>NULL</span>,
+  cv_Ncomp_method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"order"</span>, <span class='st'>"optimized"</span><span class='op'>)</span>,
   type.measure <span class='op'>=</span> <span class='fu'><a href='optionsFCnet.html'>optionsFCnet</a></span><span class='op'>(</span><span class='st'>"cv.type.measure"</span><span class='op'>)</span>,
   intercept <span class='op'>=</span> <span class='fu'><a href='optionsFCnet.html'>optionsFCnet</a></span><span class='op'>(</span><span class='st'>"intercept"</span><span class='op'>)</span>,
   standardize <span class='op'>=</span> <span class='fu'><a href='optionsFCnet.html'>optionsFCnet</a></span><span class='op'>(</span><span class='st'>"standardize"</span><span class='op'>)</span>,
@@ -197,8 +198,15 @@ The crossvalidated optimal lambda is returned.</p></td>
     <tr>
       <th>cv_Ncomp</th>
       <td><p>Whether to crossvalidate the number of components or not.
-It defaults to NULL, but a vector can be supplied specifing the number of
+It defaults to NULL, but a vector can be supplied specifing the number (range) of
 components to test in the inner loops.</p></td>
+    </tr>
+    <tr>
+      <th>cv_Ncomp_method</th>
+      <td><p>Whether the number of components to optimize means
+components are ordered (e.g. according to the explained variance of neuroimaging
+data) or - somehow experimental - whether to use the N best components
+ranked according to their relationship (MSE) with y.</p></td>
     </tr>
     <tr>
       <th>intercept</th>
