@@ -9,8 +9,7 @@ cv_FCnet(
   x,
   alpha = seq(0, 1, by = 0.1),
   lambda = rev(10^seq(-5, 5, length.out = 200)),
-  nfolds = nrow(x),
-  rep_cv = 1,
+  cv_Ncomp = NULL,
   type.measure = optionsFCnet("cv.type.measure"),
   intercept = optionsFCnet("intercept"),
   standardize = optionsFCnet("standardize"),
@@ -41,17 +40,9 @@ is optimized through internal crossvalidation. It defaults to a vector
 ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.
 The crossvalidated optimal lambda is returned.}
 
-\item{nfolds}{Number of folds to be created in the crossvalidation of alpha
-and/or lambda. It defaults to \code{nrow(x)}, that is Leave-One-Out crossvalidation.
-It can be set to whatever integer >3 and < nrow(x).}
-
-\item{rep_cv}{Number of times the crossvalidation procedure must be repeated.
-It defaults to 1 (as the LOO procedure is deterministic, thus values larger
-than 1 are redundant). If rep_cv>1, the crossvalidation is repeated rep_cv
-times, and the consensus (by default: median) crossvalidated alpha and lambda values across all rep_cv
-are returned. Useful in order to decrease randomness when kfold crossvalidation
-is required. Setting this parameter too high though will result in a mere
-approximation of the LOO.}
+\item{cv_Ncomp}{Whether to crossvalidate the number of components or not.
+It defaults to NULL, but a vector can be supplied specifing the number of
+components to test in the inner loops.}
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
 

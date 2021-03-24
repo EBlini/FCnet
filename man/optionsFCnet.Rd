@@ -8,7 +8,7 @@ optionsFCnet(...)
 }
 \arguments{
 \item{cv.type.measure}{The measure to minimize in crossvalidation inner loops.
-Differently from \code{glmnetUtils::cva.glmnet()} the deafult is the mean absolute error.}
+The deafult is the mean squared error.}
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.
 Useful if y is not scaled and centered.}

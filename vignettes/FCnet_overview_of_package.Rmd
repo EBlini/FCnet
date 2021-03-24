@@ -255,7 +255,8 @@ perm_bias= permutateLOO(y = y,
                         alpha = 0, 
                         parallelLOO = T, 
                         nperm = 100, 
-                        model_R2 = r_bias)
+                        model_R2 = r_bias,
+                        return_coeffs= T)
 
 knitr::kable(perm_bias$Summary)
 
@@ -263,7 +264,7 @@ knitr::kable(perm_bias$Summary)
 
 The original model's R2 is reported on the left. On the rightmost part of the row, a few statistics concerning the distribution of R2 from null models is reported. The full distribution is available to the user anyway in the created object through the relative slot.
 In this fictional scenario, and considering the low number of permutations, it appears that the original model beats most null models.
-Models can always be improved by crossvalidating the number of features to extract, though particular attention should be payed not to "double dip" in the data. 
+Models can always be improved by crossvalidating the number of features to extract, which is now implemented in both `FCnetLOO()` and consequently `permutateLOO()`. In addition, selection of coefficients on the basis of permutated samples is now possible through the `select_coefficients()` function.
 
 ## Conclusion
 

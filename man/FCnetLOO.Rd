@@ -9,6 +9,7 @@ FCnetLOO(
   x,
   alpha = seq(0, 1, by = 0.1),
   lambda = rev(10^seq(-5, 5, length.out = 200)),
+  cv_Ncomp = NULL,
   parallelLOO = F,
   scale_y = T,
   scale_x = T,
@@ -41,6 +42,10 @@ When a vector of lambda values is supplied, the value of lambda
 is optimized through internal nested crossvalidation. It defaults to a vector
 ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.
 The crossvalidated optimal lambda is returned.}
+
+\item{cv_Ncomp}{Whether to crossvalidate the number of components or not.
+It defaults to NULL, but a vector can be supplied specifing the number of
+components to test in the inner loops.}
 
 \item{parallelLOO}{If TRUE - recommended, but not the default - uses
 \code{future.apply::future_lapply()} for the outer loops: \code{future.apply} must be
