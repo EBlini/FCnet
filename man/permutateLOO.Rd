@@ -10,6 +10,7 @@ permutateLOO(
   alpha = seq(0, 1, by = 0.1),
   lambda = rev(10^seq(-5, 5, length.out = 200)),
   cv_Ncomp = NULL,
+  cv_Ncomp_method = c("order", "optimized"),
   parallelLOO = F,
   scale_y = T,
   scale_x = T,
@@ -45,8 +46,13 @@ is optimized through internal crossvalidation. It defaults to a vector
 ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.}
 
 \item{cv_Ncomp}{Whether to crossvalidate the number of components or not.
-It defaults to NULL, but a vector can be supplied specifing the number of
+It defaults to NULL, but a vector can be supplied specifing the number (range) of
 components to test in the inner loops.}
+
+\item{cv_Ncomp_method}{Whether the number of components to optimize means
+components are ordered (e.g. according to the explained variance of neuroimaging
+data) or - somehow experimental - whether to use the N best components
+ranked according to their relationship (MSE) with y.}
 
 \item{parallelLOO}{If TRUE - recommended, but not the default - uses
 \code{future.apply::future_lapply()} for the outer loops: \code{future.apply} must be
