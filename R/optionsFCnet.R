@@ -4,6 +4,7 @@ opt= settings::options_manager(
   cv.type.measure= "mse",
   intercept= F,
   standardize= F,
+  thresh= 10^-15,
   whichLambda= "lambda.min",
   consensus_function= median,
 
@@ -30,6 +31,9 @@ opt= settings::options_manager(
 #' "lambda.1se" - which "which gives the most regularized model such that error is
 #' within one standard error of the minimum". The latter would be preferable
 #'  for stability.
+#'  @param thresh Threshold for glmnet to stop converging to the solution.
+#'  Differently from the glmnet default, the threshold is stricter here,
+#'  but this parameter can be adapted (e.g. for speed / accuracy tradeoff).
 #'  @param consensus_function which function is used to create consensus between
 #'  coefficients from different models.
 #' @param colorPaletteDefault The default color palette for plotting matrices (a vector of colors).

@@ -45,6 +45,7 @@
 #' Differently from `glmnetUtils::cva.glmnet()` the deafult is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
 #' @param standardize Whether x must be standardized internally to glmnet.
+#' @param thresh Threshold for glmnet to stop converging to the solution.
 #' @param ... Other parameters passed to `glmnetUtils::cva.glmnet()`.
 #'
 #' @return The crossvalidated alpha and lambda parameters with the associated error.
@@ -60,6 +61,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                   type.measure= optionsFCnet("cv.type.measure"),
                   intercept= optionsFCnet("intercept"),
                   standardize= optionsFCnet("standardize"),
+                  thresh= optionsFCnet("thresh"),
                   ...){
 
 
@@ -129,6 +131,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                       type.measure = type.measure,
                       intercept= intercept,
                       standardize= standardize,
+                      thresh= thresh,
                       ...
                       )
         return(cva)
@@ -156,7 +159,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
 
     #return coefficients - only for components that were actually tested
     #the rest is set to zero
-    cf= coef(fit)[,1]
+    cf= coef(fit, s= lambda)[,1]
     zeros[c(1, which_comp+1)] = cf
     cf= zeros
 
@@ -178,7 +181,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
     #return best parameters
     bp= list(alpha= alpha,
              lambda= lambda,
-             N_comp= N_comp,
+             N_comp= which_comp,
              fit= fit,
              y= y,
              coeffs= coeffs#,

@@ -57,6 +57,7 @@
 #' Differently from `glmnetUtils::cva.glmnet()` the default is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
 #' @param standardize Whether x must be standardized internally to glmnet.
+#' @param thresh Threshold for glmnet to stop converging to the solution.
 #' @param ... Other parameters passed to `glmnetUtils::cva.glmnet()` or
 #' `glmnet::glmnet()`.
 #'
@@ -80,6 +81,7 @@ permutateLOO= function(y,
                        type.measure= optionsFCnet("cv.type.measure"),
                        intercept= optionsFCnet("intercept"),
                        standardize= optionsFCnet("standardize"),
+                       thresh= optionsFCnet("thresh"),
                        ...){
 
   cv_Ncomp_method= match.arg(cv_Ncomp_method)
@@ -120,6 +122,7 @@ permutateLOO= function(y,
                           type.measure= type.measure,
                           intercept= intercept,
                           standardize= standardize,
+                          thresh= thresh,
                           ...)$R2
 
   } else {
@@ -149,6 +152,7 @@ permutateLOO= function(y,
                     type.measure= type.measure,
                     intercept= intercept,
                     standardize= standardize,
+                    thresh= thresh,
                     ...
                     )
 
@@ -184,6 +188,7 @@ permutateLOO= function(y,
                       type.measure= type.measure,
                       intercept= intercept,
                       standardize= standardize,
+                      thresh= thresh,
                       ...
                       )
 

@@ -20,6 +20,9 @@ chooses the value of lambda which best minimizes the mean crossvalidation error 
 "lambda.1se" - which "which gives the most regularized model such that error is
 within one standard error of the minimum". The latter would be preferable
 for stability.
+@param thresh Threshold for glmnet to stop converging to the solution.
+Differently from the glmnet default, the threshold is stricter here,
+but this parameter can be adapted (e.g. for speed / accuracy tradeoff).
 @param consensus_function which function is used to create consensus between
 coefficients from different models.}
 

@@ -64,6 +64,7 @@
 #' Differently from `glmnetUtils::cva.glmnet()` the default is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
 #' @param standardize Whether x must be standardized.
+#' @param thresh Threshold for glmnet to stop converging to the solution.
 #' @param ... Other parameters passed to `glmnetUtils::cva.glmnet()` or
 #' `glmnet::glmnet()`.
 #'
@@ -86,6 +87,7 @@ FCnetLOO= function(y,
                    type.measure= optionsFCnet("cv.type.measure"),
                    intercept= optionsFCnet("intercept"),
                    standardize= optionsFCnet("standardize"),
+                   thresh= optionsFCnet("thresh"),
                    ...){
 
   cv_Ncomp_method= match.arg(cv_Ncomp_method)
@@ -132,12 +134,13 @@ FCnetLOO= function(y,
                   type.measure= type.measure,
                   intercept= intercept,
                   standardize= standardize,
+                  thresh= thresh,
                   ...
     )
 
     p= predict(fit$fit,
                s= fit$lambda,
-               newx= t(data.matrix((x[r, 1:fit$N_comp]))),
+               newx= t(data.matrix((x[r, fit$N_comp]))),
                exact= TRUE)
 
     p= as.numeric(p)
@@ -145,7 +148,7 @@ FCnetLOO= function(y,
     return(list(prediction= p,
                 alpha= fit$alpha,
                 lambda= fit$lambda,
-                N_comp= fit$N_comp,
+                N_comp= length(fit$N_comp),
                 coeffs= fit$coeffs))
 
   }

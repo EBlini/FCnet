@@ -14,6 +14,7 @@ cv_FCnet(
   type.measure = optionsFCnet("cv.type.measure"),
   intercept = optionsFCnet("intercept"),
   standardize = optionsFCnet("standardize"),
+  thresh = optionsFCnet("thresh"),
   ...
 )
 }
@@ -53,6 +54,8 @@ ranked according to their relationship (MSE) with y.}
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
 
 \item{standardize}{Whether x must be standardized internally to glmnet.}
+
+\item{thresh}{Threshold for glmnet to stop converging to the solution.}
 
 \item{...}{Other parameters passed to \code{glmnetUtils::cva.glmnet()}.}
 
