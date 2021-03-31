@@ -40,7 +40,7 @@
 #' @param cv_Ncomp_method Whether the number of components to optimize means
 #' components are ordered (e.g. according to the explained variance of neuroimaging
 #' data) or - somehow experimental - whether to use the N best components
-#' ranked according to their relationship (MSE) with y.
+#' ranked according to their relationship (pearson's R) with y.
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' Differently from `glmnetUtils::cva.glmnet()` the deafult is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
@@ -57,7 +57,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                   alpha= seq(0, 1, by= 0.1),
                   lambda= rev(10^seq(-5, 5, length.out = 200)),
                   cv_Ncomp= NULL,
-                  cv_Ncomp_method= c("order", "optimized"),
+                  cv_Ncomp_method= c("order", "R"),
                   type.measure= optionsFCnet("cv.type.measure"),
                   intercept= optionsFCnet("intercept"),
                   standardize= optionsFCnet("standardize"),
@@ -100,11 +100,13 @@ cv_FCnet= function(y, #dependent variable, typically behavior
 
     test_c= lapply(cv_Ncomp, function(x)1:x)
 
-  } else {
+  }
 
-    mse= apply(x, 2, function(z){mean(summary(lm(y~z))$residuals^2)})
+  if(cv_Ncomp_method== "R") {
 
-    rank= rank(mse, ties.method = "max")
+    r= apply(x, 2, function(z){cor(z, y)})
+
+    rank= rank(-abs(r), ties.method = "max")
     all_x= 1:ncol(x)
 
     test_c= lapply(cv_Ncomp, function(n){
