@@ -30,7 +30,7 @@
 #' @param cv_Ncomp_method Whether the number of components to optimize means
 #' components are ordered (e.g. according to the explained variance of neuroimaging
 #' data) or - somehow experimental - whether to use the N best components
-#' ranked according to their relationship (MSE) with y.
+#' ranked according to their relationship (pearson's R) with y.
 #' @param parallelLOO If TRUE - recommended, but not the default - uses
 #' `future.apply::future_lapply()` for the outer loops: `future.apply` must be
 #' installed, the machine should have multiple cores available for use,
@@ -71,7 +71,7 @@ permutateLOO= function(y,
                        alpha= seq(0, 1, by= 0.1),
                        lambda= rev(10^seq(-5, 5, length.out = 200)),
                        cv_Ncomp= NULL,
-                       cv_Ncomp_method= c("order", "optimized"),
+                       cv_Ncomp_method= c("order", "R"),
                        parallelLOO= F,
                        scale_y= T,
                        scale_x= T,
