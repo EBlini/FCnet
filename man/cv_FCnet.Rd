@@ -9,8 +9,9 @@ cv_FCnet(
   x,
   alpha = seq(0, 1, by = 0.1),
   lambda = rev(10^seq(-5, 5, length.out = 200)),
+  parallelLOO = F,
   cv_Ncomp = NULL,
-  cv_Ncomp_method = c("order", "optimized"),
+  cv_Ncomp_method = c("order", "R"),
   type.measure = optionsFCnet("cv.type.measure"),
   intercept = optionsFCnet("intercept"),
   standardize = optionsFCnet("standardize"),
@@ -42,6 +43,12 @@ is optimized through internal crossvalidation. It defaults to a vector
 ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.
 The crossvalidated optimal lambda is returned.}
 
+\item{parallelLOO}{If TRUE - recommended, but not the default - uses
+\code{future.apply::future_lapply()} for the outer loops: \code{future.apply} must be
+installed, the machine should have multiple cores available for use,
+and threads should be defined explicitly beforehand by the user
+(e.g. by calling \code{plan(multisession)}).}
+
 \item{cv_Ncomp}{Whether to crossvalidate the number of components or not.
 It defaults to NULL, but a vector can be supplied specifing the number (range) of
 components to test in the inner loops.}
@@ -49,7 +56,7 @@ components to test in the inner loops.}
 \item{cv_Ncomp_method}{Whether the number of components to optimize means
 components are ordered (e.g. according to the explained variance of neuroimaging
 data) or - somehow experimental - whether to use the N best components
-ranked according to their relationship (MSE) with y.}
+ranked according to their relationship (pearson's R) with y.}
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
 

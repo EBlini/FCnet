@@ -7,7 +7,6 @@
 plotFCnet(
   model,
   output = c("predictions", "coefficients"),
-  style = c("boxplot", "violin"),
   plot_labels = T,
   subset_coeffs = NULL
 )
@@ -18,8 +17,6 @@ plotFCnet(
 \item{output}{What to depict: model's predictions or models' coefficients. Coefficients
 are assumed to arise from nested models, thus they will depicted with - more or less pronounced -
 variability with the geometries chosen with the style parameter.}
-
-\item{style}{For coefficients, how to represent variability (e.g. boxplots or violins).}
 
 \item{plot_labels}{if \code{TRUE} annotates the row names of x as predictions.}
 

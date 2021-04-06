@@ -153,8 +153,9 @@ directly in the function or by running <code><a href='optionsFCnet.html'>options
   <span class='va'>x</span>,
   alpha <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span>, by <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span>,
   lambda <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rev.html'>rev</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>^</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>5</span>, <span class='fl'>5</span>, length.out <span class='op'>=</span> <span class='fl'>200</span><span class='op'>)</span><span class='op'>)</span>,
+  parallelLOO <span class='op'>=</span> <span class='cn'>F</span>,
   cv_Ncomp <span class='op'>=</span> <span class='cn'>NULL</span>,
-  cv_Ncomp_method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"order"</span>, <span class='st'>"optimized"</span><span class='op'>)</span>,
+  cv_Ncomp_method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"order"</span>, <span class='st'>"R"</span><span class='op'>)</span>,
   type.measure <span class='op'>=</span> <span class='fu'><a href='optionsFCnet.html'>optionsFCnet</a></span><span class='op'>(</span><span class='st'>"cv.type.measure"</span><span class='op'>)</span>,
   intercept <span class='op'>=</span> <span class='fu'><a href='optionsFCnet.html'>optionsFCnet</a></span><span class='op'>(</span><span class='st'>"intercept"</span><span class='op'>)</span>,
   standardize <span class='op'>=</span> <span class='fu'><a href='optionsFCnet.html'>optionsFCnet</a></span><span class='op'>(</span><span class='st'>"standardize"</span><span class='op'>)</span>,
@@ -197,6 +198,14 @@ ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.
 The crossvalidated optimal lambda is returned.</p></td>
     </tr>
     <tr>
+      <th>parallelLOO</th>
+      <td><p>If TRUE - recommended, but not the default - uses
+<code><a href='https://rdrr.io/pkg/future.apply/man/future_lapply.html'>future.apply::future_lapply()</a></code> for the outer loops: <code>future.apply</code> must be
+installed, the machine should have multiple cores available for use,
+and threads should be defined explicitly beforehand by the user
+(e.g. by calling <code>plan(multisession)</code>).</p></td>
+    </tr>
+    <tr>
       <th>cv_Ncomp</th>
       <td><p>Whether to crossvalidate the number of components or not.
 It defaults to NULL, but a vector can be supplied specifing the number (range) of
@@ -207,7 +216,7 @@ components to test in the inner loops.</p></td>
       <td><p>Whether the number of components to optimize means
 components are ordered (e.g. according to the explained variance of neuroimaging
 data) or - somehow experimental - whether to use the N best components
-ranked according to their relationship (MSE) with y.</p></td>
+ranked according to their relationship (pearson's R) with y.</p></td>
     </tr>
     <tr>
       <th>intercept</th>

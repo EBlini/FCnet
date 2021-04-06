@@ -33,17 +33,12 @@ select_coefficients= function(coeffs,
   pc= permutated_coeffs #renamed for simplicity
 
   #get coeffs names - useful for reordering them
-  names= coeffs$Feature[coeffs$ID== 1]
+  names= coeffs$Feature
 
   #find consensus
-  consensus= tapply(coeffs$Coefficient,
-                    coeffs$Feature,
-                    optionsFCnet("consensus_function"))
+  consensus= coeffs$Coefficient
 
-  #reorder
-  consensus= consensus[names]
-
-  #find consensus for each permutation
+  #find consensus for each permutation - not necessary but left for legacy
   perm_range= tapply(pc$Coefficient,
                      list(pc$Feature, pc$nPerm),
                      optionsFCnet("consensus_function"))

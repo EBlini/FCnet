@@ -24,7 +24,8 @@ for stability.
 Differently from the glmnet default, the threshold is stricter here,
 but this parameter can be adapted (e.g. for speed / accuracy tradeoff).
 @param consensus_function which function is used to create consensus between
-coefficients from different models.}
+coefficients from different models.
+@param nested Whether crossvalidation is to be performed in a nested fashion.}
 
 \item{colorPaletteDefault}{The default color palette for plotting matrices (a vector of colors).}
 

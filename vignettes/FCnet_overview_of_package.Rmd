@@ -185,9 +185,11 @@ rf_bias= reduce_featuresFC(FCmatrices = m_bias,
 
 ## Modelling
 
-We can run Leave-One-Out (nested cross-validated) robust regressions with one line:
+We can run Leave-One-Out (nested cross-validated by default) robust regressions with one line:
 
 ```{r}
+optionsFCnet("nested"= F)
+
 r_bias= FCnetLOO(y = y, 
                  x =  rf_bias, 
                  alpha= 0, #ridge regression
@@ -246,7 +248,7 @@ Indeed, the first component mainly taps onto the network that we have biased. Ed
 Large R2 values may occur by chance or simply in light of the many predictors in the model - even though this problem is mitigated by using the LOO R2. 
 In order to test whether this R2 is beyond chance, we can run a permutation test. Here, values of y are shuffled and then predicted. Ideally, the distribution of the models created in this way should cover - and inform about - the range of the null model.
 
-Note that, in order to optimize computational resources, we only ask for 100 permutations (the default, but generally not enough) and, most importantly, we use parallel computing to optimize the procedure. When `parallelLOO` is `TRUE`, the outer cycles are run in parallel on multiple cores (if available) by using the package `future.apply`, which must be installed. In addition, `plan(multisession` or similar must be invoked in advance by the user. 
+Note that, in order to optimize computational resources, we only ask for 50 permutations (generally not enough) and, most importantly, we use parallel computing to optimize the procedure. When `parallelLOO` is `TRUE`, the outer cycles are run in parallel on multiple cores (if available) by using the package `future.apply`, which must be installed. In addition, `plan(multisession` or similar must be invoked in advance by the user. 
 
 ```{r}
 plan(multisession) #prepare for parallel computing
@@ -254,7 +256,7 @@ perm_bias= permutateLOO(y = y,
                         x= rf_bias, 
                         alpha = 0, 
                         parallelLOO = T, 
-                        nperm = 100, 
+                        nperm = 50, 
                         model_R2 = r_bias,
                         return_coeffs= T)
 
