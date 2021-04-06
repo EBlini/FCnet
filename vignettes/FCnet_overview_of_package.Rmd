@@ -252,6 +252,9 @@ Note that, in order to optimize computational resources, we only ask for 50 perm
 
 ```{r}
 plan(multisession) #prepare for parallel computing
+
+set.seed(1)
+
 perm_bias= permutateLOO(y = y,
                         x= rf_bias, 
                         alpha = 0, 

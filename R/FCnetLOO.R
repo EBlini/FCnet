@@ -154,7 +154,9 @@ FCnetLOO= function(y,
     p= predict(ffit,
                s= fit$lambda,
                newx= (data.matrix((x[, fit$N_comp]))),
-               exact= TRUE)
+               exact= TRUE,
+               y = y,
+               x = x[, fit$N_comp])
 
     p= as.numeric(p)
 
@@ -335,7 +337,9 @@ FCnetLOO= function(y,
   p= predict(ffit,
              s= consensus_lambda,
              newx= (data.matrix((x[, final_components]))),
-             exact= TRUE)
+             exact= TRUE,
+             y = y,
+             x = x[, fit$N_comp])
 
   p= as.numeric(p)
 
