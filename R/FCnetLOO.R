@@ -135,23 +135,23 @@ FCnetLOO= function(y,
                   )
 
     #fit model
-    ffit= glmnet(y = y,
-                 x = x[, fit$N_comp],
-                 alpha = fit$alpha,
-                 lambda = fit$lambda,
-                 type.measure= type.measure,
-                 intercept= intercept,
-                 standardize= standardize,
-                 thresh= thresh,
-                 ...
-    )
+    # ffit= glmnet(y = y,
+    #              x = x[, fit$N_comp],
+    #              alpha = fit$alpha,
+    #              lambda = fit$lambda,
+    #              type.measure= type.measure,
+    #              intercept= intercept,
+    #              standardize= standardize,
+    #              thresh= thresh,
+    #              ...
+    # )
 
     #cv r2
-    # cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== fit$lambda])/c(var(y))
-    # cvr2= as.numeric(cvr2)
+    cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== fit$lambda])/c(var(y))
+    cvr2= as.numeric(cvr2)
 
     #prediction
-    p= predict(ffit,
+    p= predict(fit$fit,
                s= fit$lambda,
                newx= (data.matrix((x[, fit$N_comp]))),
                exact= TRUE,
@@ -160,19 +160,19 @@ FCnetLOO= function(y,
 
     p= as.numeric(p)
 
-    #metrics
-    pars= evalFCnet(true = as.vector(unlist(y)),
-                    predicted = p)
-
-    R2= pars[,"R2"]
-    MSE= pars[,"MSE"]
-    RMSE= pars[,"RMSE"]
+    # # #metrics
+    # pars= evalFCnet(true = as.vector(unlist(y)),
+    #                 predicted = p)
+    #
+    # R2= pars[,"R2"]
+    # MSE= pars[,"MSE"]
+    # RMSE= pars[,"RMSE"]
 
 
     #wrap-up info
-    res= list(R2= R2,
-              MSE= MSE,
-              RMSE= RMSE,
+    res= list(R2= cvr2,
+              # MSE= MSE,
+              # RMSE= RMSE,
               predicted= p,
               alpha= fit$alpha,
               lambda= fit$lambda,
@@ -269,12 +269,17 @@ FCnetLOO= function(y,
   ####################################################
   #### OUTER #########################################
   ####################################################
+  #find consensus
+  consensus_alpha= optionsFCnet("consensus_function")(alpha_inner)
+  consensus_lambda= optionsFCnet("consensus_function")(lambda_inner)
+  consensus_N_comp= optionsFCnet("consensus_function")(N_comp_inner)
+
   #prepare
   fit= cv_FCnet(y = y,
                 x = x,
-                alpha = alpha,
-                lambda = lambda,
-                cv_Ncomp = cv_Ncomp,
+                alpha = consensus_alpha,
+                lambda = consensus_lambda + 0:1, #ensure it's a vector so cv.glmnet is happy
+                cv_Ncomp = consensus_N_comp,
                 cv_Ncomp_method = cv_Ncomp_method,
                 type.measure= type.measure,
                 intercept= intercept,
@@ -282,11 +287,6 @@ FCnetLOO= function(y,
                 thresh= thresh,
                 ...
   )
-
-  #find consensus
-  consensus_alpha= optionsFCnet("consensus_function")(alpha_inner)
-  consensus_lambda= optionsFCnet("consensus_function")(lambda_inner)
-  consensus_N_comp= optionsFCnet("consensus_function")(N_comp_inner)
 
   #recover number components + prepare coefficients
   cname= c(("Intercept"), colnames(x))
@@ -319,22 +319,22 @@ FCnetLOO= function(y,
   final_components= unlist(test_c[final_components])
 
   #model fit
-  ffit= glmnet(y = y,
-               x = x[, final_components],
-               alpha = consensus_alpha,
-               lambda = consensus_lambda,
-               type.measure= type.measure,
-               intercept= intercept,
-               standardize= standardize,
-               thresh= thresh,
-               ...
-  )
+  # ffit= glmnet(y = y,
+  #              x = x[, final_components],
+  #              alpha = consensus_alpha,
+  #              lambda = consensus_lambda,
+  #              type.measure= type.measure,
+  #              intercept= intercept,
+  #              standardize= standardize,
+  #              thresh= thresh,
+  #              ...
+  # )
 
   #crossvalidation error
-  # cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== consensus_lambda])/c(var(y))
-  # cvr2= as.numeric(cvr2)
+  cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== consensus_lambda])/c(var(y))
+  cvr2= as.numeric(cvr2)
 
-  p= predict(ffit,
+  p= predict(fit$fit,
              s= consensus_lambda,
              newx= (data.matrix((x[, final_components]))),
              exact= TRUE,
@@ -343,34 +343,34 @@ FCnetLOO= function(y,
 
   p= as.numeric(p)
 
-  pars= evalFCnet(true = as.vector(unlist(y)),
-                  predicted = p)
-
-  R2= pars[,"R2"]
-  MSE= pars[,"MSE"]
-  RMSE= pars[,"RMSE"]
+  # pars= evalFCnet(true = as.vector(unlist(y)),
+  #                 predicted = p)
+  #
+  # R2= pars[,"R2"]
+  # MSE= pars[,"MSE"]
+  # RMSE= pars[,"RMSE"]
 
   #return coefficients - only for components that were actually tested
   #the rest is set to zero
-  cf= coef(ffit, s= consensus_lambda, exact= T)[,1]
-  zeros[c(1, final_components+1)] = cf
-  cf= zeros
-
-  coeffs= data.frame(Feature= cname,
-                     Coefficient= cf)
-
-  rownames(coeffs)= NULL
+  # cf= coef(fit$fit, s= consensus_lambda)[,1]
+  # zeros[c(1, which_comp+1)] = cf
+  # cf= zeros
+  #
+  # coeffs= data.frame(Feature= cname,
+  #                    Coefficient= cf)
+  #
+  # rownames(coeffs)= NULL
 
 
   #wrap-up info
-  res= list(R2= R2,
-            MSE= MSE,
-            RMSE= RMSE,
+  res= list(R2= cvr2,
+            # MSE= MSE,
+            # RMSE= RMSE,
             predicted= p,
             alpha= consensus_alpha,
             lambda= consensus_lambda,
             N_comp= consensus_N_comp,
-            coeffs= coeffs,
+            coeffs= fit$coeffs,
             y= y,
             inner= inner)
 

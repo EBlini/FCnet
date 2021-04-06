@@ -141,6 +141,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                         intercept= intercept,
                         standardize= standardize,
                         thresh= thresh,
+                        keep= T,
                         ...
         )
         return(cva)
@@ -160,6 +161,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                         intercept= intercept,
                         standardize= standardize,
                         thresh= thresh,
+                        keep= T,
                         ...
         )
         return(cva)
