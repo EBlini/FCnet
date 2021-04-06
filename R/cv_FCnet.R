@@ -34,6 +34,11 @@
 #' is optimized through internal crossvalidation. It defaults to a vector
 #' ranging from 10^-5 to 10^5 with 200 values in logarithmic steps.
 #' The crossvalidated optimal lambda is returned.
+#' @param parallelLOO If TRUE - recommended, but not the default - uses
+#' `future.apply::future_lapply()` for the outer loops: `future.apply` must be
+#' installed, the machine should have multiple cores available for use,
+#' and threads should be defined explicitly beforehand by the user
+#' (e.g. by calling `plan(multisession)`).
 #' @param cv_Ncomp Whether to crossvalidate the number of components or not.
 #' It defaults to NULL, but a vector can be supplied specifing the number (range) of
 #' components to test in the inner loops.
@@ -56,6 +61,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                   x, #independent variables, typically neural measures
                   alpha= seq(0, 1, by= 0.1),
                   lambda= rev(10^seq(-5, 5, length.out = 200)),
+                  parallelLOO= F,
                   cv_Ncomp= NULL,
                   cv_Ncomp_method= c("order", "R"),
                   type.measure= optionsFCnet("cv.type.measure"),
@@ -122,23 +128,47 @@ cv_FCnet= function(y, #dependent variable, typically behavior
   #crossvalidate alpha and/or lambda, but only if vectors are supplied
   if (length(alpha)>1 | length(lambda)>1 | length(cv_Ncomp)>1){
 
+    if(parallelLOO== T){
 
-    Ncomp_ridge= lapply(test_c, function(NC){
+      Ncomp_ridge= future.apply::future_lapply(test_c, function(NC){
 
-      cva= cva.glmnet(x= x[, NC], y= y,
-                      alpha = alpha,
-                      lambda = lambda,
-                      nfolds= nfolds,
-                      grouped= ifelse(nfolds== nrow(x), F, T),
-                      type.measure = type.measure,
-                      intercept= intercept,
-                      standardize= standardize,
-                      thresh= thresh,
-                      ...
-                      )
+        cva= cva.glmnet(x= x[, NC], y= y,
+                        alpha = alpha,
+                        lambda = lambda,
+                        nfolds= nfolds,
+                        grouped= ifelse(nfolds== nrow(x), F, T),
+                        type.measure = type.measure,
+                        intercept= intercept,
+                        standardize= standardize,
+                        thresh= thresh,
+                        ...
+        )
+        return(cva)
+
+      }, future.seed= T)
+
+    } else {
+
+      Ncomp_ridge= lapply(test_c, function(NC){
+
+        cva= cva.glmnet(x= x[, NC], y= y,
+                        alpha = alpha,
+                        lambda = lambda,
+                        nfolds= nfolds,
+                        grouped= ifelse(nfolds== nrow(x), F, T),
+                        type.measure = type.measure,
+                        intercept= intercept,
+                        standardize= standardize,
+                        thresh= thresh,
+                        ...
+        )
         return(cva)
 
       })
+    }
+
+
+
 
     pars= sapply(Ncomp_ridge, function(p)get_CVparsFCnet(p))
 
@@ -169,16 +199,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                        Coefficient= cf)
 
     rownames(coeffs)= NULL
-    #useless at this point
-    # #predict behavioral scores based on model
-    # p= predict(fit,
-    #            s= lambda,
-    #            newx= as.matrix(x)
-    #            )
-    #
-    # #fit stats - maybe unnecessary
-    # gfstats= evalFCnet(true = y,
-    #                    predicted = p)
+
 
     #return best parameters
     bp= list(alpha= alpha,
@@ -186,9 +207,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
              N_comp= which_comp,
              fit= fit,
              y= y,
-             coeffs= coeffs#,
-             #predicted= p,
-             #fit_stats= gfstats
+             coeffs= coeffs
              )
 
 

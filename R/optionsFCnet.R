@@ -7,6 +7,7 @@ opt= settings::options_manager(
   thresh= 10^-15,
   whichLambda= "lambda.min",
   consensus_function= median,
+  nested= T,
 
   colorPaletteDefault= c("darkslateblue", "royalblue4",
                        "royalblue1", "cyan2",
@@ -36,6 +37,7 @@ opt= settings::options_manager(
 #'  but this parameter can be adapted (e.g. for speed / accuracy tradeoff).
 #'  @param consensus_function which function is used to create consensus between
 #'  coefficients from different models.
+#'  @param nested Whether crossvalidation is to be performed in a nested fashion.
 #' @param colorPaletteDefault The default color palette for plotting matrices (a vector of colors).
 #' @param colorNuances Number of nuances along the provided colorPalette.
 

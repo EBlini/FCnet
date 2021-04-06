@@ -45,20 +45,18 @@ backprojectFCnet= function(coeffs,
   if(class(coeffs)== "data.frame"){
 
     #get coeffs names - useful for reordering them
-    names= coeffs$Feature[coeffs$ID== 1]
+    names= coeffs$Feature
 
-    coeffs= tapply(coeffs$Coefficient,
-                   coeffs$Feature,
-                   optionsFCnet("consensus_function"))
+    coeffs= coeffs$Coefficient
 
-    #reorder
-    coeffs= coeffs[names]
+    # #reorder
+    # coeffs= coeffs[names]
 
 
-    if("Intercept" %in% names(coeffs) | "(Intercept)" %in% names(coeffs)){
+    if("Intercept" %in% names | "(Intercept)" %in% names){
 
-      intercept= as.numeric(coeffs[names(coeffs) %in% c("(Intercept)", "Intercept")])
-      coeffs= as.numeric(coeffs[!names(coeffs) %in% c("(Intercept)", "Intercept")])
+      intercept= as.numeric(coeffs[names %in% c("(Intercept)", "Intercept")])
+      coeffs= as.numeric(coeffs[!names %in% c("(Intercept)", "Intercept")])
 
     }
   }
@@ -68,7 +66,7 @@ backprojectFCnet= function(coeffs,
     Loadings= reduce_features_object$Loadings
   }
 
-  #if coeff is a single number - depends on length wights components
+  #if coeff is a single number - depends on length weights components
   if(length(coeffs)== 1){
     c= rep(0, ncol(Loadings))
     c[coeffs]= 1
@@ -82,7 +80,7 @@ backprojectFCnet= function(coeffs,
 
 
   #do the job here
-  #multiply coeffs per PCA loadings
+  #multiply coeffs for PCA loadings
   final_coeffs= t(t(Loadings) * coeffs)
 
 

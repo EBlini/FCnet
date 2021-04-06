@@ -86,11 +86,11 @@ permutateLOO= function(y,
 
   cv_Ncomp_method= match.arg(cv_Ncomp_method)
 
-  #ensure you are working with matrices
-  y= data.matrix(y)
-
   #scaling if requested, then set to False in inner call
   if(scale_y){y= scale(y)}
+
+  #ensure you are working with matrices
+  y= data.matrix(y)
 
   #further reformatting of x
   if(class(x)[1]== "list"){

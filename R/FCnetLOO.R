@@ -92,11 +92,13 @@ FCnetLOO= function(y,
 
   cv_Ncomp_method= match.arg(cv_Ncomp_method)
 
-  #ensure you are working with matrices
-  y= data.matrix(y)
 
   #scaling if requested
   if(scale_y){y= scale(y)}
+
+  #ensure you are working with matrices
+  y= data.matrix(y)
+
 
   #further reformatting of x
   if(class(x)[1]== "list"){
@@ -113,12 +115,76 @@ FCnetLOO= function(y,
   if(scale_x){x= (x - mean(x))/var(as.vector(x))}
 
 
+  #main procedures here
+
+  if (optionsFCnet("nested")== FALSE){
+
+    #cv
+    fit= cv_FCnet(y = y,
+                  x = x,
+                  alpha = alpha,
+                  lambda = lambda,
+                  parallelLOO= parallelLOO,
+                  cv_Ncomp = cv_Ncomp,
+                  cv_Ncomp_method = cv_Ncomp_method,
+                  type.measure= type.measure,
+                  intercept= intercept,
+                  standardize= standardize,
+                  thresh= thresh,
+                  ...
+                  )
+
+    #fit model
+    ffit= glmnet(y = y,
+                 x = x[, fit$N_comp],
+                 alpha = fit$alpha,
+                 lambda = fit$lambda,
+                 type.measure= type.measure,
+                 intercept= intercept,
+                 standardize= standardize,
+                 thresh= thresh,
+                 ...
+    )
+
+    #cv r2
+    # cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== fit$lambda])/c(var(y))
+    # cvr2= as.numeric(cvr2)
+
+    #prediction
+    p= predict(ffit,
+               s= fit$lambda,
+               newx= (data.matrix((x[, fit$N_comp]))),
+               exact= TRUE)
+
+    p= as.numeric(p)
+
+    #metrics
+    pars= evalFCnet(true = as.vector(unlist(y)),
+                    predicted = p)
+
+    R2= pars[,"R2"]
+    MSE= pars[,"MSE"]
+    RMSE= pars[,"RMSE"]
+
+
+    #wrap-up info
+    res= list(R2= R2,
+              MSE= MSE,
+              RMSE= RMSE,
+              predicted= p,
+              alpha= fit$alpha,
+              lambda= fit$lambda,
+              N_comp= fit$N_comp,
+              coeffs= fit$coeffs,
+              y= y)
+
+   } else { # if not nested
+
+
   #indices for the LOO function below, passed within lapply or future_lapply
   lapply_over= 1:nrow(x)
 
-
-
-  #main function here: parallel or not
+  #main function here: parallel or not, nested
   loo_f= function(r){
 
     new_x= x[-r,]
@@ -173,38 +239,138 @@ FCnetLOO= function(y,
 
   } #end if parallelLOO
 
+
+  ####################################################
+  #### INNER #########################################
+  ####################################################
+
   #extract and reshape all relevant information
-  prediction= sapply(loo, function(x)x[["prediction"]])
+  prediction_inner= sapply(loo, function(x)x[["prediction"]])
 
-  alpha= sapply(loo, function(x)x[["alpha"]])
+  alpha_inner= sapply(loo, function(x)x[["alpha"]])
 
-  lambda= sapply(loo, function(x)x[["lambda"]])
+  lambda_inner= sapply(loo, function(x)x[["lambda"]])
 
-  N_comp= sapply(loo, function(x)x[["N_comp"]])
+  N_comp_inner= sapply(loo, function(x)x[["N_comp"]])
 
-  coeffs= lapply(loo, function(x){data.frame(x$coeffs)})
-  coeffs= do.call(rbind, coeffs)
-  coeffs$ID= rep(lapply_over,
-                 each= nrow(coeffs)/length(lapply_over))
+  coeffs_inner= lapply(loo, function(x){data.frame(x$coeffs)})
+  coeffs_inner= do.call(rbind, coeffs_inner)
+  coeffs_inner$ID= rep(lapply_over,
+                 each= nrow(coeffs_inner)/length(lapply_over))
 
-  #fit statistics
+  inner= list(predicted= prediction_inner,
+              alpha= alpha_inner,
+              lambda= lambda_inner,
+              N_comp= N_comp_inner,
+              coeffs= coeffs_inner)
+
+  ####################################################
+  #### OUTER #########################################
+  ####################################################
+  #prepare
+  fit= cv_FCnet(y = y,
+                x = x,
+                alpha = alpha,
+                lambda = lambda,
+                cv_Ncomp = cv_Ncomp,
+                cv_Ncomp_method = cv_Ncomp_method,
+                type.measure= type.measure,
+                intercept= intercept,
+                standardize= standardize,
+                thresh= thresh,
+                ...
+  )
+
+  #find consensus
+  consensus_alpha= optionsFCnet("consensus_function")(alpha_inner)
+  consensus_lambda= optionsFCnet("consensus_function")(lambda_inner)
+  consensus_N_comp= optionsFCnet("consensus_function")(N_comp_inner)
+
+  #recover number components + prepare coefficients
+  cname= c(("Intercept"), colnames(x))
+  zeros= rep(0, ncol(x) + 1) #+1 is the intercept
+
+  #if cv_Ncomp is null, all components are tested
+  if(is.null(cv_Ncomp))(cv_Ncomp= ncol(x))
+
+  if(cv_Ncomp_method== "order" | length(cv_Ncomp)== 1){
+
+    test_c= lapply(cv_Ncomp, function(x)1:x)
+
+  }
+
+  if(cv_Ncomp_method== "R") {
+
+    r= apply(x, 2, function(z){cor(z, y)})
+
+    rank= rank(-abs(r), ties.method = "max")
+    all_x= 1:ncol(x)
+
+    test_c= lapply(cv_Ncomp, function(n){
+
+      all_x[rank<= n]
+
+    })
+  }
+
+  final_components= sapply(test_c, function(l)length(l)== consensus_N_comp)
+  final_components= unlist(test_c[final_components])
+
+  #model fit
+  ffit= glmnet(y = y,
+               x = x[, final_components],
+               alpha = consensus_alpha,
+               lambda = consensus_lambda,
+               type.measure= type.measure,
+               intercept= intercept,
+               standardize= standardize,
+               thresh= thresh,
+               ...
+  )
+
+  #crossvalidation error
+  # cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== consensus_lambda])/c(var(y))
+  # cvr2= as.numeric(cvr2)
+
+  p= predict(ffit,
+             s= consensus_lambda,
+             newx= (data.matrix((x[, final_components]))),
+             exact= TRUE)
+
+  p= as.numeric(p)
+
   pars= evalFCnet(true = as.vector(unlist(y)),
-                  predicted = prediction)
+                  predicted = p)
 
   R2= pars[,"R2"]
   MSE= pars[,"MSE"]
   RMSE= pars[,"RMSE"]
 
+  #return coefficients - only for components that were actually tested
+  #the rest is set to zero
+  cf= coef(ffit, s= consensus_lambda, exact= T)[,1]
+  zeros[c(1, final_components+1)] = cf
+  cf= zeros
+
+  coeffs= data.frame(Feature= cname,
+                     Coefficient= cf)
+
+  rownames(coeffs)= NULL
+
+
   #wrap-up info
   res= list(R2= R2,
             MSE= MSE,
             RMSE= RMSE,
-            predicted= prediction,
-            alpha= alpha,
-            lambda= lambda,
-            N_comp= N_comp,
+            predicted= p,
+            alpha= consensus_alpha,
+            lambda= consensus_lambda,
+            N_comp= consensus_N_comp,
             coeffs= coeffs,
-            y= y)
+            y= y,
+            inner= inner)
+
+   } #end if nested
 
   return(res)
 
