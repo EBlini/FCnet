@@ -10,6 +10,10 @@ optionsFCnet(...)
 \item{cv.type.measure}{The measure to minimize in crossvalidation inner loops.
 The deafult is the mean squared error.}
 
+\item{cv.criterion}{Whether crossvalidated models are chosen on the basis of
+their error or - relevant when different number of components are compared -
+AIC or BIC criteria.}
+
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.
 Useful if y is not scaled and centered.}
 

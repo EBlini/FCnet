@@ -170,8 +170,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
     }
 
 
-
-
+    #collect parameters
     pars= sapply(Ncomp_ridge, function(p)get_CVparsFCnet(p))
 
     #the minimum error observed among the external loop, i.e. ncomp

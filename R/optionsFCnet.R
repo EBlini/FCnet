@@ -2,6 +2,7 @@
 # This function is not exported to user space and does not need to be documented.
 opt= settings::options_manager(
   cv.type.measure= "mse",
+  cv.criterion= "error",
   intercept= F,
   standardize= F,
   thresh= 10^-15,
@@ -24,6 +25,9 @@ opt= settings::options_manager(
 #'
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' The deafult is the mean squared error.
+#' @param cv.criterion Whether crossvalidated models are chosen on the basis of
+#' their error or - relevant when different number of components are compared -
+#' AIC or BIC criteria.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
 #' Useful if y is not scaled and centered.
 #' @param standardize Whether x must be standardized internally to `glmnet::glmnet()`.

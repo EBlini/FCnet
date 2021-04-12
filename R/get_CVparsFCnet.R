@@ -1,3 +1,24 @@
+#adapted from:
+#https://stackoverflow.com/questions/63171921/is-there-a-way-in-r-to-determine-aic-from-cv-glmnet
+glmnet_cv_aicc <- function(f= fit$modlist,
+                           l= optionsFCnet("whichLambda"),
+                           ret= optionsFCnet("cv.criterion")){
+
+  whlm <- sapply(f, function(fa) which(fa$lambda == fa[[l]]))
+
+  sapply(1:length(whlm), function(n){
+    with(f[[n]]$glmnet.fit,
+         {
+           tLL <- nulldev - nulldev * (1 - dev.ratio)[whlm[n]]
+           k <- df[whlm[n]]
+           n <- nobs
+           res= list('AIC' = - tLL + 2 * k + 2 * k * (k + 1) / (n - k - 1),
+                     'BIC' = log(n) * k - tLL)
+           return(res[[optionsFCnet("cv.criterion")]])
+         })
+  })
+
+}
 
 #' Internal function for retrieving crossvalidated parameters of cv_FCnet
 #'
@@ -18,14 +39,29 @@ get_CVparsFCnet= function(fit){
 
   lambdaSE= sapply(fit$modlist, `[[`, "lambda.1se")
 
-  error= sapply(fit$modlist, function(mod){
+  lambda= ifelse(optionsFCnet("whichLambda")== "lambda.min",
+                 lambdaMin,
+                 lambdaSE)
 
-    min(mod$cvm)
 
-  })
+  if(optionsFCnet("cv.criterion")== "error"){
+
+    error= sapply(fit$modlist, function(mod){
+
+      as.numeric(mod$cvm[which(mod$lambda== lambda)])
+
+    }) } else {
+
+      error= glmnet_cv_aicc(f= fit$modlist,
+                            l= optionsFCnet("whichLambda"),
+                            ret= optionsFCnet("cv.criterion"))
+
+    } # end cv.criterion
+
 
   best= which.min(error)
 
+  #you can use [[1]] here because Ncomp come in batches
   N_comp= fit$modlist[[1]]$glmnet.fit$dim[1]
 
   res= data.frame(
