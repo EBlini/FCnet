@@ -12,9 +12,9 @@ glmnet_cv_aicc <- function(f= fit$modlist,
            tLL <- nulldev - nulldev * (1 - dev.ratio)[whlm[n]]
            k <- df[whlm[n]]
            n <- nobs
-           res= list('AIC' = - tLL + 2 * k + 2 * k * (k + 1) / (n - k - 1),
+           res= list('AIC' = - tLL + 2 * k,
                      'BIC' = log(n) * k - tLL)
-           return(res[[optionsFCnet("cv.criterion")]])
+           return(res[[ret]])
          })
   })
 
