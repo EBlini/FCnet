@@ -88,7 +88,7 @@ plotFCnet= function(model,
     #subset coeffs
     if(!is.null(subset_coeffs)){
 
-      ggDF= ggDF[as.character(ggDF$Feature) %in% subset_coeffs,]
+      ggDF= ggDF[ggDF$Feature %in% levels(ggDF$Feature)[subset_coeffs],]
       ggDF$Feature= factor(ggDF$Feature)
 
     }

@@ -134,31 +134,21 @@ FCnetLOO= function(y,
                   ...
                   )
 
-    #fit model
-    # ffit= glmnet(y = y,
-    #              x = x[, fit$N_comp],
-    #              alpha = fit$alpha,
-    #              lambda = fit$lambda,
-    #              type.measure= type.measure,
-    #              intercept= intercept,
-    #              standardize= standardize,
-    #              thresh= thresh,
-    #              ...
-    # )
 
     #cv r2
     cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== fit$lambda])/c(var(y))
     cvr2= as.numeric(cvr2)
 
-    #prediction
-    p= predict(fit$fit,
-               s= fit$lambda,
-               newx= (data.matrix((x[, fit$N_comp]))),
-               exact= TRUE,
-               y = y,
-               x = x[, fit$N_comp])
+    #prediction - all data
+    # p= predict(fit$fit,
+    #            s= fit$lambda,
+    #            newx= (data.matrix((x[, fit$N_comp]))),
+    #            exact= TRUE,
+    #            y = y,
+    #            x = x[, fit$N_comp])
+    # p= as.numeric(p)
 
-    p= as.numeric(p)
+    p= fit$predictions
 
     # # #metrics
     # pars= evalFCnet(true = as.vector(unlist(y)),
@@ -319,30 +309,21 @@ FCnetLOO= function(y,
   final_components= sapply(test_c, function(l)length(l)== consensus_N_comp)
   final_components= unlist(test_c[final_components])
 
-  #model fit
-  # ffit= glmnet(y = y,
-  #              x = x[, final_components],
-  #              alpha = consensus_alpha,
-  #              lambda = consensus_lambda,
-  #              type.measure= type.measure,
-  #              intercept= intercept,
-  #              standardize= standardize,
-  #              thresh= thresh,
-  #              ...
-  # )
-
   #crossvalidation error
   cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== consensus_lambda])/c(var(y))
   cvr2= as.numeric(cvr2)
 
-  p= predict(fit$fit,
-             s= consensus_lambda,
-             newx= (data.matrix((x[, final_components]))),
-             exact= TRUE,
-             y = y,
-             x = x[, fit$N_comp])
+  #global prediction - all data
+  # p= predict(fit$fit,
+  #            s= consensus_lambda,
+  #            newx= (data.matrix((x[, final_components]))),
+  #            exact= TRUE,
+  #            y = y,
+  #            x = x[, fit$N_comp])
+  # p= as.numeric(p)
 
-  p= as.numeric(p)
+  #CV predictions
+  p= fit$predictions
 
   # pars= evalFCnet(true = as.vector(unlist(y)),
   #                 predicted = p)

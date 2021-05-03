@@ -181,7 +181,6 @@ cv_FCnet= function(y, #dependent variable, typically behavior
 
     fit= Ncomp_ridge[[min_error]]$modlist[[best]]
 
-
     #now hyperparameters of the best model,
     #i.e. where the minimum error was observed
     lambda= as.numeric(pars[rownames(pars)== optionsFCnet("whichLambda")])[min_error]
@@ -202,11 +201,15 @@ cv_FCnet= function(y, #dependent variable, typically behavior
     rownames(coeffs)= NULL
 
 
+    #prevalidated CV predictions
+    predictions= fit$fit.preval[, which(fit$lambda== lambda)]
+
     #return best parameters
     bp= list(alpha= alpha,
              lambda= lambda,
              N_comp= which_comp,
              fit= fit,
+             predictions= predictions,
              y= y,
              coeffs= coeffs
              )
