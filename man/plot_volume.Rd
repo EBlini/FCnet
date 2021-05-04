@@ -17,7 +17,11 @@ plot_volume(
 \arguments{
 \item{volume}{A 3_d array to depict.}
 
-\item{x, y, z}{Coordinates at which the orthostatic view is displayed.}
+\item{x}{Coordinates at which the orthostatic view is displayed.}
+
+\item{y}{Coordinates at which the orthostatic view is displayed.}
+
+\item{z}{Coordinates at which the orthostatic view is displayed.}
 
 \item{limit}{Range of values to depict. If NULL, the default,
 simmetry is preserved around the largest value in absolute value.}

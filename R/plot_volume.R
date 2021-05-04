@@ -5,14 +5,16 @@
 #' or the mean volume returned from the reduce_features object.
 #'
 #' @param volume A 3_d array to depict.
-#' @param x,y,z Coordinates at which the orthostatic view is displayed.
+#' @param x Coordinates at which the orthostatic view is displayed.
+#' @param y Coordinates at which the orthostatic view is displayed.
+#' @param z Coordinates at which the orthostatic view is displayed.
 #' @param limit Range of values to depict. If NULL, the default,
 #' simmetry is preserved around the largest value in absolute value.
 #' @param col.y The color palette used to plot values (i.e. a vector of colors). The vector is often divergent, es. `c("red", "white", "blue")`.
 #' Defaults to `optionsFCnet("colorPaletteDefault")`.
 #' @param colorNuances Number of nuances along the provided col.y.
 
-
+#' @export
 
 plot_volume= function(volume,
                       x= 1,

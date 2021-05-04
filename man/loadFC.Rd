@@ -4,7 +4,11 @@
 \alias{loadFC}
 \title{Read and load Functional Connectivity matrices or volumes}
 \usage{
-loadFC(path = choose.dir(), quick = c("default", "data.table", "parallel"))
+loadFC(
+  path = choose.dir(),
+  files = NULL,
+  quick = c("default", "data.table", "parallel")
+)
 }
 \arguments{
 \item{path}{Path to the input files. If empty, it prompts the user
@@ -12,6 +16,10 @@ to select it manually via a selection menu. Only FC matrices or
 nifti files must be included in the folder. The function performs
 a cheap guess to understand which input is passed.
 Files other than those are disregarded.}
+
+\item{files}{An optional list of file names, e.g. as created by
+\code{list.files()}. If this is supplied, path is overwritten as
+the file addressed are assumed to be relative.}
 
 \item{quick}{For csv files: the default uses base R, which may be slow if the FC matrices
 are too many. Option "data.table" uses \code{data.table::fread()}, which is sensibly

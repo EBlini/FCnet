@@ -18,6 +18,9 @@
 #' nifti files must be included in the folder. The function performs
 #' a cheap guess to understand which input is passed.
 #' Files other than those are disregarded.
+#' @param files An optional list of file names, e.g. as created by
+#' `list.files()`. If this is supplied, path is overwritten as
+#' the file addressed are assumed to be relative.
 #' @param quick For csv files: the default uses base R, which may be slow if the FC matrices
 #' are too many. Option "data.table" uses `data.table::fread()`, which is sensibly
 #' faster when FC matrices are many; `data.table` must be installed. Option "parallel" uses
@@ -31,19 +34,23 @@
 #' @export
 
 loadFC= function(path= choose.dir(),
+                 files= NULL,
                  quick= c("default", "data.table", "parallel")){
 
   #match arguments
   quick= match.arg(quick)
 
   #read all files
-  files= list.files(path)
+  if(is.null(files)){
+    files= list.files(path)
+  } else {path= ".\\"}
+
 
   #if first in line is csv then read csvs
   if(grepl(".csv", files[1], fixed = T)){
 
     #disregard non-csv
-    files= list.files(path, pattern = ".csv")
+    files= files[grepl(".csv", files, fixed = T)]
 
     #read all files
     if(quick== "default"){
