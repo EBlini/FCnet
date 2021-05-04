@@ -142,7 +142,11 @@ default in R, thus you may want to ensure that participants with low IDs
 (e.g. # 5) are identified by file names preserving this order (e.g. FC 05.csv).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>loadFC</span><span class='op'>(</span>path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/utils/choose.dir.html'>choose.dir</a></span><span class='op'>(</span><span class='op'>)</span>, quick <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"default"</span>, <span class='st'>"data.table"</span>, <span class='st'>"parallel"</span><span class='op'>)</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>loadFC</span><span class='op'>(</span>
+  path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/utils/choose.dir.html'>choose.dir</a></span><span class='op'>(</span><span class='op'>)</span>,
+  files <span class='op'>=</span> <span class='cn'>NULL</span>,
+  quick <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"default"</span>, <span class='st'>"data.table"</span>, <span class='st'>"parallel"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,6 +158,12 @@ to select it manually via a selection menu. Only FC matrices or
 nifti files must be included in the folder. The function performs
 a cheap guess to understand which input is passed.
 Files other than those are disregarded.</p></td>
+    </tr>
+    <tr>
+      <th>files</th>
+      <td><p>An optional list of file names, e.g. as created by
+<code><a href='https://rdrr.io/r/base/list.files.html'>list.files()</a></code>. If this is supplied, path is overwritten as
+the file addressed are assumed to be relative.</p></td>
     </tr>
     <tr>
       <th>quick</th>
