@@ -1,19 +1,24 @@
 
-#' Reduce the dimensionality of Functional Connectivity matrices
+#' Reduce the dimensionality of Functional Connectivity matrices or volumes
 #'
-#' This function accepts a list of lists containing square FC matrices
+#' This function accepts a list of lists containing squared FC matrices
+#' or three-dimensional arrays (brain volumes)
 #' - such as one created by `loadFC()` - and apply feature reduction techniques.
 #' Available techniques are listed under the `method` parameter and currently
 #' include Principal Component Analysis (PCA) and Independent Component
-#' Analysis (ICA). Both are applied on the upper triangular part of the matrix.
+#' Analysis (ICA). Both are applied on the upper triangular part of the matrices,
+#' if matrices are provided, or to the whole array: if many brain volumes
+#' are provided, consider masking them beforehand to reduce memory consumption.
 #' PCA uses base R `prcomp()` while ICA uses `ica::icafast()`,
 #' thus the `ica` package must be installed. The user can supply the desired
 #' number of components to retain; else, the number of components needed to
 #' explain at least a given proportion of the variance of FC matrices will be returned under
-#' the `Weights` slot - for ICA, this is based on the PCA analysis.
+#' the `Weights` slot - for ICA, this is based on the PCA analysis. The default
+#' is 95% of the varaince.
 
 
-#' @param FCmatrices a list of lists including the (square) FC matrices, such as
+#' @param FCmatrices a list of lists including (squared) FC matrices
+#' or three-dimensional arrays, such as
 #' one provided by `loadFC()`.
 #' @param method One of "PCA" or "ICA", defining the method for the desired
 #' feature reduction technique.
@@ -22,8 +27,8 @@
 #' the components. If Ncomp <1 this is interpreted as if the user wishes to retain
 #' a given proportion of variance (e.g. 0.6). If Ncomp is a vector, an additional
 #' slot is returned: a list of lists offering solutions with many components
-#' (slightly redundant for PCA but possibly useful for crossvalidating the number
-#' of features). In that last case the Weight slot always returns the model
+#' (redundant for PCA but possibly useful for crossvalidating the number
+#' of features in the case of ICA). In that last case the Weight slot always returns the model
 #' accounting for at least 95% of variance.
 #' @param parallel If TRUE uses `future.apply::future_lapply()`:
 #' `future.apply` must be installed, your machine should have multiple cores
@@ -40,8 +45,9 @@
 #' eigenvectors or the estimated sources mapping the reduced features onto the
 #' original space. SummaryPCA reports the amount of explained variance of the features
 #' with respect to variability in the original matrices. MeanFC is the mean
-#' FC matrix. CrossWeights (optional) is a list of lists reporting weights and
-#' loadings for a range of provided Ncomp.
+#' FC matrix or volume. CrossWeights (optional) is a list of lists reporting weights and
+#' loadings for a range of provided Ncomp. Dim is a dataframe with
+#' information about the original dimensions.
 
 #' @export
 
@@ -65,26 +71,53 @@ reduce_featuresFC= function(FCmatrices,
 
   }
 
-  #First collapse the upper triangles
-  if(parallel){
+  #First collapse the upper triangles -
+  #only if matrices are provided
+  #else work on the array
+  if(class(FCmatrices[[1]])[1] %in% c("matrix", "data.frame")){
 
-    FC= future.apply::future_lapply(FCmatrices, function(x){
-
-      x[upper.tri(x, diag = F)]
-
-    }, future.seed = T)
+    original_dimensions= data.frame(type= "matrix",
+                                    d1= nrow(FCmatrices[[1]]),
+                                    d2= ncol(FCmatrices[[1]]))
 
   } else {
 
+    original_dimensions= data.frame(type= "volume",
+                                    d1= dim(FCmatrices[[1]])[1],
+                                    d2= dim(FCmatrices[[1]])[2],
+                                    d3= dim(FCmatrices[[1]])[3])
+  }
+
+  #if matrices
+  if(original_dimensions[1,1]== "matrix"){
+
+    if(parallel){
+
+      FC= future.apply::future_lapply(FCmatrices, function(x){
+
+        x[upper.tri(x, diag = F)]
+
+      }, future.seed = T)
+
+    } else {
+
+      FC= lapply(FCmatrices, function(x){
+
+        x[upper.tri(x, diag = F)]
+
+      })
+    }
+  } else {#end if matrix}
+
     FC= lapply(FCmatrices, function(x){
 
-      x[upper.tri(x, diag = F)]
+      c(x)
 
     })
 
   }
 
-  #then merge
+  #then merge in columns
   FC= do.call(rbind, FC)
 
 
@@ -242,9 +275,20 @@ reduce_featuresFC= function(FCmatrices,
     #merge and return
     res= list(Weights= Weights,
               Loadings= Loadings,
-              summaryPCA= summaryPCA)
+              summaryPCA= summaryPCA,
+              dim= original_dimensions)
 
-    #also return mean FC matrix
+    #also return mean FC matrix or mean volume
+
+    if(original_dimensions[1,1]== "volume"){
+
+      meanFC= apply(FC, 2, mean)
+      meanFC= array(meanFC, dim=c(original_dimensions[1,2],
+                                  original_dimensions[1,3],
+                                  original_dimensions[1,4]))
+
+    } else { #if not a volume
+
     if(parallel){
 
       meanFC= Reduce("+",
@@ -262,7 +306,7 @@ reduce_featuresFC= function(FCmatrices,
                      as.matrix(x)/ length(FCmatrices)
 
                      }))
-    }
+    }}
 
     res[["MeanFC"]]= meanFC
 

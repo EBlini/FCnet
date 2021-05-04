@@ -65,6 +65,12 @@ select_coefficients= function(coeffs,
   coeffs= consensus
   coeffs[mask== 0]= 0
 
+  #omit intercept
+  if("Intercept" %in% names){
+    coeffs= coeffs[-1]
+    mask= mask[-1]
+  }
+
   res= list(coeffs= coeffs,
             mask= mask)
 

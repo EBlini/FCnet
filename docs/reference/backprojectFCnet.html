@@ -40,16 +40,15 @@
 
 
 <meta property="og:title" content="Back-projection of regression coefficients onto the original space — backprojectFCnet" />
-<meta property="og:description" content="This function projects - based on Loadings as provided,
-for example, by reduce_features_FC() - regression coefficients onto
-the original space (i.e. a square matrix). Coefficients can either be
+<meta property="og:description" content="This function projects - based on Loadings as provided
+by reduce_features_FC() - regression coefficients onto
+the original space (i.e. a square matrix or a volume).
+Coefficients can either be
 passed as a list (as created, for example, by FCnetLOO()), as a data.frame,
-or as a user-defined vector. If a list or a data.frame is provided, this function
-finds consensus trough the function specified by optionsFCnet(&quot;consensus_function&quot;),
-which by default is the median. Moreover, if a single value for the coefficients
+or as a user-defined vector. If a single value for the coefficients
 is provided, then the function understands that the user wants to retrieve
-the edges' loadings for a specific coefficients, i.e. (possibly) a network.
-The function returns a square matrix whose entries are the linear combination
+the edges' loadings for a specific coefficient, i.e. (possibly) a network.
+The function returns a square matrix or a 3-D array whose entries are the linear combination
 of the coefficients and the edge's loadings. Optional thresholding can be passed
 to the threshold parameter: an integer value must be specified in order to
 retrieve the k largest coefficients, in absolute value, only." />
@@ -84,7 +83,7 @@ retrieve the k largest coefficients, in absolute value, only." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FCnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6.9000</span>
       </span>
     </div>
 
@@ -133,27 +132,21 @@ retrieve the k largest coefficients, in absolute value, only." />
     </div>
 
     <div class="ref-description">
-    <p>This function projects - based on Loadings as provided,
-for example, by <code>reduce_features_FC()</code> - regression coefficients onto
-the original space (i.e. a square matrix). Coefficients can either be
+    <p>This function projects - based on Loadings as provided
+by <code>reduce_features_FC()</code> - regression coefficients onto
+the original space (i.e. a square matrix or a volume).
+Coefficients can either be
 passed as a list (as created, for example, by <code><a href='FCnetLOO.html'>FCnetLOO()</a></code>), as a data.frame,
-or as a user-defined vector. If a list or a data.frame is provided, this function
-finds consensus trough the function specified by <code><a href='optionsFCnet.html'>optionsFCnet("consensus_function")</a></code>,
-which by default is the median. Moreover, if a single value for the coefficients
+or as a user-defined vector. If a single value for the coefficients
 is provided, then the function understands that the user wants to retrieve
-the edges' loadings for a specific coefficients, i.e. (possibly) a network.
-The function returns a square matrix whose entries are the linear combination
+the edges' loadings for a specific coefficient, i.e. (possibly) a network.
+The function returns a square matrix or a 3-D array whose entries are the linear combination
 of the coefficients and the edge's loadings. Optional thresholding can be passed
 to the threshold parameter: an integer value must be specified in order to
 retrieve the k largest coefficients, in absolute value, only.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>backprojectFCnet</span><span class='op'>(</span>
-  <span class='va'>coeffs</span>,
-  <span class='va'>reduce_features_object</span>,
-  Loadings <span class='op'>=</span> <span class='cn'>NULL</span>,
-  threshold <span class='op'>=</span> <span class='cn'>NULL</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>backprojectFCnet</span><span class='op'>(</span><span class='va'>coeffs</span>, <span class='va'>reduce_features_object</span>, threshold <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -162,9 +155,10 @@ retrieve the k largest coefficients, in absolute value, only.</p>
       <th>coeffs</th>
       <td><p>Coefficients can either be
 passed as a list (as created, for example, by <code><a href='FCnetLOO.html'>FCnetLOO()</a></code>), as a data.frame,
-or as a user-defined vector. If a list or a data.frame is provided, this function
-finds consensus trough the function specified by <code><a href='optionsFCnet.html'>optionsFCnet("consensus_function")</a></code>,
-which by default is the median. Moreover, if a single value for the coefficients
+or as a user-defined vector. If you fetch a list or a data.frame,
+then all the coefficients will be backprojected: you may want to select those that are
+significant following a permutation test instead (see <code><a href='select_coefficients.html'>select_coefficients()</a></code>).
+If a single value for the coefficients
 is provided, then the function understands that the user wants to retrieve
 the edges' loadings for a specific coefficients, i.e. (possibly) a network.</p></td>
     </tr>
@@ -172,11 +166,6 @@ the edges' loadings for a specific coefficients, i.e. (possibly) a network.</p><
       <th>reduce_features_object</th>
       <td><p>An object created by <code>reduce_features_FC()</code>. If present,
 Loadings may not be provided, and is overwritten.</p></td>
-    </tr>
-    <tr>
-      <th>Loadings</th>
-      <td><p>Not necessary if reduce_features_object is passed to the function.
-Else, this is a dataframe containing all edges' relationships with the coefficients.</p></td>
     </tr>
     <tr>
       <th>threshold</th>
@@ -187,7 +176,8 @@ threshold larger entries (in absolute value).</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A square back-projection matrix with the original dimensions.</p>
+    <p>A square back-projection matrix or 3-D volume with
+the original dimensions.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

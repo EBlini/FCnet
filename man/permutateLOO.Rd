@@ -16,7 +16,7 @@ permutateLOO(
   scale_x = T,
   nperm = 100,
   model_R2 = NULL,
-  return_coeffs = F,
+  return_coeffs = T,
   type.measure = optionsFCnet("cv.type.measure"),
   intercept = optionsFCnet("intercept"),
   standardize = optionsFCnet("standardize"),
@@ -76,7 +76,7 @@ precise value of R2 can be supplied, as to avoid unnecessary computations.}
 
 \item{return_coeffs}{Optional: whether coefficients for the null models should
 be returned as well. This may interesting should inferential statistics be
-envisaged for single coefficients. The returned datya.frame, on the other
+envisaged for single coefficients. The returned data.frame, on the other
 hand, may be quite large.}
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}

@@ -4,45 +4,38 @@
 \alias{backprojectFCnet}
 \title{Back-projection of regression coefficients onto the original space}
 \usage{
-backprojectFCnet(
-  coeffs,
-  reduce_features_object,
-  Loadings = NULL,
-  threshold = NULL
-)
+backprojectFCnet(coeffs, reduce_features_object, threshold = NULL)
 }
 \arguments{
 \item{coeffs}{Coefficients can either be
 passed as a list (as created, for example, by \code{FCnetLOO()}), as a data.frame,
-or as a user-defined vector. If a list or a data.frame is provided, this function
-finds consensus trough the function specified by \code{optionsFCnet("consensus_function")},
-which by default is the median. Moreover, if a single value for the coefficients
+or as a user-defined vector. If you fetch a list or a data.frame,
+then all the coefficients will be backprojected: you may want to select those that are
+significant following a permutation test instead (see \code{select_coefficients()}).
+If a single value for the coefficients
 is provided, then the function understands that the user wants to retrieve
 the edges' loadings for a specific coefficients, i.e. (possibly) a network.}
 
 \item{reduce_features_object}{An object created by \code{reduce_features_FC()}. If present,
 Loadings may not be provided, and is overwritten.}
 
-\item{Loadings}{Not necessary if reduce_features_object is passed to the function.
-Else, this is a dataframe containing all edges' relationships with the coefficients.}
-
 \item{threshold}{Optional. Prune the back-projection matrix by retaining only the
 threshold larger entries (in absolute value).}
 }
 \value{
-A square back-projection matrix with the original dimensions.
+A square back-projection matrix or 3-D volume with
+the original dimensions.
 }
 \description{
-This function projects - based on Loadings as provided,
-for example, by \code{reduce_features_FC()} - regression coefficients onto
-the original space (i.e. a square matrix). Coefficients can either be
+This function projects - based on Loadings as provided
+by \code{reduce_features_FC()} - regression coefficients onto
+the original space (i.e. a square matrix or a volume).
+Coefficients can either be
 passed as a list (as created, for example, by \code{FCnetLOO()}), as a data.frame,
-or as a user-defined vector. If a list or a data.frame is provided, this function
-finds consensus trough the function specified by \code{optionsFCnet("consensus_function")},
-which by default is the median. Moreover, if a single value for the coefficients
+or as a user-defined vector. If a single value for the coefficients
 is provided, then the function understands that the user wants to retrieve
-the edges' loadings for a specific coefficients, i.e. (possibly) a network.
-The function returns a square matrix whose entries are the linear combination
+the edges' loadings for a specific coefficient, i.e. (possibly) a network.
+The function returns a square matrix or a 3-D array whose entries are the linear combination
 of the coefficients and the edge's loadings. Optional thresholding can be passed
 to the threshold parameter: an integer value must be specified in order to
 retrieve the k largest coefficients, in absolute value, only.

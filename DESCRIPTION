@@ -1,6 +1,6 @@
 Package: FCnet
 Title: Analysis of Functional Connectivity matrices through elastic NETs
-Version: 0.1.4.9000
+Version: 0.1.6.9000
 Year: 2020 
 Date: 2020
 Author: Elvio Blini [aut, cre], Michele De Filippo De Grazia [aut], Testolin [aut], Zorzi [aut] 
@@ -31,9 +31,11 @@ Description: The analysis of (Functional Connectivity) neuroimaging data can be
   The model is crossvalidated internally by means of Leave-One-Out (nested) 
   crossvalidation. 
   ii) Back-projection: models' coefficients can be back-projected onto the 
-  original space, in order to rank the most predictive edges of a matrix. 
+  original space, in order to rank the most predictive edges of a matrix.
+  Starting from version 0.1.5, experimental support is also provided for the 
+  analysis of brain volumes. 
 Depends: R (>= 4.0), glmnet, glmnetUtils
-Imports: reshape2, settings, ica, ggplot2, gridExtra, future.apply
+Imports: reshape2, settings, ica, ggplot2, gridExtra, future.apply, oro.nifti, neurobase
 Enhances: data.table
 License: GPL-3
 Encoding: UTF-8

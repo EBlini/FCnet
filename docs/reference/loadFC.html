@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read and load Functional Connectivity matrices — loadFC • FCnet</title>
+<title>Read and load Functional Connectivity matrices or volumes — loadFC • FCnet</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,13 @@
 
 
 
-<meta property="og:title" content="Read and load Functional Connectivity matrices — loadFC" />
+<meta property="og:title" content="Read and load Functional Connectivity matrices or volumes — loadFC" />
 <meta property="og:description" content="This function is a helper function to quickly read and import in R functional
-connectivity matrices stored as standard .csv files.
-Files must adhere to a strict format:
+connectivity matrices stored as standard .csv files or lesion/disconnection
+data stored as nifti files.
+Files (.csv) must adhere to a strict format:
 .csv files with no header nor row names.
-It is of PARAMOUNT importance that FC matrices are correctly ordered
+It is of PARAMOUNT importance that FC matrices/volumes are correctly ordered
 in their folder, according to participants' IDs (and therefore the behavioral
 score(s) to predict). Note that characters are ordered alphabetically by
 default in R, thus you may want to ensure that participants with low IDs
@@ -80,7 +81,7 @@ default in R, thus you may want to ensure that participants with low IDs
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FCnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6.9000</span>
       </span>
     </div>
 
@@ -123,17 +124,18 @@ default in R, thus you may want to ensure that participants with low IDs
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read and load Functional Connectivity matrices</h1>
+    <h1>Read and load Functional Connectivity matrices or volumes</h1>
     
     <div class="hidden name"><code>loadFC.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>This function is a helper function to quickly read and import in R functional
-connectivity matrices stored as standard .csv files.
-Files must adhere to a strict format:
+connectivity matrices stored as standard .csv files or lesion/disconnection
+data stored as nifti files.
+Files (.csv) must adhere to a strict format:
 .csv files with no header nor row names.
-It is of PARAMOUNT importance that FC matrices are correctly ordered
+It is of PARAMOUNT importance that FC matrices/volumes are correctly ordered
 in their folder, according to participants' IDs (and therefore the behavioral
 score(s) to predict). Note that characters are ordered alphabetically by
 default in R, thus you may want to ensure that participants with low IDs
@@ -148,12 +150,14 @@ default in R, thus you may want to ensure that participants with low IDs
     <tr>
       <th>path</th>
       <td><p>Path to the input files. If empty, it prompts the user
-to select it manually via a selection menu. Only FC matrices
-must be included in the folder. Files other than .csv are disregarded.</p></td>
+to select it manually via a selection menu. Only FC matrices or
+nifti files must be included in the folder. The function performs
+a cheap guess to understand which input is passed.
+Files other than those are disregarded.</p></td>
     </tr>
     <tr>
       <th>quick</th>
-      <td><p>The default uses base R, which may be slow if the FC matrices
+      <td><p>For csv files: the default uses base R, which may be slow if the FC matrices
 are too many. Option "data.table" uses <code><a href='https://Rdatatable.gitlab.io/data.table/reference/fread.html'>data.table::fread()</a></code>, which is sensibly
 faster when FC matrices are many; <code>data.table</code> must be installed. Option "parallel" uses
 <code><a href='https://rdrr.io/pkg/future.apply/man/future_lapply.html'>future.apply::future_lapply()</a></code>: <code>future.apply</code> must be installed, your
@@ -164,7 +168,8 @@ beforehand by the user (e.g. by calling <code>plan(multisession)</code>).</p></t
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of lists including the FC matrices, stored as data.frames.</p>
+    <p>A list of lists including the FC matrices/volumes,
+stored as data.frames or arrays.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

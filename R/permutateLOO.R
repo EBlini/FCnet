@@ -50,7 +50,7 @@
 #'
 #' @param return_coeffs Optional: whether coefficients for the null models should
 #' be returned as well. This may interesting should inferential statistics be
-#' envisaged for single coefficients. The returned datya.frame, on the other
+#' envisaged for single coefficients. The returned data.frame, on the other
 #' hand, may be quite large.
 
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
@@ -77,7 +77,7 @@ permutateLOO= function(y,
                        scale_x= T,
                        nperm= 100,
                        model_R2= NULL,
-                       return_coeffs= F,
+                       return_coeffs= T,
                        type.measure= optionsFCnet("cv.type.measure"),
                        intercept= optionsFCnet("intercept"),
                        standardize= optionsFCnet("standardize"),
@@ -127,7 +127,8 @@ permutateLOO= function(y,
 
   } else {
 
-    if(class(model_R2)[1]== "list")(original_R2= model_R2$R2)
+    if(class(model_R2)[1]== "list")(model_R2= model_R2$R2)
+    original_R2= model_R2
 
   }
 

@@ -2,16 +2,18 @@
 % Please edit documentation in R/loadFC.R
 \name{loadFC}
 \alias{loadFC}
-\title{Read and load Functional Connectivity matrices}
+\title{Read and load Functional Connectivity matrices or volumes}
 \usage{
 loadFC(path = choose.dir(), quick = c("default", "data.table", "parallel"))
 }
 \arguments{
 \item{path}{Path to the input files. If empty, it prompts the user
-to select it manually via a selection menu. Only FC matrices
-must be included in the folder. Files other than .csv are disregarded.}
+to select it manually via a selection menu. Only FC matrices or
+nifti files must be included in the folder. The function performs
+a cheap guess to understand which input is passed.
+Files other than those are disregarded.}
 
-\item{quick}{The default uses base R, which may be slow if the FC matrices
+\item{quick}{For csv files: the default uses base R, which may be slow if the FC matrices
 are too many. Option "data.table" uses \code{data.table::fread()}, which is sensibly
 faster when FC matrices are many; \code{data.table} must be installed. Option "parallel" uses
 \code{future.apply::future_lapply()}: \code{future.apply} must be installed, your
@@ -19,14 +21,16 @@ machine should have multiple cores available for use, and threads should be defi
 beforehand by the user (e.g. by calling \code{plan(multisession)}).}
 }
 \value{
-A list of lists including the FC matrices, stored as data.frames.
+A list of lists including the FC matrices/volumes,
+stored as data.frames or arrays.
 }
 \description{
 This function is a helper function to quickly read and import in R functional
-connectivity matrices stored as standard .csv files.
-Files must adhere to a strict format:
+connectivity matrices stored as standard .csv files or lesion/disconnection
+data stored as nifti files.
+Files (.csv) must adhere to a strict format:
 .csv files with no header nor row names.
-It is of PARAMOUNT importance that FC matrices are correctly ordered
+It is of PARAMOUNT importance that FC matrices/volumes are correctly ordered
 in their folder, according to participants' IDs (and therefore the behavioral
 score(s) to predict). Note that characters are ordered alphabetically by
 default in R, thus you may want to ensure that participants with low IDs
