@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>plot a brain Volume — plot_volume • FCnet</title>
+<title>FCnet (experimental) shiny Graphic User Interface — run_FCnet • FCnet</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,9 @@
 
 
 
-<meta property="og:title" content="plot a brain Volume — plot_volume" />
-<meta property="og:description" content="This function reads a 3-D array and returns a very basic plot
-using neurobase::ortho2(). This can be, for example, a back-projected volume
-or the mean volume returned from the reduce_features object." />
+<meta property="og:title" content="FCnet (experimental) shiny Graphic User Interface — run_FCnet" />
+<meta property="og:description" content="This function launches an experimental GUI for FCnet
+implementing a slightly simplified pipeline." />
 
 
 
@@ -117,61 +116,18 @@ or the mean volume returned from the reduce_features object." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>plot a brain Volume</h1>
+    <h1>FCnet (experimental) shiny Graphic User Interface</h1>
     
-    <div class="hidden name"><code>plot_volume.Rd</code></div>
+    <div class="hidden name"><code>run_FCnet.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function reads a 3-D array and returns a very basic plot
-using <code><a href='https://rdrr.io/pkg/neurobase/man/ortho2.html'>neurobase::ortho2()</a></code>. This can be, for example, a back-projected volume
-or the mean volume returned from the reduce_features object.</p>
+    <p>This function launches an experimental GUI for FCnet
+implementing a slightly simplified pipeline.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plot_volume</span><span class='op'>(</span>
-  <span class='va'>volume</span>,
-  x <span class='op'>=</span> <span class='fl'>1</span>,
-  y <span class='op'>=</span> <span class='fl'>1</span>,
-  z <span class='op'>=</span> <span class='fl'>1</span>,
-  limit <span class='op'>=</span> <span class='cn'>NULL</span>,
-  col.y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"darkslateblue"</span>, <span class='st'>"white"</span>, <span class='st'>"firebrick4"</span><span class='op'>)</span>,
-  colorNuances <span class='op'>=</span> <span class='fu'><a href='optionsFCnet.html'>optionsFCnet</a></span><span class='op'>(</span><span class='st'>"colorNuances"</span><span class='op'>)</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>run_FCnet</span><span class='op'>(</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>volume</th>
-      <td><p>A 3_d array to depict.</p></td>
-    </tr>
-    <tr>
-      <th>x</th>
-      <td><p>Coordinates at which the orthostatic view is displayed.</p></td>
-    </tr>
-    <tr>
-      <th>y</th>
-      <td><p>Coordinates at which the orthostatic view is displayed.</p></td>
-    </tr>
-    <tr>
-      <th>z</th>
-      <td><p>Coordinates at which the orthostatic view is displayed.</p></td>
-    </tr>
-    <tr>
-      <th>limit</th>
-      <td><p>Range of values to depict. If NULL, the default,
-simmetry is preserved around the largest value in absolute value.</p></td>
-    </tr>
-    <tr>
-      <th>col.y</th>
-      <td><p>The color palette used to plot values (i.e. a vector of colors). The vector is often divergent, es. <code><a href='https://rdrr.io/r/base/c.html'>c("red", "white", "blue")</a></code>.
-Defaults to <code><a href='optionsFCnet.html'>optionsFCnet("colorPaletteDefault")</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>colorNuances</th>
-      <td><p>Number of nuances along the provided col.y.</p></td>
-    </tr>
-    </table>
 
 
   </div>

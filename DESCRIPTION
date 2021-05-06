@@ -35,7 +35,7 @@ Description: The analysis of (Functional Connectivity) neuroimaging data can be
   Starting from version 0.1.5, experimental support is also provided for the 
   analysis of brain volumes. 
 Depends: R (>= 4.0), glmnet, glmnetUtils
-Imports: reshape2, settings, ica, ggplot2, gridExtra, future.apply, oro.nifti, neurobase
+Imports: shiny, reshape2, settings, ica, ggplot2, gridExtra, future.apply, oro.nifti, neurobase
 Enhances: data.table
 License: GPL-3
 Encoding: UTF-8
