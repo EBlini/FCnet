@@ -349,6 +349,7 @@ FCnet_server <- function(input, output) {
         modeltres= data.frame(R2= model$R2,
                               alpha= model$alpha,
                               lambda= model$lambda,
+                              Features= ncol(RF$Weights),
                               k= length(model$N_comp),
                               NonZero= sum(model$coeffs$Coefficient!=0),
                               N_obs= length(model$y))
