@@ -34,7 +34,7 @@ Description: The analysis of (Functional Connectivity) neuroimaging data can be
   original space, in order to rank the most predictive edges of a matrix.
   Starting from version 0.1.5, experimental support is also provided for the 
   analysis of brain volumes. 
-Depends: R (>= 4.0), glmnet, glmnetUtils
+Depends: R (>= 3.6), glmnet, glmnetUtils
 Imports: shiny, reshape2, settings, ica, ggplot2, gridExtra, future.apply, oro.nifti, neurobase
 Enhances: data.table
 License: GPL-3
