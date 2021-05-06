@@ -3,7 +3,6 @@
 
 #library(shiny)
 
-# Define UI for application that draws a histogram
 FCnet_ui <- shiny::fluidPage(
 
     # Application title
@@ -478,13 +477,14 @@ FCnet_server <- function(input, output) {
         req(input$y)
 
         final_script= paste(header,
-                read_data()$script,
-                red_feat()$script,
-                p_meanFC()$script,
-                model_fun()$script,
-                bp_fun()$script,
-                sep= "\n\n"
-                )
+                            read_data()$script,
+                            red_feat()$script,
+                            p_meanFC()$script,
+                            model_fun()$script,
+                            bp_fun()$script,
+                            sep= "\n\n"
+                            )
+
         return(final_script)
 
     })
