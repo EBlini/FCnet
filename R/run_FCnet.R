@@ -180,7 +180,7 @@ FCnet_server <- function(input, output) {
             if(grepl(".csv", addresses[1], fixed = T)){
 
                 res= lapply(addresses, function(r){
-                    matrix= data.table::fread(r, header= F)
+                    matrix= read.csv(r, header= F)
                     matrix= as.data.frame(matrix)
                     return(matrix)
 
