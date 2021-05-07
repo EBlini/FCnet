@@ -103,8 +103,15 @@ FCnet_ui <- shiny::fluidPage(
                                                 width = 300,
                                                 height = 300))),
 
-            #-coeffs
-            shiny::tableOutput("Coefficients"),
+            shiny::fluidRow(
+              shiny::column(width= 12,
+                            status = "primary",
+                            shiny::div(style = 'overflow-x: scroll',
+                                       shiny::tableOutput("Coefficients")
+                            )
+              )
+            ),
+
             #backproject
             shiny::plotOutput("BPplot", width = 300, height = 300),
 
@@ -376,7 +383,8 @@ FCnet_server <- function(input, output) {
 
     #coefficients
     output$Coefficients=shiny::renderTable({
-        model_fun()$model$coeffs
+      reshape2::dcast(model_fun()$model$coeffs, . ~ Feature,
+                      value.var="Coefficient")
         })
 
     #backproject
