@@ -36,6 +36,10 @@ plotFCnet= function(model,
     ggDF= data.frame(ID= 1:length(model$predicted),
                      Score= as.numeric(model$y),
                      Predicted= model$predicted)
+    lim= c(min(ggDF$Score, ggDF$Predicted),
+           max(ggDF$Score, ggDF$Predicted))
+
+
 
     #plot here
     if(plot_labels){
@@ -64,6 +68,7 @@ plotFCnet= function(model,
       ggplot2::geom_smooth(method= "lm",
                            color= "red",
                            size= 1.3) +
+      ggplot2::ylim(lim) + ggplot2::xlim(lim) +
       commonTheme
 
 
