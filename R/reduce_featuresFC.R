@@ -222,6 +222,9 @@ reduce_featuresFC= function(FCmatrices,
             L= res$S
             W= res$M
 
+            colnames(L)= paste0("ICA_", 1:x)
+            colnames(W)= paste0("ICA_", 1:x)
+
             return(list(Weights= W,
                         Loadings= L))
 
@@ -235,6 +238,9 @@ reduce_featuresFC= function(FCmatrices,
 
             L= res$S
             W= res$M
+
+            colnames(L)= paste0("ICA_", 1:x)
+            colnames(W)= paste0("ICA_", 1:x)
 
             return(list(Weights= W,
                         Loadings= L))
@@ -266,6 +272,10 @@ reduce_featuresFC= function(FCmatrices,
 
         Loadings= ICA$S
         Weights= ICA$M
+        colnames(Loadings)= paste0("ICA_", 1:Ncomp)
+        colnames(Weights)= paste0("ICA_", 1:Ncomp)
+
+
 
       }
 
