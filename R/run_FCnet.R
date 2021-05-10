@@ -376,7 +376,8 @@ FCnet_server <- function(input, output) {
     })
 
     #tableresults
-    output$ModelT= shiny::renderTable({model_fun()$modeltres})
+    output$ModelT= shiny::renderTable({model_fun()$modeltres},
+                                      digits = 4)
     #plot results
     output$ModelP1= shiny::renderPlot({model_fun()$p1})
     output$ModelP2= shiny::renderPlot({model_fun()$p2})
@@ -385,7 +386,7 @@ FCnet_server <- function(input, output) {
     output$Coefficients=shiny::renderTable({
       reshape2::dcast(model_fun()$model$coeffs, . ~ Feature,
                       value.var="Coefficient")
-        })
+        }, digits= 4)
 
     #backproject
     bp_fun= shiny::reactive({
