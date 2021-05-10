@@ -217,7 +217,7 @@ reduce_featuresFC= function(FCmatrices,
 
           CrossWeights= future.apply::future_lapply(Ncomp_vector, function(x){
 
-            res= icafast(ppFC, nc = x, ...)
+            res= ica::icafast(ppFC, nc = x, ...)
 
             L= res$S
             W= res$M
@@ -231,7 +231,7 @@ reduce_featuresFC= function(FCmatrices,
 
           CrossWeights= lapply(Ncomp_vector, function(x){
 
-            res= icafast(ppFC, nc = x, ...)
+            res= ica::icafast(ppFC, nc = x, ...)
 
             L= res$S
             W= res$M
@@ -262,7 +262,7 @@ reduce_featuresFC= function(FCmatrices,
       if(is.null(Ncomp_vector) | !Ncomp %in% Ncomp_vector){
 
         #do it
-        ICA= icafast(ppFC, nc = Ncomp, ...)
+        ICA= ica::icafast(ppFC, nc = Ncomp, ...)
 
         Loadings= ICA$S
         Weights= ICA$M
