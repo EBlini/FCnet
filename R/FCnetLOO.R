@@ -139,30 +139,15 @@ FCnetLOO= function(y,
     cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== fit$lambda])/c(var(y))
     cvr2= as.numeric(cvr2)
 
-    #prediction - all data
-    # p= predict(fit$fit,
-    #            s= fit$lambda,
-    #            newx= (data.matrix((x[, fit$N_comp]))),
-    #            exact= TRUE,
-    #            y = y,
-    #            x = x[, fit$N_comp])
-    # p= as.numeric(p)
-
     p= fit$predictions
 
-    # # #metrics
-    # pars= evalFCnet(true = as.vector(unlist(y)),
-    #                 predicted = p)
-    #
-    # R2= pars[,"R2"]
-    # MSE= pars[,"MSE"]
-    # RMSE= pars[,"RMSE"]
+    #metrics
+    pars= evalFCnet(fit)
 
 
     #wrap-up info
     res= list(R2= cvr2,
-              # MSE= MSE,
-              # RMSE= RMSE,
+              Goodness_Fit= pars,
               predicted= p,
               alpha= fit$alpha,
               lambda= fit$lambda,
@@ -313,41 +298,14 @@ FCnetLOO= function(y,
   cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== consensus_lambda])/c(var(y))
   cvr2= as.numeric(cvr2)
 
-  #global prediction - all data
-  # p= predict(fit$fit,
-  #            s= consensus_lambda,
-  #            newx= (data.matrix((x[, final_components]))),
-  #            exact= TRUE,
-  #            y = y,
-  #            x = x[, fit$N_comp])
-  # p= as.numeric(p)
-
   #CV predictions
   p= fit$predictions
 
-  # pars= evalFCnet(true = as.vector(unlist(y)),
-  #                 predicted = p)
-  #
-  # R2= pars[,"R2"]
-  # MSE= pars[,"MSE"]
-  # RMSE= pars[,"RMSE"]
-
-  #return coefficients - only for components that were actually tested
-  #the rest is set to zero
-  # cf= coef(fit$fit, s= consensus_lambda)[,1]
-  # zeros[c(1, which_comp+1)] = cf
-  # cf= zeros
-  #
-  # coeffs= data.frame(Feature= cname,
-  #                    Coefficient= cf)
-  #
-  # rownames(coeffs)= NULL
-
+  pars= evalFCnet(fit)
 
   #wrap-up info
   res= list(R2= cvr2,
-            # MSE= MSE,
-            # RMSE= RMSE,
+            Goodness_Fit= pars,
             predicted= p,
             alpha= consensus_alpha,
             lambda= consensus_lambda,

@@ -4,12 +4,10 @@
 \alias{evalFCnet}
 \title{Evaluate model's prediction against the observed true values}
 \usage{
-evalFCnet(true, predicted)
+evalFCnet(model)
 }
 \arguments{
-\item{true}{Observed (fitted) values.}
-
-\item{predicted}{Predicted (model-derived) values.}
+\item{model}{an object returned from a call to cv_FCnet}
 }
 \value{
 A dataframe with model's goodness of fit statistics.

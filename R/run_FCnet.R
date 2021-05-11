@@ -359,6 +359,9 @@ FCnet_server <- function(input, output) {
                               Features= ncol(RF$Weights),
                               k= length(model$N_comp),
                               NonZero= sum(model$coeffs$Coefficient!=0),
+                              RMSE= model$Goodness_Fit$RMSE,
+                              AIC= model$Goodness_Fit$AIC,
+                              BIC= model$Goodness_Fit$BIC,
                               N_obs= length(model$y))
 
         script= paste("#Modelling",
