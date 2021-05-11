@@ -124,18 +124,14 @@
     <p>Evaluate model's prediction against the observed true values</p>
     </div>
 
-    <pre class="usage"><span class='fu'>evalFCnet</span><span class='op'>(</span><span class='va'>true</span>, <span class='va'>predicted</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>evalFCnet</span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>true</th>
-      <td><p>Observed (fitted) values.</p></td>
-    </tr>
-    <tr>
-      <th>predicted</th>
-      <td><p>Predicted (model-derived) values.</p></td>
+      <th>model</th>
+      <td><p>an object returned from a call to cv_FCnet</p></td>
     </tr>
     </table>
 
