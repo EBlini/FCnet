@@ -1,28 +1,34 @@
 #' Evaluate model's prediction against the observed true values
 #'
-#' @param true Observed (fitted) values.
-#' @param predicted Predicted (model-derived) values.
+#' @param model an object returned from a call to cv_FCnet
 #' @return A dataframe with model's goodness of fit statistics.
 #'
 #' @export
 
-evalFCnet= function(true, predicted){
+evalFCnet= function(model){
 
   # Model performance metrics
-  RMSE= sqrt(mean((predicted - true)^2))
-  MSE= RMSE^2
+  RMSE= sqrt(mean((model$predictions - model$y)^2))
 
-  #Rsquare= as.numeric(cor(true, predicted)^2)
+  fit= model$fit$glmnet.fit
 
-  sse = sum((predicted - true)^2)
-  sst = sum((true - mean(true))^2)
-  Rsquare = 1 - sse / sst
+  which_lambda= which(fit$lambda== model$lambda)
+
+  tLL= fit$nulldev - fit$nulldev * (1 - fit$dev.ratio)[which_lambda]
+
+  k= fit$df[which_lambda]
+
+  n= fit$nobs
+
+  AIC= - tLL + 2 * k
+
+  BIC= log(n) * k - tLL
 
 
   res= data.frame(
-    MSE= MSE,
     RMSE= RMSE,
-    R2= Rsquare
+    AIC= AIC,
+    BIC= BIC
   )
 
   return(res)
