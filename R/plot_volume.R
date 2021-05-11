@@ -21,7 +21,11 @@ plot_volume= function(volume,
                       y= 1,
                       z= 1,
                       limit= NULL,
-                      col.y= c("darkslateblue", "black", "firebrick4"),
+                      col.y= c("chartreuse",
+                               "darkslateblue",
+                               "black",
+                               "firebrick4",
+                               "lightgoldenrod1"),
                       colorNuances= optionsFCnet("colorNuances")){
 
   #"smart" limit setting

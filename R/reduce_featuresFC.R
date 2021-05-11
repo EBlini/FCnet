@@ -2,8 +2,7 @@
 #' Reduce the dimensionality of Functional Connectivity matrices or volumes
 #'
 #' This function accepts a list of lists containing squared FC matrices
-#' or three-dimensional arrays (brain volumes)
-#' - such as one created by `loadFC()` - and apply feature reduction techniques.
+#' or three-dimensional arrays (brain volumes) - such as one created by `loadFC()` - and apply feature reduction techniques.
 #' Available techniques are listed under the `method` parameter and currently
 #' include Principal Component Analysis (PCA) and Independent Component
 #' Analysis (ICA). Both are applied on the upper triangular part of the matrices,

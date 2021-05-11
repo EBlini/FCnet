@@ -54,9 +54,7 @@ information about the original dimensions.
 }
 \description{
 This function accepts a list of lists containing squared FC matrices
-or three-dimensional arrays (brain volumes)
-\itemize{
-\item such as one created by \code{loadFC()} - and apply feature reduction techniques.
+or three-dimensional arrays (brain volumes) - such as one created by \code{loadFC()} - and apply feature reduction techniques.
 Available techniques are listed under the \code{method} parameter and currently
 include Principal Component Analysis (PCA) and Independent Component
 Analysis (ICA). Both are applied on the upper triangular part of the matrices,
@@ -68,5 +66,4 @@ number of components to retain; else, the number of components needed to
 explain at least a given proportion of the variance of FC matrices will be returned under
 the \code{Weights} slot - for ICA, this is based on the PCA analysis. The default
 is 95\% of the varaince.
-}
 }
