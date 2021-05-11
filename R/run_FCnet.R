@@ -13,33 +13,41 @@ FCnet_ui <- shiny::fluidPage(
         shiny::sidebarPanel(
 
             #x is fc matrices or volumes
-            shiny::fileInput("x",
-                             "Choose FC matrices or brain volumes",
-                             multiple= T),
+          shiny::fileInput("x",
+                           "FC matrices or brain volumes",
+                           multiple= T),
 
-            #y is behavioral scores
-            shiny::fileInput("y",
-                             "Choose data to predict (one .csv file)",
-                             accept = c(
-                                 "text/csv",
-                                 "text/comma-separated-values,text/plain",
-                                 ".csv")),
-            #multiple scores uploaded
-            shiny::textInput("y_n",
-                             "Choose data column",
-                             value = 1),
+          #y is behavioral scores
+          shiny::fluidRow(
+            shiny::column(width = 7,
+                          shiny::fileInput("y",
+                                           "Data to predict",
+                                           accept = c(
+                                             "text/csv",
+                                             "text/comma-separated-values,text/plain",
+                                             ".csv"))),
+            shiny::column(width = 5,
+                          #multiple scores uploaded
+                          shiny::textInput("y_n",
+                                           "in column",
+                                           value = 1))
+          ),
 
-            #feature reduction
-            #method
-            shiny::selectInput("FRmethod",
-                               "Choose feature reduction method",
-                               c("PCA"= "PCA",
-                                 "ICA"= "ICA"),
-                               selected = "PCA"),
-            #number of components
-            shiny::textInput("FRcomps",
-                             "How many components/explained variance?",
-                             value = 0.95),
+          #feature reduction
+          #method
+        shiny::fluidRow(
+          shiny::column(width = 6,
+                          shiny::selectInput("FRmethod",
+                                             "Features reduction",
+                                             c("PCA"= "PCA",
+                                               "ICA"= "ICA"),
+                                             selected = "PCA")),
+            shiny::column(width = 6,
+                          #number of components
+                          shiny::textInput("FRcomps",
+                                           "Explained variance",
+                                           value = 0.95))
+          ),
 
             #modelling
             shiny::selectInput("alpha",
@@ -51,21 +59,24 @@ FCnet_ui <- shiny::fluidPage(
             shiny::fluidRow(
                 shiny::column(width = 8,
                               shiny::sliderInput("FeatRange", "Features Range:",
-                                   min= 10, max= 150,
-                                   value= c(10, 15), step= 1)),
+                                   min= 2, max= 1000,
+                                   value= c(2, 1000), step= 1)),
                 shiny::column(width = 4,
                               shiny::sliderInput("FeatStep", "Features Step:",
                                    min= 1, max= 10,
                                    value= 5, step= 1))),
 
+        shiny::fluidRow(
+          shiny::column(width = 6,
             shiny::selectInput("whattobp", "Back-Projection:",
                                c("Feature(s)"= 1,
                                  "Coefficient(s)"= 2),
-                               selected = "Feature(s)"),
-
-            shiny::selectInput("ctobp", "Coefficients to back-project",
+                               selected = "Feature(s)")),
+          shiny::column(width = 6,
+            shiny::selectInput("ctobp", "Which coefficients",
                                as.character(1:150), selected = "1",
-                               multiple= T),
+                               multiple= T))
+          ),
 
             shiny::fluidRow(
                 shiny::column(4,
@@ -127,7 +138,7 @@ FCnet_ui <- shiny::fluidPage(
 )
 
 # Define server logic required to draw a histogram
-FCnet_server <- function(input, output) {
+FCnet_server <- function(input, output, session) {
 
     #omit in the real app/inside package?
     #library("FCnet")
@@ -261,6 +272,28 @@ FCnet_server <- function(input, output) {
 
     })
 
+
+    #change UI according to data
+    shiny::observe({
+
+      req(input$x)
+      req(input$y)
+
+      val= ncol(red_feat()$RF$Weights)
+
+      # Step size is 2 when input value is even; 1 when value is odd.
+      shiny::updateSliderInput(session, inputId = "FeatRange",
+                               value = val,
+                               min = 2,
+                               max = val,
+                               step = 1)
+
+      shiny::updateSelectInput(session, inputId = "ctobp",
+                               choices= as.character(1: val))
+
+    })
+
+
     #meanFC
     p_meanFC= shiny::reactive({
 
@@ -372,6 +405,7 @@ FCnet_server <- function(input, output) {
                       "model= FCnetLOO(y, RF, alpha = alpha, cv_Ncomp = seq(min_comp, max_comp, step))",
                       sep= "\n")
 
+
         return(list(model= model,
                     modeltres= modeltres,
                     p1= p1, p2= p2,
@@ -387,7 +421,8 @@ FCnet_server <- function(input, output) {
 
     #coefficients
     output$Coefficients=shiny::renderTable({
-      reshape2::dcast(model_fun()$model$coeffs, . ~ Feature,
+      reshape2::dcast(model_fun()$model$coeffs, . ~ factor(Feature,
+                                                           levels= unique(Feature)),
                       value.var="Coefficient")
         }, digits= 4)
 
@@ -401,12 +436,17 @@ FCnet_server <- function(input, output) {
         model= model_fun()$model
 
         if(input$whattobp== "1"){
-        coeffs= as.numeric(input$ctobp)
-        addtoscript1= paste("coeffs= c('",
-                           paste(ifelse(length(dput(input$ctobp))>1,
-                                        dput(input$ctobp), input$ctobp),
-                           collapse = ifelse(length(dput(input$ctobp))>1,"','", "")
-                           ), "')")
+          coeffs= as.numeric(input$ctobp)
+
+          c1= ifelse(length(dput(input$ctobp))>1,
+                     dput(input$ctobp),
+                     input$ctobp)
+          coll_c1= ifelse(length(dput(input$ctobp))>1,"','", "")
+
+          addtoscript1= paste("coeffs= c('",
+                             paste(c1,
+                             collapse= coll_c1
+                             ), "')")
 
         } else {
             coeffs= as.numeric(input$ctobp) #yeah redundant
