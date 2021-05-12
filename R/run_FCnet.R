@@ -72,7 +72,7 @@ FCnet_ui <- shiny::fluidPage(
                                    min= 2, max= 1000,
                                    value= c(2, 1000), step= 1)),
                 shiny::column(width = 4,
-                              shiny::sliderInput("FeatStep", "Features Step:",
+                              shiny::sliderInput("FeatStep", "Step:",
                                    min= 1, max= 10,
                                    value= 5, step= 1))),
 

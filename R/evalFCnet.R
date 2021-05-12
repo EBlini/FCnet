@@ -14,15 +14,17 @@ evalFCnet= function(model){
 
   which_lambda= which(fit$lambda== model$lambda)
 
-  tLL= fit$nulldev - fit$nulldev * (1 - fit$dev.ratio)[which_lambda]
+  #tLL= fit$nulldev - fit$nulldev * (1 - fit$dev.ratio)[which_lambda]
+  #tLL= deviance(fit)[which_lambda]
+  tLL= sum(dnorm((model$predictions - model$y), log= T))
 
   k= fit$df[which_lambda]
 
   n= fit$nobs
 
-  AIC= - tLL + 2 * k
+  AIC= - 2*tLL + 2 * k
 
-  BIC= log(n) * k - tLL
+  BIC= log(n) * k - 2*tLL
 
 
   res= data.frame(
