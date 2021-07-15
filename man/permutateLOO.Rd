@@ -56,10 +56,13 @@ data) or - somehow experimental - whether to use the N best components
 ranked according to their relationship (pearson's R) with y.}
 
 \item{parallelLOO}{If TRUE - recommended, but not the default - uses
-\code{future.apply::future_lapply()} for the outer loops: \code{future.apply} must be
+\code{future.apply::future_lapply()} for the inner loops: \code{future.apply} must be
 installed, the machine should have multiple cores available for use,
 and threads should be defined explicitly beforehand by the user
-(e.g. by calling \code{plan(multisession)}).}
+(e.g. by calling \code{plan(multisession)}). Outer loops have been changed in the
+most recent versions of FCnet to avoid excessive parallelization and resources
+consumption, which was causing this function to be very often slower than
+desirable.}
 
 \item{scale_y}{Whether y should be scaled prior to fit. Default, TRUE, scales
 and center y with \code{scale()}.}
@@ -100,6 +103,6 @@ This function is a wrapper around \code{FCnet::FCnetLOO()} which executes nperm
 times LOO robust regression pipelines on randomly permutated y scores.
 A vector of R2 obtained from permutated (null) models is returned. If asked,
 a data.frame (possibly huge) of the coefficients for the null models is also
-returned. A summary data.frame describes the distribution of the
+returned (this is the default). A summary data.frame describes the distribution of the
 permutated models.
 }

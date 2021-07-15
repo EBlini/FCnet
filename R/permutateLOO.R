@@ -4,7 +4,7 @@
 #' times LOO robust regression pipelines on randomly permutated y scores.
 #' A vector of R2 obtained from permutated (null) models is returned. If asked,
 #' a data.frame (possibly huge) of the coefficients for the null models is also
-#' returned. A summary data.frame describes the distribution of the
+#' returned (this is the default). A summary data.frame describes the distribution of the
 #' permutated models.
 #'
 #' @param y The dependent variable, typically behavioral scores to predict.
@@ -32,10 +32,13 @@
 #' data) or - somehow experimental - whether to use the N best components
 #' ranked according to their relationship (pearson's R) with y.
 #' @param parallelLOO If TRUE - recommended, but not the default - uses
-#' `future.apply::future_lapply()` for the outer loops: `future.apply` must be
+#' `future.apply::future_lapply()` for the inner loops: `future.apply` must be
 #' installed, the machine should have multiple cores available for use,
 #' and threads should be defined explicitly beforehand by the user
-#' (e.g. by calling `plan(multisession)`).
+#' (e.g. by calling `plan(multisession)`). Outer loops have been changed in the
+#' most recent versions of FCnet to avoid excessive parallelization and resources
+#' consumption, which was causing this function to be very often slower than
+#' desirable.
 #' @param scale_y Whether y should be scaled prior to fit. Default, TRUE, scales
 #' and center y with `scale()`.
 #' @param scale_x Whether x should be scaled prior to fit. Default, TRUE, subtracts
@@ -135,81 +138,134 @@ permutateLOO= function(y,
   if(is.na(original_R2))(original_R2= 0)
   original_R2= as.numeric(original_R2)
 
-  if(parallelLOO){
 
-    perms= future.apply::future_lapply(1:nperm, function(p){
+  #loop instead of apply because CPU is choked often
+  #progress bar
+  pb= txtProgressBar(min = 0, max = nperm, style = 3)
 
-      y= y[sample(1:length(y), size = length(y), replace = F)]
+  perms= vector(mode= "list", length= nperm)
 
-      res= FCnetLOO(y= y,
-                    x= x,
-                    alpha = alpha,
-                    lambda= lambda,
-                    cv_Ncomp = cv_Ncomp,
-                    cv_Ncomp_method = cv_Ncomp_method,
-                    parallelLOO= F,
-                    scale_y= F,
-                    scale_x= F,
-                    type.measure= type.measure,
-                    intercept= intercept,
-                    standardize= standardize,
-                    thresh= thresh,
-                    ...
-                    )
+  #loop here
+  for (p in 1:nperm){
 
-      R2= data.frame(nPerm= p, R2= ifelse(is.na(res$R2), 0, res$R2))
+    #permutate scores
+    yp= y[sample(1:length(y), size = length(y), replace = F)]
 
-      res_inner= list(R2=R2)
+    #fit
+    res= FCnetLOO(y= yp,
+                  x= x,
+                  alpha = alpha,
+                  lambda= lambda,
+                  cv_Ncomp = cv_Ncomp,
+                  cv_Ncomp_method = cv_Ncomp_method,
+                  parallelLOO= parallelLOO,
+                  scale_y= F, #already done
+                  scale_x= F, #already done
+                  type.measure= type.measure,
+                  intercept= intercept,
+                  standardize= standardize,
+                  thresh= thresh,
+                  ...
+                  )
 
-      if(return_coeffs){
+    R2= data.frame(nPerm= p, R2= ifelse(is.na(res$R2), 0, res$R2))
 
-        Coeffs= res$coeffs
-        Coeffs$nPerm= p
-        res_inner[["Coeffs"]]= Coeffs
+    res_inner= list(R2=R2)
 
-      }
+    if(return_coeffs){
 
-      return(res_inner)
+      Coeffs= res$coeffs
+      Coeffs$nPerm= p
+      res_inner[["Coeffs"]]= Coeffs
 
-    }, future.seed= T)} else {
+    }
 
-      perms= lapply(1:nperm, function(p){
+    perms[[p]]= res_inner
 
-        y= y[sample(1:length(y), size = length(y), replace = F)]
+    #update progressbar
+    setTxtProgressBar(pb, p)
 
-        res= FCnetLOO(y= y,
-                      x= x,
-                      alpha = alpha,
-                      lambda= lambda,
-                      cv_Ncomp = cv_Ncomp,
-                      cv_Ncomp_method = cv_Ncomp_method,
-                      parallelLOO= F,
-                      scale_y= F,
-                      scale_x= F,
-                      type.measure= type.measure,
-                      intercept= intercept,
-                      standardize= standardize,
-                      thresh= thresh,
-                      ...
-                      )
+  }
 
-        R2= data.frame(nPerm= p, R2= res$R2)
+  #close progressbar
+  close(pb)
 
-        res_inner= list(R2=R2)
 
-        if(return_coeffs){
-
-          Coeffs= res$coeffs
-          Coeffs$nPerm= p
-          res_inner[["Coeffs"]]= Coeffs
-
-        }
-
-        return(res_inner)
-
-      })
-
-    } #end if parallelLOO
+  # if(parallelLOO){
+  #
+  #   perms= future.apply::future_lapply(1:nperm, function(p){
+  #
+  #     y= y[sample(1:length(y), size = length(y), replace = F)]
+  #
+  #     res= FCnetLOO(y= y,
+  #                   x= x,
+  #                   alpha = alpha,
+  #                   lambda= lambda,
+  #                   cv_Ncomp = cv_Ncomp,
+  #                   cv_Ncomp_method = cv_Ncomp_method,
+  #                   parallelLOO= F,
+  #                   scale_y= F,
+  #                   scale_x= F,
+  #                   type.measure= type.measure,
+  #                   intercept= intercept,
+  #                   standardize= standardize,
+  #                   thresh= thresh,
+  #                   ...
+  #                   )
+  #
+  #     R2= data.frame(nPerm= p, R2= ifelse(is.na(res$R2), 0, res$R2))
+  #
+  #     res_inner= list(R2=R2)
+  #
+  #     if(return_coeffs){
+  #
+  #       Coeffs= res$coeffs
+  #       Coeffs$nPerm= p
+  #       res_inner[["Coeffs"]]= Coeffs
+  #
+  #     }
+  #
+  #     return(res_inner)
+  #
+  #   }, future.seed= T)} else {
+  #
+  #     perms= lapply(1:nperm, function(p){
+  #
+  #       y= y[sample(1:length(y), size = length(y), replace = F)]
+  #
+  #       res= FCnetLOO(y= y,
+  #                     x= x,
+  #                     alpha = alpha,
+  #                     lambda= lambda,
+  #                     cv_Ncomp = cv_Ncomp,
+  #                     cv_Ncomp_method = cv_Ncomp_method,
+  #                     parallelLOO= F,
+  #                     scale_y= F,
+  #                     scale_x= F,
+  #                     type.measure= type.measure,
+  #                     intercept= intercept,
+  #                     standardize= standardize,
+  #                     thresh= thresh,
+  #                     ...
+  #                     )
+  #
+  #       R2= data.frame(nPerm= p, R2= res$R2)
+  #
+  #       res_inner= list(R2=R2)
+  #
+  #       if(return_coeffs){
+  #
+  #         Coeffs= res$coeffs
+  #         Coeffs$nPerm= p
+  #         res_inner[["Coeffs"]]= Coeffs
+  #
+  #       }
+  #
+  #       return(res_inner)
+  #
+  #     })
+  #
+  #   } #end if parallelLOO
 
 
   R2= lapply(perms, function(x)x$R2)
