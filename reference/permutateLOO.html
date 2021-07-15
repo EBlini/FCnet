@@ -44,7 +44,7 @@
 times LOO robust regression pipelines on randomly permutated y scores.
 A vector of R2 obtained from permutated (null) models is returned. If asked,
 a data.frame (possibly huge) of the coefficients for the null models is also
-returned. A summary data.frame describes the distribution of the
+returned (this is the default). A summary data.frame describes the distribution of the
 permutated models." />
 
 
@@ -77,7 +77,7 @@ permutated models." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FCnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7.9000</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@ permutated models." />
 times LOO robust regression pipelines on randomly permutated y scores.
 A vector of R2 obtained from permutated (null) models is returned. If asked,
 a data.frame (possibly huge) of the coefficients for the null models is also
-returned. A summary data.frame describes the distribution of the
+returned (this is the default). A summary data.frame describes the distribution of the
 permutated models.</p>
     </div>
 
@@ -202,10 +202,13 @@ ranked according to their relationship (pearson's R) with y.</p></td>
     <tr>
       <th>parallelLOO</th>
       <td><p>If TRUE - recommended, but not the default - uses
-<code><a href='https://rdrr.io/pkg/future.apply/man/future_lapply.html'>future.apply::future_lapply()</a></code> for the outer loops: <code>future.apply</code> must be
+<code><a href='https://rdrr.io/pkg/future.apply/man/future_lapply.html'>future.apply::future_lapply()</a></code> for the inner loops: <code>future.apply</code> must be
 installed, the machine should have multiple cores available for use,
 and threads should be defined explicitly beforehand by the user
-(e.g. by calling <code>plan(multisession)</code>).</p></td>
+(e.g. by calling <code>plan(multisession)</code>). Outer loops have been changed in the
+most recent versions of FCnet to avoid excessive parallelization and resources
+consumption, which was causing this function to be very often slower than
+desirable.</p></td>
     </tr>
     <tr>
       <th>scale_y</th>
