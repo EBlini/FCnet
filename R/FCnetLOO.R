@@ -60,6 +60,7 @@
 #' @param scale_x Whether x should be scaled prior to fit. Default, TRUE, subtracts
 #' the mean matrix value and divides each entry for the matrix variance.
 #' Beware that this adds to `optionsFCnet("standardize")`.
+#' @param family Defaults to "gaussian." Experimental support for "binomial" on the way.
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' Differently from `glmnetUtils::cva.glmnet()` the default is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
@@ -84,6 +85,7 @@ FCnetLOO= function(y,
                    parallelLOO= F,
                    scale_y= T,
                    scale_x= T,
+                   family= optionsFCnet("family"),
                    type.measure= optionsFCnet("cv.type.measure"),
                    intercept= optionsFCnet("intercept"),
                    standardize= optionsFCnet("standardize"),
@@ -94,7 +96,13 @@ FCnetLOO= function(y,
 
 
   #scaling if requested
-  if(scale_y){y= scale(y)}
+  if(scale_y){
+
+    if(family== "binomial")(warning("You requested scaling of y but the family is 'binomial'..."))
+
+    y= scale(y)
+
+    }
 
   #ensure you are working with matrices
   y= data.matrix(y)
@@ -127,6 +135,7 @@ FCnetLOO= function(y,
                   parallelLOO= parallelLOO,
                   cv_Ncomp = cv_Ncomp,
                   cv_Ncomp_method = cv_Ncomp_method,
+                  family= family,
                   type.measure= type.measure,
                   intercept= intercept,
                   standardize= standardize,
@@ -142,7 +151,7 @@ FCnetLOO= function(y,
     p= fit$predictions
 
     #metrics
-    pars= evalFCnet(fit)
+    pars= evalFCnet(fit, family)
 
 
     #wrap-up info
@@ -155,7 +164,16 @@ FCnetLOO= function(y,
               coeffs= fit$coeffs,
               y= y)
 
-   } else { # if not nested
+    if(family== "binomial"){
+
+      res[["R2"]]= NULL
+
+      res[["Accuracy"]]= pars$Accuracy
+
+    }
+
+
+   } else { # if  nested
 
 
   #indices for the LOO function below, passed within lapply or future_lapply
@@ -175,6 +193,7 @@ FCnetLOO= function(y,
                   cv_Ncomp = cv_Ncomp,
                   cv_Ncomp_method = cv_Ncomp_method,
                   parallelLOO = F,
+                  family= family,
                   type.measure= type.measure,
                   intercept= intercept,
                   standardize= standardize,
@@ -257,6 +276,7 @@ FCnetLOO= function(y,
                 lambda = consensus_lambda + 0:1, #ensure it's a vector so cv.glmnet is happy
                 cv_Ncomp = consensus_N_comp,
                 cv_Ncomp_method = cv_Ncomp_method,
+                family= family,
                 type.measure= type.measure,
                 intercept= intercept,
                 standardize= standardize,
@@ -301,7 +321,7 @@ FCnetLOO= function(y,
   #CV predictions
   p= fit$predictions
 
-  pars= evalFCnet(fit)
+  pars= evalFCnet(fit, family)
 
   #wrap-up info
   res= list(R2= cvr2,
@@ -313,6 +333,15 @@ FCnetLOO= function(y,
             coeffs= fit$coeffs,
             y= y,
             inner= inner)
+
+  if(family== "binomial"){
+
+    res[["R2"]]= NULL
+
+    res[["Accuracy"]]= pars$Accuracy
+
+  }
+
 
    } #end if nested
 
