@@ -170,7 +170,7 @@ the file addressed are assumed to be relative.</p></td>
       <td><p>For csv files: the default uses base R, which may be slow if the FC matrices
 are too many. Option "data.table" uses <code>data.table::fread()</code>, which is sensibly
 faster when FC matrices are many; <code>data.table</code> must be installed. Option "parallel" uses
-<code><a href='https://rdrr.io/pkg/future.apply/man/future_lapply.html'>future.apply::future_lapply()</a></code>: <code>future.apply</code> must be installed, your
+<code><a href='https://future.apply.futureverse.org/reference/future_lapply.html'>future.apply::future_lapply()</a></code>: <code>future.apply</code> must be installed, your
 machine should have multiple cores available for use, and threads should be defined explicitly
 beforehand by the user (e.g. by calling <code>plan(multisession)</code>).</p></td>
     </tr>
