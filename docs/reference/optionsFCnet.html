@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FCnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8.9000</span>
       </span>
     </div>
 
@@ -130,6 +130,10 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>family</th>
+      <td><p>Defaults to "gaussian." Experimental support for "binomial" on the way.</p></td>
+    </tr>
+    <tr>
       <th>cv.type.measure</th>
       <td><p>The measure to minimize in crossvalidation inner loops.
 The deafult is the mean squared error.</p></td>
@@ -155,12 +159,21 @@ Useful if y is not scaled and centered.</p></td>
 chooses the value of lambda which best minimizes the mean crossvalidation error - or
 "lambda.1se" - which "which gives the most regularized model such that error is
 within one standard error of the minimum". The latter would be preferable
-for stability.
-@param thresh Threshold for glmnet to stop converging to the solution.
-This parameter can be adapted (e.g. for speed / accuracy tradeoff).
-@param consensus_function which function is used to create consensus between
-coefficients from different models.
-@param nested Whether crossvalidation is to be performed in a nested fashion.</p></td>
+for stability.</p></td>
+    </tr>
+    <tr>
+      <th>thresh</th>
+      <td><p>Threshold for glmnet to stop converging to the solution.
+This parameter can be adapted (e.g. for speed / accuracy tradeoff).</p></td>
+    </tr>
+    <tr>
+      <th>consensus_function</th>
+      <td><p>which function is used to create consensus between
+coefficients from different models.</p></td>
+    </tr>
+    <tr>
+      <th>nested</th>
+      <td><p>Whether crossvalidation is to be performed in a nested fashion.</p></td>
     </tr>
     <tr>
       <th>colorPaletteDefault</th>

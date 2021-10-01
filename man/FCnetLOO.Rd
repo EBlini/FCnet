@@ -14,6 +14,7 @@ FCnetLOO(
   parallelLOO = F,
   scale_y = T,
   scale_x = T,
+  family = optionsFCnet("family"),
   type.measure = optionsFCnet("cv.type.measure"),
   intercept = optionsFCnet("intercept"),
   standardize = optionsFCnet("standardize"),
@@ -66,6 +67,8 @@ and threads should be defined explicitly beforehand by the user
 \item{scale_x}{Whether x should be scaled prior to fit. Default, TRUE, subtracts
 the mean matrix value and divides each entry for the matrix variance.
 Beware that this adds to \code{optionsFCnet("standardize")}.}
+
+\item{family}{Defaults to "gaussian." Experimental support for "binomial" on the way.}
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
 

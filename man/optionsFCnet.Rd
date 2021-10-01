@@ -7,6 +7,8 @@
 optionsFCnet(...)
 }
 \arguments{
+\item{family}{Defaults to "gaussian." Experimental support for "binomial" on the way.}
+
 \item{cv.type.measure}{The measure to minimize in crossvalidation inner loops.
 The deafult is the mean squared error.}
 
@@ -23,12 +25,15 @@ Useful if y is not scaled and centered.}
 chooses the value of lambda which best minimizes the mean crossvalidation error - or
 "lambda.1se" - which "which gives the most regularized model such that error is
 within one standard error of the minimum". The latter would be preferable
-for stability.
-@param thresh Threshold for glmnet to stop converging to the solution.
-This parameter can be adapted (e.g. for speed / accuracy tradeoff).
-@param consensus_function which function is used to create consensus between
-coefficients from different models.
-@param nested Whether crossvalidation is to be performed in a nested fashion.}
+for stability.}
+
+\item{thresh}{Threshold for glmnet to stop converging to the solution.
+This parameter can be adapted (e.g. for speed / accuracy tradeoff).}
+
+\item{consensus_function}{which function is used to create consensus between
+coefficients from different models.}
+
+\item{nested}{Whether crossvalidation is to be performed in a nested fashion.}
 
 \item{colorPaletteDefault}{The default color palette for plotting matrices (a vector of colors).}
 

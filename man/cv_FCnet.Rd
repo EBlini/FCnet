@@ -12,6 +12,7 @@ cv_FCnet(
   parallelLOO = F,
   cv_Ncomp = NULL,
   cv_Ncomp_method = c("order", "R"),
+  family = optionsFCnet("family"),
   type.measure = optionsFCnet("cv.type.measure"),
   intercept = optionsFCnet("intercept"),
   standardize = optionsFCnet("standardize"),
@@ -57,6 +58,8 @@ components to test in the inner loops.}
 components are ordered (e.g. according to the explained variance of neuroimaging
 data) or - somehow experimental - whether to use the N best components
 ranked according to their relationship (pearson's R) with y.}
+
+\item{family}{Defaults to "gaussian." Experimental support for "binomial" on the way.}
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
 

@@ -44,17 +44,20 @@
 #' @param scale_x Whether x should be scaled prior to fit. Default, TRUE, subtracts
 #' the mean matrix value and divides each entry for the matrix variance.
 #' Beware that this adds to `optionsFCnet("standardize")`.
-
 #' @param nperm The number of permutations for the null models. Default is 100.
 #'
 #' @param model_R2 Optional. If this entry is left NULL, the original model is
 #' fitted again. Either an object created by `FCnet::FCnetLOO()` or a
 #' precise value of R2 can be supplied, as to avoid unnecessary computations.
+#' @param model_Accuracy Optional. If this entry is left NULL, the original model is
+#' fitted again. Either an object created by `FCnet::FCnetLOO()` or a
+#' precise value of Accuracy can be supplied, as to avoid unnecessary computations.
 #'
 #' @param return_coeffs Optional: whether coefficients for the null models should
 #' be returned as well. This may interesting should inferential statistics be
 #' envisaged for single coefficients. The returned data.frame, on the other
 #' hand, may be quite large.
+#' @param family Defaults to "gaussian." Experimental support for "binomial" on the way.
 
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' Differently from `glmnetUtils::cva.glmnet()` the default is the mean absolute error.
@@ -80,7 +83,9 @@ permutateLOO= function(y,
                        scale_x= T,
                        nperm= 100,
                        model_R2= NULL,
+                       model_Accuracy= NULL,
                        return_coeffs= T,
+                       family= optionsFCnet("family"),
                        type.measure= optionsFCnet("cv.type.measure"),
                        intercept= optionsFCnet("intercept"),
                        standardize= optionsFCnet("standardize"),
@@ -90,7 +95,13 @@ permutateLOO= function(y,
   cv_Ncomp_method= match.arg(cv_Ncomp_method)
 
   #scaling if requested, then set to False in inner call
-  if(scale_y){y= scale(y)}
+  if(scale_y){
+
+    if(family== "binomial")(warning("You requested scaling of y but the family is 'binomial'..."))
+
+    y= scale(y)
+
+    }
 
   #ensure you are working with matrices
   y= data.matrix(y)
@@ -111,7 +122,7 @@ permutateLOO= function(y,
 
 
   #original model here
-  if(is.null(model_R2)){
+  if(is.null(model_R2) + is.null(model_Accuracy)==2){
 
     original_R2= FCnetLOO(y= y,
                           x= x,
@@ -122,16 +133,30 @@ permutateLOO= function(y,
                           parallelLOO= parallelLOO,
                           scale_y= F,
                           scale_x= F,
+                          family= family,
                           type.measure= type.measure,
                           intercept= intercept,
                           standardize= standardize,
                           thresh= thresh,
-                          ...)$R2
+                          ...)
+    if(family== "binomial")(original_R2= original_R2$Accuracy) else {
+
+      original_R2= original_R2$R2
+    }
 
   } else {
 
-    if(class(model_R2)[1]== "list")(model_R2= model_R2$R2)
-    original_R2= model_R2
+    if(family== "binomial"){
+
+      if(class(model_Accuracy)[1]== "list")(model_R2= model_Accuracy$Accuracy)
+      original_R2= model_model_Accuracy
+
+    } else {
+
+      if(class(model_R2)[1]== "list")(model_R2= model_R2$R2)
+      original_R2= model_R2
+
+    }
 
   }
 
@@ -161,6 +186,7 @@ permutateLOO= function(y,
                   parallelLOO= parallelLOO,
                   scale_y= F, #already done
                   scale_x= F, #already done
+                  family= family,
                   type.measure= type.measure,
                   intercept= intercept,
                   standardize= standardize,
@@ -168,9 +194,25 @@ permutateLOO= function(y,
                   ...
                   )
 
-    R2= data.frame(nPerm= p, R2= ifelse(is.na(res$R2), 0, res$R2))
+    if(family== "binomial"){
 
-    res_inner= list(R2=R2)
+      Accuracy= data.frame(nPerm= p,
+                           Accuracy= ifelse(is.na(res$Accuracy),
+                                0,
+                                res$Accuracy))
+
+      res_inner= list(Accuracy= Accuracy)
+
+    } else {
+
+      R2= data.frame(nPerm= p,
+                     R2= ifelse(is.na(res$R2),
+                                0,
+                                res$R2))
+
+      res_inner= list(R2=R2)
+    }
+
 
     if(return_coeffs){
 
@@ -191,6 +233,7 @@ permutateLOO= function(y,
   close(pb)
 
 
+  # #this bit was written before adaptation to binomial
   # if(parallelLOO){
   #
   #   perms= future.apply::future_lapply(1:nperm, function(p){
@@ -268,10 +311,22 @@ permutateLOO= function(y,
   #   } #end if parallelLOO
 
 
-  R2= lapply(perms, function(x)x$R2)
-  R2= do.call(rbind, R2)
+  if(family== "binomial"){
 
-  res= list(R2= R2)
+    R2= lapply(perms, function(x)x$Accuracy)
+    R2= do.call(rbind, R2)
+    res= list(Accuracy= R2)
+
+  } else {
+
+    R2= lapply(perms, function(x)x$R2)
+    R2= do.call(rbind, R2)
+    res= list(R2= R2)
+
+  }
+
+
+
 
   if(return_coeffs){
 
@@ -281,16 +336,29 @@ permutateLOO= function(y,
   }
 
   #summary
-  summary_perms= data.frame(Model_R2= original_R2,
+  summary_perms= data.frame(Empty= "Empty",
                             Permutations= nperm,
-                            P_value= sum(R2$R2>original_R2)/length(R2$R2),
-                            MeanR2= mean(R2$R2),
-                            SD_R2= sd(R2$R2),
-                            Upper_95= mean(R2$R2) + 1.96*sd(R2$R2),
-                            Quantile_50= quantile(R2$R2, 0.5),
-                            Quantile_70= quantile(R2$R2, 0.7),
-                            Quantile_90= quantile(R2$R2, 0.9),
-                            Quantile_95= quantile(R2$R2, 0.95))
+                            P_value= sum(R2[,2]>original_R2)/length(R2[,2]),
+                            Mean= mean(R2[,2]),
+                            SD= sd(R2[,2]),
+                            Upper_95= mean(R2[,2]) + 1.96*sd(R2[,2]),
+                            Quantile_50= quantile(R2[,2], 0.5),
+                            Quantile_70= quantile(R2[,2], 0.7),
+                            Quantile_90= quantile(R2[,2], 0.9),
+                            Quantile_95= quantile(R2[,2], 0.95))
+
+  if (family== "binomial"){
+
+    names(summary_perms)[1]= "Model_Accuracy"
+    summary_perms[["Model_Accuracy"]]= original_R2
+
+  } else {
+
+    names(summary_perms)[1]= "Model_R2"
+    summary_perms[["Model_R2"]]= original_R2
+
+  }
+
 
   rownames(summary_perms)= NULL
 

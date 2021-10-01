@@ -46,6 +46,7 @@
 #' components are ordered (e.g. according to the explained variance of neuroimaging
 #' data) or - somehow experimental - whether to use the N best components
 #' ranked according to their relationship (pearson's R) with y.
+#' @param family Defaults to "gaussian." Experimental support for "binomial" on the way.
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' Differently from `glmnetUtils::cva.glmnet()` the deafult is the mean absolute error.
 #' @param intercept whether to fit (TRUE) or not (FALSE) an intercept to the model.
@@ -64,6 +65,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                   parallelLOO= F,
                   cv_Ncomp= NULL,
                   cv_Ncomp_method= c("order", "R"),
+                  family= optionsFCnet("family"),
                   type.measure= optionsFCnet("cv.type.measure"),
                   intercept= optionsFCnet("intercept"),
                   standardize= optionsFCnet("standardize"),
@@ -137,6 +139,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                         lambda = lambda,
                         nfolds= nfolds,
                         grouped= ifelse(nfolds== nrow(x), F, T),
+                        family= family,
                         type.measure = type.measure,
                         intercept= intercept,
                         standardize= standardize,
@@ -157,6 +160,7 @@ cv_FCnet= function(y, #dependent variable, typically behavior
                         lambda = lambda,
                         nfolds= nfolds,
                         grouped= ifelse(nfolds== nrow(x), F, T),
+                        family= family,
                         type.measure = type.measure,
                         intercept= intercept,
                         standardize= standardize,
@@ -203,6 +207,9 @@ cv_FCnet= function(y, #dependent variable, typically behavior
 
     #prevalidated CV predictions
     predictions= fit$fit.preval[, which(fit$lambda== lambda)]
+
+    #for binomial, negative values are class 0, positive class 1
+    #predict(fit,  newx = x, s= lambda, type= "class")
 
     #return best parameters
     bp= list(alpha= alpha,

@@ -41,8 +41,7 @@
 
 <meta property="og:title" content="Reduce the dimensionality of Functional Connectivity matrices or volumes — reduce_featuresFC" />
 <meta property="og:description" content="This function accepts a list of lists containing squared FC matrices
-or three-dimensional arrays (brain volumes)
-such as one created by loadFC() - and apply feature reduction techniques.
+or three-dimensional arrays (brain volumes) - such as one created by loadFC() - and apply feature reduction techniques.
 Available techniques are listed under the method parameter and currently
 include Principal Component Analysis (PCA) and Independent Component
 Analysis (ICA). Both are applied on the upper triangular part of the matrices,
@@ -53,9 +52,7 @@ thus the ica package must be installed. The user can supply the desired
 number of components to retain; else, the number of components needed to
 explain at least a given proportion of the variance of FC matrices will be returned under
 the Weights slot - for ICA, this is based on the PCA analysis. The default
-is 95% of the varaince.
-
-" />
+is 95% of the varaince." />
 
 
 
@@ -87,7 +84,7 @@ is 95% of the varaince.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FCnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8.9000</span>
       </span>
     </div>
 
@@ -137,8 +134,7 @@ is 95% of the varaince.
 
     <div class="ref-description">
     <p>This function accepts a list of lists containing squared FC matrices
-or three-dimensional arrays (brain volumes)</p><ul>
-<li><p>such as one created by <code><a href='loadFC.html'>loadFC()</a></code> - and apply feature reduction techniques.
+or three-dimensional arrays (brain volumes) - such as one created by <code><a href='loadFC.html'>loadFC()</a></code> - and apply feature reduction techniques.
 Available techniques are listed under the <code>method</code> parameter and currently
 include Principal Component Analysis (PCA) and Independent Component
 Analysis (ICA). Both are applied on the upper triangular part of the matrices,
@@ -149,9 +145,7 @@ thus the <code>ica</code> package must be installed. The user can supply the des
 number of components to retain; else, the number of components needed to
 explain at least a given proportion of the variance of FC matrices will be returned under
 the <code>Weights</code> slot - for ICA, this is based on the PCA analysis. The default
-is 95% of the varaince.</p></li>
-</ul>
-
+is 95% of the varaince.</p>
     </div>
 
     <pre class="usage"><span class='fu'>reduce_featuresFC</span><span class='op'>(</span>

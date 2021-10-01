@@ -36,9 +36,21 @@ plotFCnet= function(model,
     ggDF= data.frame(ID= 1:length(model$predicted),
                      Score= as.numeric(model$y),
                      Predicted= model$predicted)
+
+    #check if binomial
+    if(length(table(ggDF$Score))==2)(binomial= T)else(binomial=F)
+
     lim= c(min(ggDF$Score, ggDF$Predicted),
            max(ggDF$Score, ggDF$Predicted))
 
+    if(binomial) {
+
+      ggDF$Score= as.factor(ggDF$Score)
+
+      lim= c(-abs(max(ggDF$Predicted)),
+                       abs(max(ggDF$Predicted)))
+
+      }
 
 
     #plot here
@@ -61,15 +73,30 @@ plotFCnet= function(model,
     }
 
 
-    p= p +
-      ggplot2::geom_abline(color= "dark gray",
-                           size= 1.1,
-                           linetype= "dashed") +
-      ggplot2::geom_smooth(method= "lm",
-                           color= "red",
-                           size= 1.3) +
-      ggplot2::ylim(lim) + ggplot2::xlim(lim) +
-      commonTheme
+    if(binomial){
+
+      p= p +
+        ggplot2::geom_hline(yintercept = 0, color= "dark gray",
+                            size= 1.1,
+                            linetype= "dashed") +
+        ggplot2::ylim(lim) +
+        xlab("Group") +
+        commonTheme
+
+
+    } else {
+
+      p= p +
+        ggplot2::geom_abline(color= "dark gray",
+                             size= 1.1,
+                             linetype= "dashed") +
+        ggplot2::geom_smooth(method= "lm",
+                             color= "red",
+                             size= 1.3) +
+        ggplot2::ylim(lim) + ggplot2::xlim(lim) +
+        commonTheme
+
+    }
 
 
   } # end if output== predictions

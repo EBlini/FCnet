@@ -4,7 +4,7 @@
 \alias{evalFCnet}
 \title{Evaluate model's prediction against the observed true values}
 \usage{
-evalFCnet(model)
+evalFCnet(model, family)
 }
 \arguments{
 \item{model}{an object returned from a call to cv_FCnet}

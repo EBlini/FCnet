@@ -1,6 +1,7 @@
 # Variable, global to package's namespace.
 # This function is not exported to user space and does not need to be documented.
 opt= settings::options_manager(
+  family= "gaussian",
   cv.type.measure= "mse",
   cv.criterion= "error",
   intercept= F,
@@ -23,6 +24,7 @@ opt= settings::options_manager(
 
 #' Set or get options for FCnet
 #'
+#' @param family Defaults to "gaussian." Experimental support for "binomial" on the way.
 #' @param cv.type.measure The measure to minimize in crossvalidation inner loops.
 #' The deafult is the mean squared error.
 #' @param cv.criterion Whether crossvalidated models are chosen on the basis of
@@ -36,11 +38,11 @@ opt= settings::options_manager(
 #' "lambda.1se" - which "which gives the most regularized model such that error is
 #' within one standard error of the minimum". The latter would be preferable
 #'  for stability.
-#'  @param thresh Threshold for glmnet to stop converging to the solution.
+#' @param thresh Threshold for glmnet to stop converging to the solution.
 #'  This parameter can be adapted (e.g. for speed / accuracy tradeoff).
-#'  @param consensus_function which function is used to create consensus between
+#' @param consensus_function which function is used to create consensus between
 #'  coefficients from different models.
-#'  @param nested Whether crossvalidation is to be performed in a nested fashion.
+#' @param nested Whether crossvalidation is to be performed in a nested fashion.
 #' @param colorPaletteDefault The default color palette for plotting matrices (a vector of colors).
 #' @param colorNuances Number of nuances along the provided colorPalette.
 

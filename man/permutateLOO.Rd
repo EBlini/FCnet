@@ -16,7 +16,9 @@ permutateLOO(
   scale_x = T,
   nperm = 100,
   model_R2 = NULL,
+  model_Accuracy = NULL,
   return_coeffs = T,
+  family = optionsFCnet("family"),
   type.measure = optionsFCnet("cv.type.measure"),
   intercept = optionsFCnet("intercept"),
   standardize = optionsFCnet("standardize"),
@@ -77,10 +79,16 @@ Beware that this adds to \code{optionsFCnet("standardize")}.}
 fitted again. Either an object created by \code{FCnet::FCnetLOO()} or a
 precise value of R2 can be supplied, as to avoid unnecessary computations.}
 
+\item{model_Accuracy}{Optional. If this entry is left NULL, the original model is
+fitted again. Either an object created by \code{FCnet::FCnetLOO()} or a
+precise value of Accuracy can be supplied, as to avoid unnecessary computations.}
+
 \item{return_coeffs}{Optional: whether coefficients for the null models should
 be returned as well. This may interesting should inferential statistics be
 envisaged for single coefficients. The returned data.frame, on the other
 hand, may be quite large.}
+
+\item{family}{Defaults to "gaussian." Experimental support for "binomial" on the way.}
 
 \item{intercept}{whether to fit (TRUE) or not (FALSE) an intercept to the model.}
 
