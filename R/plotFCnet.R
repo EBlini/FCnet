@@ -80,7 +80,11 @@ plotFCnet= function(model,
                             size= 1.1,
                             linetype= "dashed") +
         ggplot2::ylim(lim) +
+<<<<<<< HEAD
         ggplot2::xlab("Group") +
+=======
+        xlab("Group") +
+>>>>>>> 2fac822f16729a4d990aadaea595f643e1a282de
         commonTheme
 
 
