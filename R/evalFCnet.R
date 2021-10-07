@@ -8,7 +8,7 @@
 evalFCnet= function(model, family){
 
   # Model performance metrics
-  RMSE= sqrt(mean((model$predictions - model$y)^2))
+  RMSE= sqrt(mean((as.numeric(model$predictions) - as.numeric(model$y))^2))
 
   fit= model$fit$glmnet.fit
 
