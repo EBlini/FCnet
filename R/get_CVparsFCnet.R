@@ -39,16 +39,25 @@ get_CVparsFCnet= function(fit){
 
   lambdaSE= sapply(fit$modlist, `[[`, "lambda.1se")
 
-  lambda= ifelse(optionsFCnet("whichLambda")== "lambda.min",
-                 lambdaMin,
-                 lambdaSE)
+  if(optionsFCnet("whichLambda")== "lambda.min"){
+
+    lambda= lambdaMin
+
+  } else {
+
+    lambda= lambdaSE
+
+  }
+  # lambda= ifelse(optionsFCnet("whichLambda")== "lambda.min",
+  #                lambdaMin,
+  #                lambdaSE)
 
 
   if(optionsFCnet("cv.criterion")== "error"){
 
-    error= sapply(fit$modlist, function(mod){
+    error= sapply(1:length(fit$modlist), function(n){
 
-      as.numeric(mod$cvm[which(mod$lambda== lambda)])
+      as.numeric(fit$modlist[[n]]$cvm[which(fit$modlist[[n]]$lambda== lambda[n])])
 
     }) } else {
 
