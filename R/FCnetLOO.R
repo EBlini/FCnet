@@ -143,19 +143,19 @@ FCnetLOO= function(y,
                   ...
                   )
 
-
-    #cv r2
-    cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== fit$lambda])/c(var(y))
-    cvr2= as.numeric(cvr2)
-
     p= fit$predictions
+
+    rss <- sum((p - y) ^ 2)  ## residual sum of squares
+    tss <- sum((y - mean(y)) ^ 2)  ## total sum of squares
+    rsq <- 1 - rss/tss
+
 
     #metrics
     pars= evalFCnet(fit, family)
 
 
     #wrap-up info
-    res= list(R2= cvr2,
+    res= list(R2= rsq,
               Goodness_Fit= pars,
               predicted= p,
               alpha= fit$alpha,
@@ -314,17 +314,17 @@ FCnetLOO= function(y,
   final_components= sapply(test_c, function(l)length(l)== consensus_N_comp)
   final_components= unlist(test_c[final_components])
 
-  #crossvalidation error
-  cvr2= 1-c(fit$fit$cvm[fit$fit$lambda== consensus_lambda])/c(var(y))
-  cvr2= as.numeric(cvr2)
-
   #CV predictions
   p= fit$predictions
+
+  rss <- sum((p - y) ^ 2)  ## residual sum of squares
+  tss <- sum((y - mean(y)) ^ 2)  ## total sum of squares
+  rsq <- 1 - rss/tss
 
   pars= evalFCnet(fit, family)
 
   #wrap-up info
-  res= list(R2= cvr2,
+  res= list(R2= rsq,
             Goodness_Fit= pars,
             predicted= p,
             alpha= consensus_alpha,
