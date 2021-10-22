@@ -230,8 +230,8 @@
                  alpha<span class="op">=</span> <span class="fl">0</span>, <span class="co">#ridge regression</span>
                  parallelLOO <span class="op">=</span> <span class="cn">F</span><span class="op">)</span> 
 <span class="va">r_bias</span><span class="op">$</span><span class="va">R2</span></code></pre></div>
-<pre><code>## [1] 0.4550954</code></pre>
-<p>It appears that this model is capable to explain about 45% of the variance from LOO observations.</p>
+<pre><code>## [1] 0.4439749</code></pre>
+<p>It appears that this model is capable to explain about 44% of the variance from LOO observations.</p>
 <p>A graphical depiction of the fit or coefficients can be obtained with <code><a href="../reference/plotFCnet.html">plotFCnet()</a></code>:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotFCnet.html">plotFCnet</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">r_bias</span>, 
@@ -393,10 +393,10 @@
 <table class="table">
 <colgroup>
 <col width="9%">
-<col width="11%">
+<col width="12%">
 <col width="7%">
 <col width="9%">
-<col width="9%">
+<col width="8%">
 <col width="9%">
 <col width="11%">
 <col width="11%">
@@ -416,16 +416,16 @@
 <th align="right">Quantile_95</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td align="right">0.4550954</td>
+<td align="right">0.4439749</td>
 <td align="right">50</td>
 <td align="right">0</td>
-<td align="right">0.0364484</td>
-<td align="right">0.0312414</td>
-<td align="right">0.0976816</td>
-<td align="right">0.02</td>
-<td align="right">0.0242587</td>
-<td align="right">0.090485</td>
-<td align="right">0.0965333</td>
+<td align="right">0.0167841</td>
+<td align="right">0.031879</td>
+<td align="right">0.0792669</td>
+<td align="right">0</td>
+<td align="right">0.0043456</td>
+<td align="right">0.0719234</td>
+<td align="right">0.0780952</td>
 </tr></tbody>
 </table>
 <p>The original model’s R2 is reported on the left. On the rightmost part of the row, a few statistics concerning the distribution of R2 from null models is reported. The full distribution is available to the user anyway in the created object through the relative slot. In this fictional scenario, and considering the low number of permutations, it appears that the original model beats most null models. Models can always be improved by crossvalidating the number of features to extract, which is now implemented in both <code><a href="../reference/FCnetLOO.html">FCnetLOO()</a></code> and consequently <code><a href="../reference/permutateLOO.html">permutateLOO()</a></code>. In addition, selection of coefficients on the basis of permutated samples is now possible through the <code><a href="../reference/select_coefficients.html">select_coefficients()</a></code> function.</p>
@@ -459,7 +459,7 @@
 ## [1] future.apply_1.8.1 future_1.22.1      gridExtra_2.3      ggplot2_3.3.5      FCnet_0.1.8.9000   glmnetUtils_1.1.8  glmnet_4.1-2       Matrix_1.3-4      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.7        lattice_0.20-44   listenv_0.8.0     rprojroot_2.0.2   digest_0.6.28     foreach_1.5.1     utf8_1.2.2        parallelly_1.28.1 R6_2.5.1          plyr_1.8.6        evaluate_0.14     highr_0.9         pillar_1.6.3      rlang_0.4.11      settings_0.2.7    jquerylib_0.1.4   rmarkdown_2.11    pkgdown_1.6.1     textshaping_0.3.5 desc_1.4.0        labeling_0.4.2    splines_4.1.1     stringr_1.4.0     munsell_0.5.0     compiler_4.1.1    xfun_0.26         pkgconfig_2.0.3   systemfonts_1.0.2 shape_1.4.6       mgcv_1.8-36       globals_0.14.0    htmltools_0.5.2   tibble_3.1.5      codetools_0.2-18  fansi_0.5.0       crayon_1.4.1      withr_2.4.2       grid_4.1.1        nlme_3.1-152      jsonlite_1.7.2    gtable_0.3.0      lifecycle_1.0.1   magrittr_2.0.1    scales_1.1.1      stringi_1.7.5     cachem_1.0.6      farver_2.1.0      reshape2_1.4.4    fs_1.5.0          bslib_0.3.1       ellipsis_0.3.2    ragg_1.1.3        vctrs_0.3.8       iterators_1.0.13  tools_4.1.1      
+##  [1] Rcpp_1.0.7        lattice_0.20-44   listenv_0.8.0     rprojroot_2.0.2   digest_0.6.28     foreach_1.5.1     utf8_1.2.2        parallelly_1.28.1 R6_2.5.1          plyr_1.8.6        evaluate_0.14     highr_0.9         pillar_1.6.4      rlang_0.4.12      settings_0.2.7    jquerylib_0.1.4   rmarkdown_2.11    pkgdown_1.6.1     textshaping_0.3.6 desc_1.4.0        labeling_0.4.2    splines_4.1.1     stringr_1.4.0     munsell_0.5.0     compiler_4.1.1    xfun_0.27         pkgconfig_2.0.3   systemfonts_1.0.2 shape_1.4.6       mgcv_1.8-36       globals_0.14.0    htmltools_0.5.2   tibble_3.1.5      codetools_0.2-18  fansi_0.5.0       crayon_1.4.1      withr_2.4.2       grid_4.1.1        nlme_3.1-152      jsonlite_1.7.2    gtable_0.3.0      lifecycle_1.0.1   magrittr_2.0.1    scales_1.1.1      stringi_1.7.5     cachem_1.0.6      farver_2.1.0      reshape2_1.4.4    fs_1.5.0          bslib_0.3.1       ellipsis_0.3.2    ragg_1.1.3        vctrs_0.3.8       iterators_1.0.13  tools_4.1.1      
 ## [56] glue_1.4.2        parallel_4.1.1    fastmap_1.1.0     survival_3.2-11   yaml_2.2.1        colorspace_2.0-2  memoise_2.0.0     knitr_1.36        sass_0.4.0</code></pre>
 </div>
   </div>
