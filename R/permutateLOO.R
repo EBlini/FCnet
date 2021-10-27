@@ -149,7 +149,7 @@ permutateLOO= function(y,
     if(family== "binomial"){
 
       if(class(model_Accuracy)[1]== "list")(model_R2= model_Accuracy$Accuracy)
-      original_R2= model_model_Accuracy
+      original_R2= model_Accuracy
 
     } else {
 
