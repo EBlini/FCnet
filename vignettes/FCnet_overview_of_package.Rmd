@@ -221,7 +221,8 @@ We ensure that back-projected coefficients properly identify the network that we
 
 ```{r }
 bp_bias= backprojectFCnet(coeffs = r_bias, 
-                          reduce_features_object = rf_bias,
+                          reduce_features_object = rf_bias, 
+                          normthresh = F,
                           threshold = length(network1)*length(network2))
 
 plotFC(bp_bias) + grid_net

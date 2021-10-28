@@ -47,9 +47,12 @@ vtoarray= function(v, dim){
 #' the edges' loadings for a specific coefficients, i.e. (possibly) a network.
 #' @param reduce_features_object An object created by `reduce_features_FC()`. If present,
 #' Loadings may not be provided, and is overwritten.
-#'@param threshold Optional. Prune the back-projection matrix by retaining only the
-#'threshold larger entries (in absolute value).
-#'
+#' @param normthresh If TRUE first back-projected coefficients are normalized
+#' within the -1 - 1 interval, and then only the values larger than 0.1 (in
+#' absolute value) are retained. Default is TRUE.
+#' @param threshold Optional. Prune the back-projection matrix by retaining only the
+#'threshold larger entries (in absolute value) if normthresh is FALSE. This is disregarded
+#'if normthresh is TRUE.
 #' @return A square back-projection matrix or 3-D volume with
 #' the original dimensions.
 #'
@@ -58,6 +61,7 @@ vtoarray= function(v, dim){
 
 backprojectFCnet= function(coeffs,
                            reduce_features_object,
+                           normthresh= TRUE,
                            threshold= NULL){
 
 
@@ -109,10 +113,19 @@ backprojectFCnet= function(coeffs,
   #sum or mean?
   final_coeffs= rowSums(final_coeffs)
 
+  #warn if both threshold pars are set
+  if(!is.null(threshold) & normthresh== TRUE){
+
+    warning("Parameter threshold disregarded because normthresh is TRUE")
+
+    threshold= NULL
+
+  }
 
   #vector to matrix
-  if(is.null(threshold)){
+  if(is.null(threshold) & normthresh== FALSE){
 
+    #no pruning
     if(reduce_features_object$dim[1,1]== "matrix"){
 
       res= vtom(final_coeffs)
@@ -125,8 +138,9 @@ backprojectFCnet= function(coeffs,
 
     }
 
-  } else {
+  } else if (!is.null(threshold) & normthresh== FALSE){
 
+    #if pruning by threshold
     Nth_larger= sort(abs(final_coeffs),
                      decreasing = T)[threshold]
 
@@ -147,6 +161,28 @@ backprojectFCnet= function(coeffs,
 
     }
 
+
+  } else {
+
+    #if normtresh is TRUE
+    larger= max(abs(final_coeffs))
+
+    final_coeffs_pruned= final_coeffs/larger
+
+    final_coeffs_pruned[abs(final_coeffs_pruned)< 0.1]= 0
+
+    if(reduce_features_object$dim[1,1]== "matrix"){
+
+      res= vtom(final_coeffs_pruned)
+
+    } else {
+
+      res= vtoarray(final_coeffs_pruned,
+                    c(reduce_features_object$dim[1,2],
+                      reduce_features_object$dim[1,3],
+                      reduce_features_object$dim[1,4]))
+
+    }
 
   }
 
