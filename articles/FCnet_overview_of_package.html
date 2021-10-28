@@ -252,7 +252,8 @@
 <p>We ensure that back-projected coefficients properly identify the network that we perturbed:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bp_bias</span><span class="op">=</span> <span class="fu"><a href="../reference/backprojectFCnet.html">backprojectFCnet</a></span><span class="op">(</span>coeffs <span class="op">=</span> <span class="va">r_bias</span>, 
-                          reduce_features_object <span class="op">=</span> <span class="va">rf_bias</span>,
+                          reduce_features_object <span class="op">=</span> <span class="va">rf_bias</span>, 
+                          normthresh <span class="op">=</span> <span class="cn">F</span>,
                           threshold <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">network1</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">network2</span><span class="op">)</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/plotFC.html">plotFC</a></span><span class="op">(</span><span class="va">bp_bias</span><span class="op">)</span> <span class="op">+</span> <span class="va">grid_net</span></code></pre></div>
@@ -262,9 +263,10 @@
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bp_first</span><span class="op">=</span> <span class="fu"><a href="../reference/backprojectFCnet.html">backprojectFCnet</a></span><span class="op">(</span>coeffs <span class="op">=</span> <span class="fl">1</span>,  
                           reduce_features_object <span class="op">=</span> <span class="va">rf_bias</span>,
-                          threshold <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">network1</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">network2</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/plotFC.html">plotFC</a></span><span class="op">(</span><span class="va">bp_first</span><span class="op">)</span> <span class="op">+</span> <span class="va">grid_net</span></code></pre></div>
+                          threshold <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">network1</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">network2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## Warning in backprojectFCnet(coeffs = 1, reduce_features_object = rf_bias, : Parameter threshold disregarded because normthresh is TRUE</code></pre>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plotFC.html">plotFC</a></span><span class="op">(</span><span class="va">bp_first</span><span class="op">)</span> <span class="op">+</span> <span class="va">grid_net</span></code></pre></div>
 <p><img src="FCnet_overview_of_package_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>Indeed, the first component mainly taps onto the network that we have biased. Edges have a negative loading on this feature, but they have a positive association with the behavioral score.</p>
 </div>
@@ -273,7 +275,7 @@
 <a href="#testing-significance-permutation-test" class="anchor"></a>Testing significance: permutation test</h2>
 <p>Large R2 values may occur by chance or simply in light of the many predictors in the model - even though this problem is mitigated by using the LOO R2. In order to test whether this R2 is beyond chance, we can run a permutation test. Here, values of y are shuffled and then predicted. Ideally, the distribution of the models created in this way should cover - and inform about - the range of the null model.</p>
 <p>Note that, in order to optimize computational resources, we only ask for 50 permutations (generally not enough) and, most importantly, we use parallel computing to optimize the procedure. When <code>parallelLOO</code> is <code>TRUE</code>, the outer cycles are run in parallel on multiple cores (if available) by using the package <code>future.apply</code>, which must be installed. In addition, <code>plan(multisession</code> or similar must be invoked in advance by the user.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">plan</span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span> <span class="co">#prepare for parallel computing</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
@@ -388,7 +390,7 @@
   |=========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================                    |  98%
   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
   |=============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================| 100%</code></pre>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">perm_bias</span><span class="op">$</span><span class="va">Summary</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <colgroup>
@@ -439,7 +441,7 @@
 <h2 class="hasAnchor">
 <a href="#appendix" class="anchor"></a>Appendix</h2>
 <p>Packages’ versions:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## R version 4.1.1 (2021-08-10)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
