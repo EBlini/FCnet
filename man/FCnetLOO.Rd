@@ -53,7 +53,8 @@ components to test in the inner loops.}
 \item{cv_Ncomp_method}{Whether the number of components to optimize means
 components are ordered (e.g. according to the explained variance of neuroimaging
 data) or - somehow experimental - whether to use the N best components
-ranked according to their relationship (pearson's R) with y.}
+ranked according to their relationship (the coefficient of an
+univariate (g)lm) with y.}
 
 \item{parallelLOO}{If TRUE - recommended, but not the default - uses
 \code{future.apply::future_lapply()} for the outer loops: \code{future.apply} must be

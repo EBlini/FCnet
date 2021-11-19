@@ -49,7 +49,8 @@
 #' @param cv_Ncomp_method Whether the number of components to optimize means
 #' components are ordered (e.g. according to the explained variance of neuroimaging
 #' data) or - somehow experimental - whether to use the N best components
-#' ranked according to their relationship (pearson's R) with y.
+#' ranked according to their relationship (in the context of a
+#' univariate (g)lm) with y.
 #' @param parallelLOO If TRUE - recommended, but not the default - uses
 #' `future.apply::future_lapply()` for the outer loops: `future.apply` must be
 #' installed, the machine should have multiple cores available for use,
@@ -299,9 +300,22 @@ FCnetLOO= function(y,
 
   if(cv_Ncomp_method== "R") {
 
-    r= apply(x, 2, function(z){cor(z, y)})
+    if(family== "gaussian"){
 
-    rank= rank(-abs(r), ties.method = "max")
+      #r= unlist(apply(x, 2, function(z){coef(lm(y~z))[2]}))
+
+      r= unlist(apply(x, 2, function(z){deviance(lm(y~z))}))
+      r= r*(-1)
+
+    } else {
+
+      #r= unlist(apply(x, 2, function(z){coef(glm(y~z, family= "binomial"))[2]}))
+      r= unlist(apply(x, 2, function(z){deviance(glm(y~z, family= "binomial"))}))
+      r= r*(-1)
+
+    }
+
+    rank= rank(-r, ties.method = "max")
     all_x= 1:ncol(x)
 
     test_c= lapply(cv_Ncomp, function(n){
