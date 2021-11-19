@@ -303,7 +303,6 @@ FCnetLOO= function(y,
     if(family== "gaussian"){
 
       #r= unlist(apply(x, 2, function(z){coef(lm(y~z))[2]}))
-
       r= unlist(apply(x, 2, function(z){deviance(lm(y~z))}))
       r= r*(-1)
 
@@ -314,6 +313,7 @@ FCnetLOO= function(y,
       r= r*(-1)
 
     }
+
 
     rank= rank(-r, ties.method = "max")
     all_x= 1:ncol(x)

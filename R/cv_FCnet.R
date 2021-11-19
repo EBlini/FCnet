@@ -116,7 +116,6 @@ cv_FCnet= function(y, #dependent variable, typically behavior
     if(family== "gaussian"){
 
       #r= unlist(apply(x, 2, function(z){coef(lm(y~z))[2]}))
-
       r= unlist(apply(x, 2, function(z){deviance(lm(y~z))}))
       r= r*(-1)
 
@@ -127,7 +126,6 @@ cv_FCnet= function(y, #dependent variable, typically behavior
       r= r*(-1)
 
     }
-
 
     rank= rank(-r, ties.method = "max")
     all_x= 1:ncol(x)

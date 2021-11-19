@@ -31,6 +31,7 @@
 #' components are ordered (e.g. according to the explained variance of neuroimaging
 #' data) or - somehow experimental - whether to use the N best components
 #' ranked according to their relationship (in the context of a
+#' ranked according to their relationship (the coefficient of an
 #' univariate (g)lm) with y.
 #' @param parallelLOO If TRUE - recommended, but not the default - uses
 #' `future.apply::future_lapply()` for the inner loops: `future.apply` must be
