@@ -236,6 +236,7 @@ Back-projection by default computes the linear contribution to the behavioral sc
 ```{r}
 bp_first= backprojectFCnet(coeffs = 1,  
                           reduce_features_object = rf_bias,
+                          normthresh = F,
                           threshold = length(network1)*length(network2))
 
 plotFC(bp_first) + grid_net

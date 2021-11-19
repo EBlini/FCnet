@@ -4,7 +4,12 @@
 \alias{backprojectFCnet}
 \title{Back-projection of regression coefficients onto the original space}
 \usage{
-backprojectFCnet(coeffs, reduce_features_object, threshold = NULL)
+backprojectFCnet(
+  coeffs,
+  reduce_features_object,
+  normthresh = TRUE,
+  threshold = NULL
+)
 }
 \arguments{
 \item{coeffs}{Coefficients can either be
@@ -19,8 +24,13 @@ the edges' loadings for a specific coefficients, i.e. (possibly) a network.}
 \item{reduce_features_object}{An object created by \code{reduce_features_FC()}. If present,
 Loadings may not be provided, and is overwritten.}
 
+\item{normthresh}{If TRUE first back-projected coefficients are normalized
+within the -1 - 1 interval, and then only the values larger than 0.1 (in
+absolute value) are retained. Default is TRUE.}
+
 \item{threshold}{Optional. Prune the back-projection matrix by retaining only the
-threshold larger entries (in absolute value).}
+threshold larger entries (in absolute value) if normthresh is FALSE. This is disregarded
+if normthresh is TRUE.}
 }
 \value{
 A square back-projection matrix or 3-D volume with
