@@ -83,7 +83,7 @@ retrieve the k largest coefficients, in absolute value, only." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FCnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9.9000</span>
       </span>
     </div>
 
@@ -146,7 +146,12 @@ to the threshold parameter: an integer value must be specified in order to
 retrieve the k largest coefficients, in absolute value, only.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>backprojectFCnet</span><span class='op'>(</span><span class='va'>coeffs</span>, <span class='va'>reduce_features_object</span>, threshold <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>backprojectFCnet</span><span class='op'>(</span>
+  <span class='va'>coeffs</span>,
+  <span class='va'>reduce_features_object</span>,
+  normthresh <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  threshold <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,9 +173,16 @@ the edges' loadings for a specific coefficients, i.e. (possibly) a network.</p><
 Loadings may not be provided, and is overwritten.</p></td>
     </tr>
     <tr>
+      <th>normthresh</th>
+      <td><p>If TRUE first back-projected coefficients are normalized
+within the -1 - 1 interval, and then only the values larger than 0.1 (in
+absolute value) are retained. Default is TRUE.</p></td>
+    </tr>
+    <tr>
       <th>threshold</th>
       <td><p>Optional. Prune the back-projection matrix by retaining only the
-threshold larger entries (in absolute value).</p></td>
+threshold larger entries (in absolute value) if normthresh is FALSE. This is disregarded
+if normthresh is TRUE.</p></td>
     </tr>
     </table>
 

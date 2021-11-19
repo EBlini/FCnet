@@ -93,7 +93,7 @@ the user (e.g. via plan(multisession)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FCnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9.9000</span>
       </span>
     </div>
 
@@ -229,7 +229,8 @@ components to test in the inner loops.</p></td>
       <td><p>Whether the number of components to optimize means
 components are ordered (e.g. according to the explained variance of neuroimaging
 data) or - somehow experimental - whether to use the N best components
-ranked according to their relationship (pearson's R) with y.</p></td>
+ranked according to their relationship (the coefficient of an
+univariate (g)lm) with y.</p></td>
     </tr>
     <tr>
       <th>parallelLOO</th>
@@ -248,7 +249,7 @@ and threads should be defined explicitly beforehand by the user
       <th>scale_x</th>
       <td><p>Whether x should be scaled prior to fit. Default, TRUE, subtracts
 the mean matrix value and divides each entry for the matrix variance.
-Beware that this adds to <code><a href='optionsFCnet.html'>optionsFCnet("standardize")</a></code>.</p></td>
+Beware that this adds to <code>optionsFCnet("standardize")</code>.</p></td>
     </tr>
     <tr>
       <th>family</th>

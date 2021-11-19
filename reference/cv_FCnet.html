@@ -84,7 +84,7 @@ directly in the function or by running optionsFCnet(optionsFCnet= &quot;mse&quot
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FCnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9.9000</span>
       </span>
     </div>
 
@@ -145,7 +145,7 @@ The crossvalidated lambda and alpha parameters are returned. For the model,
 use the <code><a href='FCnetLOO.html'>FCnetLOO()</a></code> function to avoid overfitting.
 Differently from <code><a href='https://glmnet.stanford.edu/reference/cv.glmnet.html'>glmnet::cv.glmnet()</a></code>, here the
 mean absolute error is minimized by default; you can change this parameter
-directly in the function or by running <code><a href='optionsFCnet.html'>optionsFCnet(optionsFCnet= "mse")</a></code>.</p>
+directly in the function or by running <code>optionsFCnet(optionsFCnet= "mse")</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>cv_FCnet</span><span class='op'>(</span>
@@ -217,7 +217,8 @@ components to test in the inner loops.</p></td>
       <td><p>Whether the number of components to optimize means
 components are ordered (e.g. according to the explained variance of neuroimaging
 data) or - somehow experimental - whether to use the N best components
-ranked according to their relationship (pearson's R) with y.</p></td>
+ranked according to their relationship (the coefficient of an
+univariate (g)lm) with y.</p></td>
     </tr>
     <tr>
       <th>family</th>
