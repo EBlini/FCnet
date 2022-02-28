@@ -33,6 +33,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -45,18 +47,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">FCnet</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -85,64 +81,79 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="fcnet" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#fcnet" class="anchor"></a>FCnet</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="fcnet">FCnet<a class="anchor" aria-label="anchor" href="#fcnet"></a>
+</h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
 <p>An R package for the analysis of Functional Connectivity matrices, lesional maps, or disconnection maps through elastic NETs.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>The package is currently available through <a href="https://github.com/">GitHub</a>. The installation requires the R package <code>devtools</code>.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>The package is currently available through <a href="https://github.com/" class="external-link">GitHub</a>. The installation requires the R package <code>devtools</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"EBlini/FCnet"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="scope" class="section level2">
-<h2 class="hasAnchor">
-<a href="#scope" class="anchor"></a>Scope</h2>
+<div class="section level2">
+<h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
+</h2>
 <p>The analysis of (Functional Connectivity) neuroimaging data can be daunting due to the very high dimensionality of the features involved. In time, several approaches to the problem have been devised. <code>FCnet</code> allows one to easily implement a three steps procedure consisting of:</p>
-<p>1) <strong>Feature reduction</strong>: the functional connectivity matrices (or volumes with lesion/disconnection mapping) are first summarized through data reduction techniques such as Principal Component Analysis or Independent Components Analysis.</p>
-<p>2) <strong>Robust regression</strong>: the reduced matrix of Weights is then entered into a robust regression model (with either ridge or LASSO penalty). The model is crossvalidated internally by means of Leave-One-Out (possibly nested) crossvalidation.</p>
-<p>3) <strong>Back-projection</strong>: models’ coefficients can be back-projected onto the original space, in order to rank the most predictive edges of a matrix or voxels.</p>
-<p>For useful references, see: <a href="https://www.pnas.org/content/113/30/E4367">Siegel et al., 2016</a>; <a href="https://academic.oup.com/brain/article/143/7/2173/5861020">Salvalaggio et al., 2020</a>; <a href="https://link.springer.com/chapter/10.1007%2F978-3-030-59277-6_3">Calesella et al., 2020</a>.</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Feature reduction</strong>: the functional connectivity matrices (or volumes with lesion/disconnection mapping) are first summarized through data reduction techniques such as Principal Component Analysis or Independent Components Analysis.</p></li>
+<li><p><strong>Robust regression</strong>: the reduced matrix of Weights is then entered into a robust regression model (with either ridge or LASSO penalty). The model is crossvalidated internally by means of Leave-One-Out (possibly nested) crossvalidation.</p></li>
+<li><p><strong>Back-projection</strong>: models’ coefficients can be back-projected onto the original space, in order to rank the most predictive edges of a matrix or voxels.</p></li>
+</ol>
+<p>For useful references, see: <a href="https://www.pnas.org/content/113/30/E4367" class="external-link">Siegel et al., 2016</a>; <a href="https://academic.oup.com/brain/article/143/7/2173/5861020" class="external-link">Salvalaggio et al., 2020</a>; <a href="https://link.springer.com/chapter/10.1007%2F978-3-030-59277-6_3" class="external-link">Calesella et al., 2020</a>.</p>
 </div>
-<div id="overview" class="section level2">
-<h2 class="hasAnchor">
-<a href="#overview" class="anchor"></a>Overview</h2>
-<p>An overview of the package is available <a href="https://eblini.github.io/FCnet/articles/FCnet_overview_of_package.html">here</a>.</p>
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
+<p>An overview of the package is available <a href="https://eblini.github.io/FCnet/articles/FCnet_overview_of_package.html" class="external-link">here</a>.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Elvio Blini <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7181-5763" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html#citation">Citing FCnet</a></li>
+</ul>
+</div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Elvio Blini <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7181-5763" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Michele De Filippo De Grazia <br><small class="roles"> Author </small>  </li>
 <li>Alberto Testolin <br><small class="roles"> Author </small>  </li>
 <li>Marco Zorzi <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
+
+
   </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Elvio Blini, Michele De Filippo De Grazia, Alberto Testolin, Marco Zorzi.</p>
+  <p></p>
+<p>Developed by Elvio Blini, Michele De Filippo De Grazia, Alberto Testolin, Marco Zorzi.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -150,6 +161,8 @@
 
   
 
+
+  
 
   </body>
 </html>
