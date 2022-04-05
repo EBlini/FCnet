@@ -331,8 +331,8 @@ FCnetLOO= function(y,
   #CV predictions
   p= fit$predictions
 
-  rss <- sum((p - y) ^ 2)  ## residual sum of squares
-  tss <- sum((y - mean(y)) ^ 2)  ## total sum of squares
+  rss <- sum((p - as.numeric(y)) ^ 2)  ## residual sum of squares
+  tss <- sum((as.numeric(y) - mean(as.numeric(y))) ^ 2)  ## total sum of squares
   rsq <- 1 - rss/tss
 
   pars= evalFCnet(fit, family)
